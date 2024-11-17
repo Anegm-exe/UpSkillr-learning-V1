@@ -1,6 +1,11 @@
 # Node.js dependencies
-/node_modules
+# Node.js dependencies in backend folder
+/backend/node_modules
+/frontend/node_modules
+
+# Ignore .node files in any node_modules folder
 **/node_modules/**/*.node
+
 /.pnp
 .pnp.*
 .yarn/*
