@@ -1,6 +1,6 @@
-# UpSkillr-V1.0
+# UpSkillr - V1.0
 ### -ANegm 17 Nov
-#### Hallo Dev Team! :D
+##### Hallo Dev Team! :D
 
 Okay This Is The Base Project That We Will Be Working On (Backend-Wise + Frontend-Wise)
 We will be using TypeScript mainly in this project!
