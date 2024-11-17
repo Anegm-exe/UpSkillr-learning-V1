@@ -10,5 +10,5 @@ Make sure you write clean code as much as possible and comment everything in a g
 
 *Thank You* <3
 - Please Make Sure You Run the Backend Using: "npm run start:dev" to Get The Benifits of Using Nodemon
-- Run Frontend Using: "npm start"
+- Run Frontend Using: "npm run dev"
 ___________________
