@@ -3,6 +3,7 @@
 /backend/node_modules
 /frontend/node_modules
 /frontend/.next/
+/frontend/.next/trace
 
 # Ignore .node files in any node_modules folder
 **/node_modules/**/*.node
@@ -85,4 +86,4 @@ next-env.d.ts
 # Miscellaneous ignored files
 .DS_Store
 Thumbs.db
-/frontend/.next/trace
+
