@@ -18,6 +18,7 @@
 !.yarn/versions
 
 # Build outputs
+backend/dist
 /dist
 /build
 /.next
