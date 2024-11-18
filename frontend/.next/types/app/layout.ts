@@ -1,4 +1,4 @@
-// File: C:\Users\Administrator\source\repos\UpSkillrV1.0\frontend\src\app\layout.tsx
+// File: C:\Users\youse\OneDrive\Desktop\dev\UpSkillr-learning-V1\frontend\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
