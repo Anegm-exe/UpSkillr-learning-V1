@@ -12,7 +12,7 @@ import { AuthenticationLogsSchema } from './schemas/authentication-logs.schema';
 @Module({
     imports: [
         // Connect to MongoDB 
-        MongooseModule.forRoot('your-mongo-db-connection-string'), // (Actuall URL MISSING PLEASE CREATE AND ADD IT :D)
+        MongooseModule.forRoot('mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr'), 
 
         // 8 Schemas Added Refrencing the "Schemas PDF"" submitted on the CMS! PLEASE CHECK IT OUT AGAIN AND SECOND GUESS ITS CONTENT!
         // CHATGPT HELPED IN FASTLY IMPLEMENTING THEM SO CHANGE AND DISCUSS IT AS MUCH AS YOU LIKE! :D (Good Base To Start)
