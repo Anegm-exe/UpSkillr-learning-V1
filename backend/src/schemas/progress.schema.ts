@@ -24,6 +24,16 @@ export const ProgressSchema = new Schema({
     type: Date,
     default: Date.now, // This will automatically set to the current date and time
   },
+  averageQuiz:{
+    type:Number,
+    required:false,
+    default:0,
+  },
+  openedTimes:{
+    type:Number,
+    required:false,
+    default:0,
+  }
 });
 
 // Define the Progress model
