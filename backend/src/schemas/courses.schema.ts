@@ -24,8 +24,15 @@ export const CourseSchema = new Schema({
     enum: ['Beginner', 'Intermediate', 'Advanced'],
     required: true,
   },
-  createdBy: {
-    type: String,
+  rating: {
+    type: Number, 
+    required: false,
+    min: 0,
+    max: 5,
+    default: 0,
+  }
+  ,createdBy: {
+    type: String, // Tutor id
     required: true,
   },
   createdAt: {
