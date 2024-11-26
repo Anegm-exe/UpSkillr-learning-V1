@@ -1,26 +1,21 @@
-import { Schema, model } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-export const ContentSchema = new Schema({
-  versions: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  urlArray: {
-    type: [String],
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-  },
-  latestAt: {
-    type: Date,
-    required: true,
-  },
-});
+@Schema()
+export class Content {
+  @Prop({ required: true })
+  versions: string;
 
-export const Content = model("Content", ContentSchema);
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  urlArray: string[];
+
+  @Prop({ required: true })
+  createdAt: Date;
+
+  @Prop({ required: true })
+  latestAt: Date;
+}
+
+export const ContentSchema = SchemaFactory.createForClass(Content);
