@@ -12,7 +12,7 @@ export class Content {
   urlArray: string[];
 
   @Prop({ required: true })
-  createdAt: Date;
+  timestamp: Date;
 
   @Prop({ required: true })
   latestAt: Date;

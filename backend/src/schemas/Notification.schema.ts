@@ -1,23 +1,19 @@
-import { Schema, model } from 'mongoose';
-// Define the schema
-export const NotificationsSchema = new Schema({
-    userId: {
-      type: String,
-      required: true,
-    },
-    message: {
-      type: String,
-      required: true,
-    },
-    Sender_id: {
-      type: String,
-      required: false,
-    },
-    DateTime: {
-      type: Date,
-      default: Date.now,
-    },
-  });
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
-  // Define the model
-  export const Notifications = model('Notifications', NotificationsSchema);
+@Schema()
+export class Notification {
+  @Prop({ required: true , ref: 'User'})
+  userId: Types.ObjectId;
+
+  @Prop({ required: true })
+  message: string;
+
+  @Prop({ required: false , ref: 'User'})
+  senderId: Types.ObjectId;
+
+  @Prop({ default: Date.now })
+  timestamp: Date;
+}
+
+export const NotificationSchema = SchemaFactory.createForClass(Notification);

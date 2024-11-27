@@ -1,30 +1,25 @@
-import {Schema, model} from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
+import { Message } from './message.schema';
 
-const Message=new Schema({
-    message_id:{
-        type: String, 
-        required:true
-    }, 
-    text:{
-        type:String,
-        min_length:0, 
-        max_length:3000
-    },
-    date_time:{
-        type: Date,
-        required:true
-    }
-})
-const ChatSchema=new Schema({
-    name:{
-        type: String,
-        required:true
-    },
-    User_Id:{
-    type: String,
-    required: true    
-    },
+@Schema()
+export class Chat {
+  @Prop({ required: true })
+  name: string;
 
-messages: [Message]
-});
-export default model('Chat', ChatSchema)
+  @Prop({
+    type: [Types.ObjectId],
+    ref: 'User',
+    required: true,
+    validate: {
+      validator: (value: Types.ObjectId[]) => value.length >= 2,
+      message: 'At least 2 users are required',
+    },
+  })
+  User_Ids: Types.ObjectId[];
+
+  @Prop({default: []})
+  messages: Message[];
+}
+
+export const ChatSchema = SchemaFactory.createForClass(Chat);
