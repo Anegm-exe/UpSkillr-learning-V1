@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
+import { Types, Document } from 'mongoose';
 import { Message } from './message.schema';
+
+export type ForumDocument = Forum & Document;
 
 @Schema()
 export class Forum {
