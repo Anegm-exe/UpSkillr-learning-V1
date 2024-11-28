@@ -6,7 +6,7 @@ export type CourseDocument = Course & Document;
 @Schema()
 export class Course {
   @Prop({ required: true , ref: 'User'})
-  Instructor_id: Types.ObjectId; 
+  instructor_id: String; 
 
   @Prop({ required: true })
   title: string;
@@ -18,7 +18,7 @@ export class Course {
   category: string;
 
   @Prop({ required: true, enum: ['Beginner', 'Intermediate', 'Advanced'] })
-  difficultyLevel: string;
+  difficulty_Level: string;
 
   @Prop({ min: 0, max: 5, default: 0 })
   rating: number;
