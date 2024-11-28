@@ -22,6 +22,8 @@ export class Module {
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ModuleSchema = SchemaFactory.createForClass(Module);

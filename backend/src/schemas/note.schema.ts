@@ -19,6 +19,8 @@ export class Note {
 
   @Prop({ default: Date.now })
   last_updated: Date;
+
+  readonly _id?: string;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);
