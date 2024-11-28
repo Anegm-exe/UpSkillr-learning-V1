@@ -1,31 +1,21 @@
-import { Schema, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types, Document } from "mongoose";
 
-const AuthenticationLogsSchema = new Schema({
-  logId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  userId: {
-    type: String, // This could reference the User schema
-    required: true,
-  },
-  event: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now, // Automatically set to current date/time when the log is created
-  },
-  status: {
-    type: String,
-    enum: ['Success', 'Failure'], // Limit possible values for status
-    required: true,
-  },
-});
+export type AuthenticationLogDocument = AuthenticationLog & Document;
 
-// Define the Authentication Logs model interface
-const AuthenticationLogs = model('AuthenticationLogs', AuthenticationLogsSchema);
+@Schema()
+export class AuthenticationLog {
+  @Prop({ required: true , ref:'User'})
+  userId: Types.ObjectId;
 
-export { AuthenticationLogs, AuthenticationLogsSchema };
+  @Prop({ required: true })
+  event: string;
+
+  @Prop({ default: Date.now })
+  timestamp: Date;
+
+  @Prop({ required: true, enum: ['Success', 'Failure'] })
+  status: string;
+}
+
+export const AuthenticationLogSchema = SchemaFactory.createForClass(AuthenticationLog);
