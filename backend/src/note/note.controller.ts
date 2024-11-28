@@ -1,39 +1,48 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { NoteService } from './note.service';
-
-
+import { Note } from 'src/schemas/note.schema';
+import { Types } from 'mongoose';
 
 @Controller('note')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
-//create a new note
+
+  // Create a new note
   @Post()
-  create(@Body() body: any) { 
+  async create(@Body() body: Note): Promise<Note> {
     return this.noteService.create(body);
   }
-//retrieve all notes
+
+  // Retrieve all notes
   @Get()
-  findAll() {
+  async findAll(): Promise<Note[]> {
     return this.noteService.findAll();
   }
-//get note by id
+
+  // Get a note by ID
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.noteService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Note> {
+    return this.noteService.findOne(new Types.ObjectId(id));
   }
-//get note by course id
-@Get('course/:courseId')
-findByCourseId(@Param('courseId') courseId: number) {
-  return this.noteService.findByCourseId(courseId);
-}
-//update a note by id 
+
+  // Get notes by course ID
+  @Get('course/:courseId')
+  async findByCourseId(@Param('courseId') courseId: string): Promise<Note[]> {
+    return this.noteService.findByCourseId(Number(courseId));
+  }
+
+  // Update a note by ID
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body:any) {
-    return this.noteService.update(+id, body);
+  async update(
+    @Param('id') id: string, 
+    @Body() body: Partial<Note>
+  ): Promise<Note> {
+    return this.noteService.update(new Types.ObjectId(id), body);
   }
-//delete a note
+
+  // Delete a note by ID
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.noteService.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    return this.noteService.delete(new Types.ObjectId(id));
   }
 }
