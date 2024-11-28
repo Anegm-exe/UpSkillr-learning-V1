@@ -10,18 +10,20 @@ export class Chat {
   name: string;
 
   @Prop({
-    type: [Types.ObjectId],
+    type: [String],
     ref: 'User',
     required: true,
     validate: {
-      validator: (value: Types.ObjectId[]) => value.length >= 2,
+      validator: (value: String[]) => value.length >= 2,
       message: 'At least 2 users are required',
     },
   })
-  User_Ids: Types.ObjectId[];
+  user_ids: String[];
 
   @Prop({default: []})
   messages: Message[];
+
+  readonly _id?: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

@@ -7,13 +7,15 @@ export type QuizDocument = Quiz & Document;
 @Schema()
 export class Quiz {
   @Prop({ required: true , ref: 'Module'})
-  moduleId: Types.ObjectId;
+  module_id: String;
 
   @Prop({ required: true })
-  questions: Question[]
+  questions: Question[];
 
   @Prop({ default: Date.now })
   timestamp : Date;
+
+  readonly _id?: string;
 }
 
 export const QuizSchema = SchemaFactory.createForClass(Quiz);

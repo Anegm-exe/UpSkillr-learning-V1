@@ -6,7 +6,7 @@ export type ModuleDocument = Module & Document;
 @Schema()
 export class Module {
   @Prop({ required: true , ref:'Course' })
-  courseId: Types.ObjectId;
+  course_id: String;
 
   @Prop({ required: true })
   title: string;
@@ -19,6 +19,8 @@ export class Module {
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ModuleSchema = SchemaFactory.createForClass(Module);

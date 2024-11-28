@@ -12,7 +12,9 @@ export class Question {
   options: String[];
 
   @Prop({ required: true }) 
-  answer: String;
+  answer: number;
+
+  readonly _id?: string;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

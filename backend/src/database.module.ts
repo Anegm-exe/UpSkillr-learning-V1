@@ -31,7 +31,7 @@ import { ForumSchema } from './schemas/forum.schema';
             { name: 'Progress', schema: ProgressSchema },
             { name: 'Notes', schema: NoteSchema },
             { name: 'Chat', schema: ChatSchema},
-            { name: 'AuthenticationLogs', schema: AuthenticationLogSchema },
+            { name: 'AuthenticationLog', schema: AuthenticationLogSchema },
             { name: 'Content', schema: ContentSchema },
             { name: 'Notification', schema: NotificationSchema },
             { name: 'Forum', schema: ForumSchema },

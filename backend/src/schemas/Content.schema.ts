@@ -12,13 +12,15 @@ export class Content {
   name: string;
 
   @Prop({ required: true })
-  urlArray: string[];
+  url_array: string[];
 
   @Prop({ required: true })
   timestamp: Date;
 
   @Prop({ required: true })
-  latestAt: Date;
+  latest_at: Date;
+
+  readonly _id?: string;
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);

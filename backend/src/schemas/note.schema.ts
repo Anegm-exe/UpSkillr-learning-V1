@@ -6,10 +6,10 @@ export type NoteDocument = Note & Document;
 @Schema()
 export class Note {
   @Prop({ required: true , ref: 'User' })
-  userId: Types.ObjectId;
+  user_id: String;
 
   @Prop({ required: false , ref: 'Course' })
-  courseId: Types.ObjectId;
+  course_id: String;
 
   @Prop({ required: true })
   content: string;
@@ -18,7 +18,9 @@ export class Note {
   timestamp: Date;
 
   @Prop({ default: Date.now })
-  lastUpdated: Date;
+  last_updated: Date;
+
+  readonly _id?: string;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);
