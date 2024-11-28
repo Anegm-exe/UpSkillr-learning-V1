@@ -1,24 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { Notes,NotesSchema } from 'src/schemas/notes.schema';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable,NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model,Types } from 'mongoose';
+import { Note,NoteDocument} from 'src/schemas/note.schema';
 
 @Injectable()
 export class NoteService {
+  constructor(@InjectModel(Note.name) private noteModel: Model<NoteDocument>,) { }
   // create a note
-  async create(noteData: any): Promise<any> { 
-    const note = new Notes(noteData); 
+  async create(noteData: Note): Promise<Note> { 
+    const note = new this.noteModel(noteData); 
     return await note.save(); 
   }
 
   //retrieve all notes
-  async findAll() : Promise<any>{
-    const notes = Notes.find();
-    return notes ;
-  }
-
+  async findAll(): Promise<Note[]> {
+    return this.noteModel.find().exec();
+}
   //get note by id
- async findOne(id: number) : Promise<any>  {
-    const note = await Notes.findById(id);
+ async findOne(id: Types.ObjectId): Promise<Note> {
+    const note = await this.noteModel.findOne(id).exec();
     if (!note) {
       throw new NotFoundException(`Note with id #${id} not found`);
     }
@@ -26,8 +26,8 @@ export class NoteService {
   }
 
   //get note by course id
-  async findByCourseId(courseId: number): Promise<any[]> {
-    const notes = await Notes.find({ courseId }); // Query notes with the given courseId
+  async findByCourseId(courseId: number): Promise<Note[]> {
+    const notes = await this.noteModel.find({ courseId }).exec(); // Query notes with the given courseId
     if (!notes || notes.length === 0) {
       throw new NotFoundException(`No notes found for course id #${courseId}`);
     }
@@ -35,22 +35,20 @@ export class NoteService {
   }
 
   //update note
-  async update(id: number, updateData: any): Promise<any> {
-    const note = await Notes.findById(id);
-    if (!note) {
-      throw new NotFoundException(`Note with id #${id} not found`);
+  async update(id: Types.ObjectId, updateData: Partial<Note>): Promise<Note> {
+    const updatedNote = await this.noteModel
+        .findOneAndUpdate({ _id: id }, updateData, { new: true })
+        .exec();
+    if (!updatedNote) {
+        throw new NotFoundException(`Note with ID ${id} not found`);
     }
-    Object.assign(note, updateData); // Merge the update data into the note
-    return await note.save(); 
-  }
-
+    return updatedNote;
+}
   //delete a note
-  async remove(id: number): Promise<{ message: string }> {
-    const note = await Notes.findById(id);
-    if (!note) {
-      throw new NotFoundException(`Note with id #${id} not found`);
+  async delete(id: Types.ObjectId): Promise<void> {
+    const result = await this.noteModel.deleteOne({ _id: id }).exec();
+    if (result.deletedCount === 0) {
+        throw new NotFoundException(`Note with ID ${id} not found`);
     }
-    await note.deleteOne(); 
-    return { message: `Note with id #${id} has been removed` };
-  }
+}
 }
