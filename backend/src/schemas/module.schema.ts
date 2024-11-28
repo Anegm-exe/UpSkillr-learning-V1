@@ -1,13 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types, Document } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type ModuleDocument = Module & Document;
 
 @Schema()
 export class Module {
-  @Prop({ required: true })
-  moduleId: String;
-
   @Prop({ required: true , ref:'Course' })
   course_id: String;
 
