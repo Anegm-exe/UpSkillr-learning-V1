@@ -5,6 +5,9 @@ export type ModuleDocument = Module & Document;
 
 @Schema()
 export class Module {
+  @Prop({ required: true })
+  moduleId: String;
+
   @Prop({ required: true , ref:'Course' })
   course_id: String;
 
