@@ -16,6 +16,8 @@ export class AuthenticationLog {
 
   @Prop({ required: true, enum: ['Success', 'Failure'] })
   status: string;
+
+  readonly _id?: string;
 }
 
 export const AuthenticationLogSchema = SchemaFactory.createForClass(AuthenticationLog);

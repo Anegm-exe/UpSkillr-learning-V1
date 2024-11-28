@@ -19,6 +19,8 @@ export class Content {
 
   @Prop({ required: true })
   latest_at: Date;
+
+  readonly _id?: string;
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);

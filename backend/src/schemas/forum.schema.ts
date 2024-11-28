@@ -27,6 +27,8 @@ export class Forum {
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ForumSchema = SchemaFactory.createForClass(Forum);

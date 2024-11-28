@@ -22,6 +22,8 @@ export class Chat {
 
   @Prop({default: []})
   messages_ids: String[];
+
+  readonly _id?: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

@@ -19,6 +19,8 @@ export class Response{
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ResponseSchema = SchemaFactory.createForClass(Response);

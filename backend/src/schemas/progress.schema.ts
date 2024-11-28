@@ -22,6 +22,8 @@ export class Progress {
 
   @Prop({ required: false, default: 0 })
   opened_times: number;
+
+  readonly _id?: string;
 }
 
 export const ProgressSchema = SchemaFactory.createForClass(Progress);

@@ -16,6 +16,8 @@ export class Notification {
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

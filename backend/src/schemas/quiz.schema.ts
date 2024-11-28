@@ -10,10 +10,12 @@ export class Quiz {
   module_id: String;
 
   @Prop({ required: true })
-  questions: String[]
+  questions: Question[];
 
   @Prop({ default: Date.now })
   timestamp : Date;
+
+  readonly _id?: string;
 }
 
 export const QuizSchema = SchemaFactory.createForClass(Quiz);
