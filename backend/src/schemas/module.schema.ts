@@ -6,7 +6,7 @@ export type ModuleDocument = Module & Document;
 @Schema()
 export class Module {
   @Prop({ required: true , ref:'Course' })
-  courseId: Types.ObjectId;
+  course_id: String;
 
   @Prop({ required: true })
   title: string;

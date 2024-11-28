@@ -6,13 +6,13 @@ export type NotificationDocument = Notification & Document;
 @Schema()
 export class Notification {
   @Prop({ required: true , ref: 'User'})
-  userId: Types.ObjectId;
+  user_id: String;
 
   @Prop({ required: true })
   message: string;
 
   @Prop({ required: false , ref: 'User'})
-  senderId: Types.ObjectId;
+  sender_id: String;
 
   @Prop({ default: Date.now })
   timestamp: Date;

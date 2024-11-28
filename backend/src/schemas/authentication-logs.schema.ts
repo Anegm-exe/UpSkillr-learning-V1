@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types, Document } from "mongoose";
+import { Document } from "mongoose";
 
 export type AuthenticationLogDocument = AuthenticationLog & Document;
 
 @Schema()
 export class AuthenticationLog {
   @Prop({ required: true , ref:'User'})
-  userId: Types.ObjectId;
+  user_id: String;
 
   @Prop({ required: true })
   event: string;
