@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs/common';
-
 import { NotificationService } from './notifications.service';
 import { Notification } from 'src/schemas/Notification.schema';
 import { Types } from 'mongoose';
