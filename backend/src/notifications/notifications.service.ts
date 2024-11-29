@@ -7,7 +7,7 @@ import { Notification,NotificationDocument} from 'src/schemas/Notification.schem
 export class NotificationService {
   constructor(@InjectModel(Notification.name) private notificationModel: Model<NotificationDocument>,) { }
   // create a notification
-  async create(notificationData: Notification): Promise<Notification> { 
+  async create(notificationData: Partial <Notification>): Promise<Notification> { 
     const notification = new this.notificationModel(notificationData); 
     return await notification.save(); 
   }
@@ -17,7 +17,7 @@ export class NotificationService {
     return this.notificationModel.find().exec();
 }
   //get notification by id
- async findOne(id: Types.ObjectId): Promise<Notification> {
+ async findOne(id: String): Promise<Notification> {
     const notification = await this.notificationModel.findOne(id).exec();
     if (!notification) {
       throw new NotFoundException(`Notification with id #${id} not found`);
@@ -26,7 +26,7 @@ export class NotificationService {
   }
 
   //update notification
-  async update(id: Types.ObjectId, updateData: Partial<Notification>): Promise<Notification> {
+  async update(id: String, updateData: Partial<Notification>): Promise<Notification> {
     const updatedNotification = await this.notificationModel
         .findOneAndUpdate({ _id: id }, updateData, { new: true })
         .exec();
@@ -36,10 +36,25 @@ export class NotificationService {
     return updatedNotification;
 }
   //delete a notification
-  async delete(id: Types.ObjectId): Promise<void> {
+  async delete(id: String): Promise<void> {
     const result = await this.notificationModel.deleteOne({ _id: id }).exec();
     if (result.deletedCount === 0) {
         throw new NotFoundException(`Notification with ID ${id} not found`);
     }
 }
+
+async deleteExpiredNotifications(): Promise<number> {
+    const currentTime = new Date();
+    // Deletes notifications where the expiration time has passed
+    const result = await this.notificationModel.deleteMany({
+      $expr: {
+        $lte: [
+          { $add: ['$timestamp', '$expiredTime'] }, 
+          currentTime, 
+        ],
+      },
+    }).exec();
+
+    return result.deletedCount ?? 0;
+  }
 }

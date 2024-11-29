@@ -7,7 +7,7 @@ import { Note,NoteDocument} from 'src/schemas/note.schema';
 export class NoteService {
   constructor(@InjectModel(Note.name) private noteModel: Model<NoteDocument>,) { }
   // create a note
-  async create(noteData: Note): Promise<Note> { 
+  async create(noteData: Partial<Note>): Promise<Note> { 
     const note = new this.noteModel(noteData); 
     return await note.save(); 
   }
@@ -17,7 +17,7 @@ export class NoteService {
     return this.noteModel.find().exec();
 }
   //get note by id
- async findOne(id: Types.ObjectId): Promise<Note> {
+ async findOne(id: String): Promise<Note> {
     const note = await this.noteModel.findOne(id).exec();
     if (!note) {
       throw new NotFoundException(`Note with id #${id} not found`);
@@ -35,7 +35,7 @@ export class NoteService {
   }
 
   //update note
-  async update(id: Types.ObjectId, updateData: Partial<Note>): Promise<Note> {
+  async update(id: String, updateData: Partial<Note>): Promise<Note> {
     const updatedNote = await this.noteModel
         .findOneAndUpdate({ _id: id }, updateData, { new: true })
         .exec();
@@ -45,10 +45,12 @@ export class NoteService {
     return updatedNote;
 }
   //delete a note
-  async delete(id: Types.ObjectId): Promise<void> {
+  async delete(id: String): Promise<void> {
     const result = await this.noteModel.deleteOne({ _id: id }).exec();
     if (result.deletedCount === 0) {
         throw new NotFoundException(`Note with ID ${id} not found`);
     }
 }
+//share a note
+
 }

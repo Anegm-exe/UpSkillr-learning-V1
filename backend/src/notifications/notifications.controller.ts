@@ -22,7 +22,7 @@ export class NotificationsController {
   // Get Notification by ID
   @Get(':id')
   async findNotificationById(@Param('id') id: string): Promise<Notification> {
-    return this.notificationsService.findOne(new Types.ObjectId(id));
+    return this.notificationsService.findOne((id));
   }
 
   // Update a Notification by ID
@@ -31,12 +31,17 @@ export class NotificationsController {
     @Param('id') id: string, 
     @Body() updateData: Partial<Notification>
   ): Promise<Notification> {
-    return this.notificationsService.update(new Types.ObjectId(id), updateData);
+    return this.notificationsService.update((id), updateData);
   }
 
   // Delete a Notification by ID
   @Delete(':id')
   async deleteNotification(@Param('id') id: string): Promise<void> {
-    return this.notificationsService.delete(new Types.ObjectId(id));
+    return this.notificationsService.delete((id));
+  }
+  @Delete()
+  async removeExpiredNotifications(): Promise<void> {
+    const deletedCount = await this.notificationsService.deleteExpiredNotifications();
+    console.log(`Deleted ${deletedCount} expired notifications.`);
   }
 }
