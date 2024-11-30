@@ -8,7 +8,7 @@ export class QuizService {
     constructor(@InjectModel(Quiz.name) private quizModel: Model<QuizDocument>,) { }
 
     // Create A Quiz With The Data Provided
-    async create(quiz: Quiz): Promise<Quiz> {
+    async create(quiz: Partial<Quiz>): Promise<Quiz> {
         const newQuiz = new this.quizModel(quiz);
         return newQuiz.save();
     }

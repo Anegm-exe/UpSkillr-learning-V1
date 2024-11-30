@@ -18,6 +18,23 @@ export class ResponseService {
         return this.responseModel.find().exec();
     }
 
+    async findAllByQuizId(id: String): Promise<Response[]> {
+        const response = await this.responseModel.find({quiz_id : id}).exec()
+        if(!response) {
+            throw new NotFoundException(`Responses with quiz_id ${id} not found`)
+        }
+        return response;
+    }
+
+    async findAllByUserId(id: String): Promise<Response[]> {
+        const response = await this.responseModel.find({user_id : id}).exec()
+        if(!response) {
+            throw new NotFoundException(`Responses with user_id ${id} not found`)
+        }
+        return response;
+    }
+
+
     // Find A Specific Response by ID
     async findOne(id: String): Promise<Response> {
         const response = await this.responseModel.findOne({ _id: id }).exec();

@@ -1,25 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Question, QuestionDocument } from '../schemas/question.schema';
+import { Questions, QuestionsDocument as QuestionDocument } from '../schemas/question.schema';
 
 @Injectable()
 export class QuestionService {
-    constructor(@InjectModel(Question.name) private questionModel: Model<QuestionDocument>,) { }
+    constructor(@InjectModel(Questions.name) private questionModel: Model<QuestionDocument>,) { }
 
     // Create A Question With The Data Provided
-    async create(question: Question): Promise<Question> {
+    async create(question: Questions): Promise<Questions> {
         const newQuestion = new this.questionModel(question);
         return newQuestion.save();
     }
 
     // Get All Questions Existing
-    async findAll(): Promise<Question[]> {
+    async findAll(): Promise<Questions[]> {
         return this.questionModel.find().exec();
     }
 
     // Find A Specific Question by ID
-    async findOne(id: String): Promise<Question> {
+    async findOne(id: String): Promise<Questions> {
         const question = await this.questionModel.findOne({ _id: id }).exec();
         if (!question) {
             throw new NotFoundException(`Question with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class QuestionService {
     }
 
     // Update A Question Based On New-Data
-    async update(id: String, updateData: Partial<Question>): Promise<Question> {
+    async update(id: String, updateData: Partial<Questions>): Promise<Questions> {
         const updatedQuestion = await this.questionModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();

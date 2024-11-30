@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { ProgressService } from '../services/progress.service';
+import { ProgressService } from './progress.service';
 import { Progress } from '../schemas/progress.schema';
 
 @Controller('progress')

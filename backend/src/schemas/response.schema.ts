@@ -5,16 +5,16 @@ export type ResponseDocument = Response & Document;
 
 @Schema()
 export class Response{
-  @Prop({ required: true })
+  @Prop({ required: true, ref: 'User' })
   user_id: String;
 
   @Prop({ required: true, ref: 'Quiz' })
   quiz_id: String;
 
   @Prop({ required: true })
-  answers: {questionId: String; answer: string}[];
+  answers: {questionId: String; answer: number}[];
 
-  @Prop({ required: true })
+  @Prop({ default: 0 })
   score: number;
 
   @Prop({ default: Date.now })

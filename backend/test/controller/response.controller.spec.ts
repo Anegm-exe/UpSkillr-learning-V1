@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ResponseController } from '../../src/controllers/response.controller';
+import { ResponseController } from '../../src/response/response.controller';
 
 describe('ResponceController', () => {
   let controller: ResponseController;
