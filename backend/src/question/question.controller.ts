@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { QuestionService } from '../services/question.service';
-import { Question } from '../schemas/question.schema';
+import { QuestionService as QuestionService } from './question.service';
+import { Questions as Question } from '../schemas/question.schema';
 
 @Controller('question')
 export class QuestionController {
@@ -32,5 +32,6 @@ export class QuestionController {
     @Delete(':id')
     async delete(@Param('id') id: String): Promise<void> {
         return this.questionService.delete(id);
+    
     }
 }
