@@ -20,7 +20,7 @@ export class ContentController {
   }
   @Get(":contentId")
   getContentById(@Param("contentId") contentId: string) {
-    return this.contentService.getContentByContentId(contentId);
+    return this.contentService.getContentById(contentId);
   }
 
   // CHECK LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -42,12 +42,12 @@ export class ContentController {
     return this.contentService.uploadContent(createContentDto);
   }
   @Patch("id")
-  updateContent(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto) {
-    return this.contentService.update(contentId, updateContentDto);
+  update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto) {
+    return this.contentService.updateContent(contentId, updateContentDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.contentService.remove(id);
+    return this.contentService.deleteContent(id);
   }
 }

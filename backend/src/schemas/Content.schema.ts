@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory, Types } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 export type ContentDocument = Content & Document;
@@ -35,8 +35,8 @@ export class Content {
   @Prop({ required: true })
   currentVersion: number;
 
-  @Prop({ type: [FileVersionSchema], required: true })
-  versions: FileVersion[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: "FileVersion" }], required: true })
+  versions: Types.ObjectId[];
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);
