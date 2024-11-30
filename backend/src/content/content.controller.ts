@@ -15,8 +15,8 @@ export class ContentController {
   getAllContent() {
     return this.contentService.getAllContent();
   }
-  @Get()
-  getContentById(@Param("courseId") courseId: string) {
+  @Get(":contentId")
+  getContentById(@Param("contentId") courseId: string) {
     return this.contentService.getContentByCourseId(courseId);
   }
 }
