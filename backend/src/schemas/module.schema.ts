@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type ModuleDocument = Module & Document;
 
@@ -19,6 +19,9 @@ export class Module {
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Content' }], required: true })
+  contentIDs: Types.ObjectId[];
 
   readonly _id?: string;
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { Module } from "../schemas/module.schema";
-import { ModuleService } from "src/services/module.service";
+import { ModuleService } from "src/module/module.service";
 
 @Controller('module')
 export class ModuleController {
