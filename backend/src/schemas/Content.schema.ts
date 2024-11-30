@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory, Types } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document, Types } from "mongoose";
 
 export type ContentDocument = Content & Document;
 export type FileVersionDocument = FileVersion & Document;
