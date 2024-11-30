@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Content, ContentSchema } from 'src/schemas/content.schema'
+import { ContentController } from './content.controller';
 
 @Module({
     imports:[
@@ -9,7 +10,7 @@ import { Content, ContentSchema } from 'src/schemas/content.schema'
             schema: ContentSchema
         }])
     ],
-    controllers:[],
+    controllers:[ContentController],
     providers:[]
 })
 
