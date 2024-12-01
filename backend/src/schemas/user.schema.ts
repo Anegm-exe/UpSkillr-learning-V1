@@ -11,8 +11,12 @@ export class User  {
   @Prop({ required: true, unique: true })
   email: string;
 
+
   @Prop({ required: true })
   password_hash: string;
+
+  @Prop({ required: true, unique: true })
+  dataOfBirth: Date;
 
   @Prop({ required: true, enum: ['student', 'instructor', 'admin'] })
   role: string;
