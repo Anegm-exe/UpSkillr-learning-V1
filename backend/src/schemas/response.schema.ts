@@ -5,20 +5,22 @@ export type ResponseDocument = Response & Document;
 
 @Schema()
 export class Response{
-  @Prop({ required: true })
-  userId: Types.ObjectId;
+  @Prop({ required: true, ref: 'User' })
+  user_id: string;
 
   @Prop({ required: true, ref: 'Quiz' })
-  quizId: Types.ObjectId;
+  quiz_id: string;
 
   @Prop({ required: true })
-  answers: {questionId: Types.ObjectId; answer: string}[];
+  answers: {questionId: string; answer: number}[];
 
-  @Prop({ required: true })
+  @Prop({ default: 0 })
   score: number;
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ResponseSchema = SchemaFactory.createForClass(Response);

@@ -7,26 +7,28 @@ export type ForumDocument = Forum & Document;
 @Schema()
 export class Forum {
   @Prop({ required: true , ref:'Course'})
-  courseId: Types.ObjectId;
+  course_id: string;
 
   @Prop({ required: true , ref:'User'}) 
-  user_id: Types.ObjectId;
+  user_id: string;
 
   @Prop({ required: true })
   title: Message;
 
   @Prop({
-    type: [Message],
+    type: [string],
     required: true,
     validate: {
       validator: (value: Message[]) => value.length >= 1,
       message: 'At least 1 Message for the form to be created !',
     },
   })
-  messages: Message[];
+  messages: string[];
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const ForumSchema = SchemaFactory.createForClass(Forum);

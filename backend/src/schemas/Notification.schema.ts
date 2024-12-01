@@ -6,16 +6,18 @@ export type NotificationDocument = Notification & Document;
 @Schema()
 export class Notification {
   @Prop({ required: true , ref: 'User'})
-  userId: Types.ObjectId;
+  user_id: string;
 
   @Prop({ required: true })
   message: string;
 
   @Prop({ required: false , ref: 'User'})
-  senderId: Types.ObjectId;
+  sender_id: string;
 
   @Prop({ default: Date.now })
   timestamp: Date;
+
+  readonly _id?: string;
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

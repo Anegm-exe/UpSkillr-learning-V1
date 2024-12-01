@@ -6,22 +6,24 @@ export type ProgressDocument = Progress & Document;
 @Schema()
 export class Progress {
   @Prop({ required: true , ref: 'User'})
-  userId: Types.ObjectId;
+  user_id: string;
 
   @Prop({ required: true , ref: 'Course'})
-  courseId: Types.ObjectId;
+  course_id: string;
 
   @Prop({ required: true, min: 0, max: 100 })
-  completionPercentage: number;
+  completion_percentage: number;
 
   @Prop({ default: Date.now })
-  lastAccessed: Date;
+  last_accessed: Date;
 
   @Prop({ required: false, default: 0 })
-  averageQuiz: number;
+  average_quiz: number;
 
   @Prop({ required: false, default: 0 })
-  openedTimes: number;
+  opened_times: number;
+
+  readonly _id?: string;
 }
 
 export const ProgressSchema = SchemaFactory.createForClass(Progress);
