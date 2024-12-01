@@ -19,7 +19,7 @@ export class ProgressService {
     }
 
     // Find A Specific Progress by ID
-    async findOne(id: String): Promise<Progress> {
+    async findOne(id: string): Promise<Progress> {
         const progress = await this.progressModel.findOne({ _id: id }).exec();
         if (!progress) {
             throw new NotFoundException(`Progress with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class ProgressService {
     }
 
     // Update A Progress Based On New-Data
-    async update(id: String, updateData: Partial<Progress>): Promise<Progress> {
+    async update(id: string, updateData: Partial<Progress>): Promise<Progress> {
         const updatedProgress = await this.progressModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();
@@ -39,7 +39,7 @@ export class ProgressService {
     }
 
     // Delete A Progress
-    async delete(id: String): Promise<void> {
+    async delete(id: string): Promise<void> {
         const result = await this.progressModel.deleteOne({ _id: id }).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Progress with ID ${id} not found`);

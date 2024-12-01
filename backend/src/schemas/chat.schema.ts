@@ -10,15 +10,15 @@ export class Chat {
   name: string;
 
   @Prop({
-    type: [String],
+    type: [string],
     ref: 'User',
     required: true,
     validate: {
-      validator: (value: String[]) => value.length >= 2,
+      validator: (value: string[]) => value.length >= 2,
       message: 'At least 2 users are required',
     },
   })
-  user_ids: String[];
+  user_ids: string[];
 
   @Prop({default: []})
   messages: Message[];

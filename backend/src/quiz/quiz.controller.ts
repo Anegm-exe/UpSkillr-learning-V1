@@ -41,13 +41,13 @@ export class QuizController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: String): Promise<Quiz> {
+    async findOne(@Param('id') id: string): Promise<Quiz> {
         return this.quizService.findOne(id);
     }
 
     @Put(':id')
     async update(
-        @Param('id') id: String,
+        @Param('id') id: string,
         @Body('quiz') updateQuizDto: Partial<Quiz>,
         @Body('questions') updateQestionDto: Partial<Questions[]>
     ): Promise<Quiz> {
@@ -60,7 +60,7 @@ export class QuizController {
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: String): Promise<void> {
+    async delete(@Param('id') id: string): Promise<void> {
         const quiz = await this.quizService.findOne(id);
         await Promise.all(
             quiz.questions.map(async (id) => {

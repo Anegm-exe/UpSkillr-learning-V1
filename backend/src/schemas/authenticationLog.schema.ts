@@ -6,7 +6,7 @@ export type AuthenticationLogDocument = AuthenticationLog & Document;
 @Schema()
 export class AuthenticationLog {
   @Prop({ required: true , ref:'User'})
-  user_id: String;
+  user_id: string;
 
   @Prop({ required: true })
   event: string;
