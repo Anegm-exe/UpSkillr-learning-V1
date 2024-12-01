@@ -1,17 +1,26 @@
-import { Schema, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-// Define Schema
-export const UserSchema = new Schema(
-  {
-    userId: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
-    role: { type: String, required: true, enum: ['student', 'instructor', 'admin'] },
-    profilePictureUrl: { type: String, required: false },
-  },
-  { timestamps: { createdAt: 'createdAt' } }
-);
+export type UserDocument = User & Document;
 
-// Define Model
-export const User = model('User', UserSchema);
+@Schema()
+export class User  {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ required: true })
+  password_hash: string;
+
+  @Prop({ required: true, enum: ['student', 'instructor', 'admin'] })
+  role: string;
+
+  @Prop({ required: false, default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'})
+  profile_picture_url: string;
+
+  readonly _id?: string;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);

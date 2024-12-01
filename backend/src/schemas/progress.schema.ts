@@ -1,30 +1,29 @@
-import { Schema, model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types, Document } from 'mongoose';
 
-export const ProgressSchema = new Schema({
-  progressId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  userId: {
-    type: String, 
-    required: true,
-  },
-  courseId: {
-    type: String, // This could be a reference to the Course model
-    required: true,
-  },
-  completionPercentage: {
-    type: Number, // Represents the completion percentage (0-100)
-    required: true,
-    min: 0,
-    max: 100,
-  },
-  lastAccessed: {
-    type: Date,
-    default: Date.now, // This will automatically set to the current date and time
-  },
-});
+export type ProgressDocument = Progress & Document;
 
-// Define the Progress model
-export const Progress = model('Progress', ProgressSchema);
+@Schema()
+export class Progress {
+  @Prop({ required: true , ref: 'User'})
+  user_id: string;
+
+  @Prop({ required: true , ref: 'Course'})
+  course_id: string;
+
+  @Prop({ required: true, min: 0, max: 100 })
+  completion_percentage: number;
+
+  @Prop({ default: Date.now })
+  last_accessed: Date;
+
+  @Prop({ required: false, default: 0 })
+  average_quiz: number;
+
+  @Prop({ required: false, default: 0 })
+  opened_times: number;
+
+  readonly _id?: string;
+}
+
+export const ProgressSchema = SchemaFactory.createForClass(Progress);
