@@ -1,81 +1,52 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateChatDTO, CreateMessageDTO, GetChatDetailsDTO, GetAllChatsDTO, GetRecentChatDTO, EditMessagesDTO, DeleteMessageDTO } from './chat.dto';
 import { Chat, ChatDocument } from '../schemas/chat.schema';
 import { Message, MessageDocument } from 'src/schemas/message.schema';
 import { Model } from 'mongoose'
+//import {userS} //import user service to check if email exists for a user's db
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
-    @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>
+  // @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>
   ) { }
-  async createChat(User_Id, createChatDto: CreateChatDTO): Promise<Chat> {
-    const newChat = new this.chatModel(User_Id, createChatDto); //dto for creating a chat
+  async createChat( createChatDto: Partial<Chat>, emails:string[]): Promise<Chat> {
+  //   const user_ids = await Promise.all(
+  //     emails.map(async (email) => {
+  //         return (await this..create(question))._id;
+  //     }
+  // )); 
+    createChatDto.user_ids.push()
+    const newChat = new this.chatModel(createChatDto); //dto for creating a chat
     return newChat.save(); // saves to db
   }
-  async createMessage(createMessageDTO: CreateMessageDTO): Promise<Message> {
-    const newMessage = new this.messageModel(createMessageDTO);
-    return newMessage.save(); //saves my new message to the db
-  }
-  async findAllChats(chat_id, getAllChatsDTO: GetAllChatsDTO) {
-    const User_Id = getAllChatsDTO.User_Id;
-    const chats = await this.chatModel.findById(chat_id);
+  async findAllChats(User_Id: string) {
+    const chats = await this.chatModel.find({ User_id: User_Id });
     return chats;
   }
-  async getChatDetails(chat_id: String, getChatDetailsDto: GetChatDetailsDTO) {
-    const chat = await this.chatModel.findById(chat_id);
+  async getChatDetails(chat_id: String) {
+    const chat = await this.chatModel.findById({ _id: chat_id });
     if (!chat) {
       throw new NotFoundException('Chat not found');
     }
-    return this.chatModel.findById(chat_id, getChatDetailsDto).sort(); //ezaayyy a3mela descendingg
+    return this.chatModel.findById({ _id: chat_id })
   }
-  async getRecentChat(chat_id, getRecentChat: GetRecentChatDTO) {
-    const User_Id = getRecentChat;
-    const recent_chat = await this.chatModel.find(chat_id).sort().exec();
+  async getRecentChat(chat_id: string) {
+    const recent_chat = await this.chatModel.find({ _id: chat_id }).sort().exec();
     if (!recent_chat) {
       throw new NotFoundException('not found');
     }
     return recent_chat;
   }
-  async editMessages(editMessages: EditMessagesDTO) {
-    const message_id = EditMessagesDTO
-    const message = await this.messageModel.findById(message_id);
-    if (message) {
-      message.text = editMessages.newText;
-      return message.save()
-    }
-    throw new Error('You cannot edit this message')
-  }
+
   async deleteChat(chat_id: string) {
-    const chat = await this.chatModel.findById(chat_id)
+    const chat = await this.chatModel.findById({_id: chat_id})
     if (!chat) {
       throw new Error('chat not found');
     }
     await this.chatModel.deleteOne({ chat_id }, { deletedAt: new Date() });
     return { success: true };
   }
-  async deleteMessage(chat_id: string, message_id: string, dto: DeleteMessageDTO) {
-    const message = await this.messageModel.findOne({ where: { id: message_id, chat_id } }, dto);
-    if (!message) {
-      throw new NotFoundException('Message not found');
-    }
-    await this.messageModel.deleteOne({ message_id }, { deletedAt: new Date() })
-    return { success: true };
-  }
-  async editMessage(chat_id: string, message_id: string, newText: string) {
-    const chat = await this.chatModel.findById(chat_id);
-    if (!chat) {
-      throw new Error('not found');
-    }
-    const message = chat.messages.find((message) => message._id == message_id);
-    if (!message) {
-      throw new NotFoundException('message not found');
-    }
-    message.text = newText;
-    message.updatedAt = new Date();
-    await this.messageModel.save(message);
-    return this.chatModel.findOne({ chat_id }, ['messages']);
-  }
+
 }
