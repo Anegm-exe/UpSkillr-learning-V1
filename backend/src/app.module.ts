@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common';
 import { QuizService } from './quiz/quiz.service';
 import { QuizController } from './quiz/quiz.controller';
 import { ResponseController } from './response/response.controller';
