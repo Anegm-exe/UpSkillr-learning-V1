@@ -8,7 +8,7 @@ export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,) { }
 
     // Create A User With The Data Provided
-    async create(user: User): Promise<User> {
+    async create(user: Partial<User>): Promise<User> {
         const newUser = new this.userModel(user);
         return newUser.save();
     }
@@ -33,7 +33,7 @@ export class UserService {
 
     // Find Specific User By Email
     async findByEmail(email: string): Promise<User | null> {
-        return this.userModel.findOne({ email }).exec();
+        return this.userModel.findOne({ email:email }).exec();
     }
 
     // Update A User Based On New-Data

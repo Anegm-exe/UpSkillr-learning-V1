@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, HttpException, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterRequestDto } from './dto/RegisterRequestDto';
 import { SignInDto } from './dto/SignInDto';
+import { User } from 'src/schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -10,7 +10,6 @@ export class AuthController {
   async signIn(@Body() signInDto: SignInDto, @Res({ passthrough: true }) res) {
     try {
       const result = await this.authService.signIn(signInDto.email, signInDto.password);
-
       res.cookie('token', result.access_token, {
         httpOnly: true, // Prevents client-side JavaScript access
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
@@ -20,7 +19,7 @@ export class AuthController {
       return {
         statusCode: HttpStatus.OK,
         message: 'Login successful',
-        user: result.payload,
+        ...result.payload
       };
     } catch (error) {
         console.log(error)
@@ -41,7 +40,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async signup(@Body() registerRequestDto: RegisterRequestDto) {
+  async signup(@Body() registerRequestDto: Partial<User>) {
     try {
       // Call the AuthService to handle registration
       const result = await this.authService.register(registerRequestDto);

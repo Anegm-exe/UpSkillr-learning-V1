@@ -16,7 +16,7 @@ export class Forum {
   title: Message;
 
   @Prop({
-    type: [string],
+    type: [String],
     required: true,
     validate: {
       validator: (value: Message[]) => value.length >= 1,

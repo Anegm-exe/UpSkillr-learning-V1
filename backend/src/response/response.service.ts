@@ -2,13 +2,26 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Response, ResponseDocument } from '../schemas/response.schema';
+import { QuestionsDocument } from 'src/schemas/question.schema';
+import { QuestionService } from 'src/question/question.service';
 
 @Injectable()
 export class ResponseService {
-    constructor(@InjectModel(Response.name) private responseModel: Model<ResponseDocument>,) { }
+    constructor(
+        @InjectModel(Response.name) private responseModel: Model<ResponseDocument>,
+        private readonly questionService: QuestionService
+    ) { }
 
     // Create A Response With The Data Provided
-    async create(response: Response): Promise<Response> {
+    async create(response: Partial<Response>): Promise<Response> {
+        let score = 0;
+        for (const answerResponse of response.answers) {
+            const question = await this.questionService.findOne(answerResponse.questionId);
+            if (question.answer === answerResponse.answer) {
+                score++;
+            }
+        }
+        response.score = score;
         const newResponse = new this.responseModel(response);
         return newResponse.save();
     }
