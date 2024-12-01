@@ -6,10 +6,10 @@ export type NoteDocument = Note & Document;
 @Schema()
 export class Note {
   @Prop({ required: true , ref: 'User' })
-  user_id: String;
+  user_id: string;
 
   @Prop({ required: false , ref: 'Course' })
-  course_id: String;
+  course_id: string;
 
   @Prop({ required: true })
   content: string;

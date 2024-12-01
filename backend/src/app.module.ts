@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common';
 import { QuizService } from './quiz/quiz.service';
 import { QuizController } from './quiz/quiz.controller';
 import { ResponseController } from './response/response.controller';
@@ -22,6 +21,7 @@ import { AuthenticationLogModule } from './authenticationlog/authenticationlog.m
 import { ContentModule } from './content/content.module';
 import { NotificationModule } from './notification/notification.module';
 import { ForumModule } from './forum/forum.module';
+import { AuthModule } from './Auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +40,7 @@ import { ForumModule } from './forum/forum.module';
     ContentModule,
     NotificationModule,
     ForumModule,
+    AuthModule
   ]
 })
 export class AppModule {}

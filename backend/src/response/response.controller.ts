@@ -32,30 +32,30 @@ export class ResponseController {
     }
 
     @Get('quiz/:id')
-    async findAllByQuizId(@Param('id') id: String): Promise<Response[]> {
+    async findAllByQuizId(@Param('id') id: string): Promise<Response[]> {
         return this.responseService.findAllByQuizId(id);
     } 
 
     @Get('user/:id')
-    async findAllByUserId(@Param('id') id: String): Promise<Response[]> {
+    async findAllByUserId(@Param('id') id: string): Promise<Response[]> {
         return this.responseService.findAllByUserId(id);
     } 
 
     @Get(':id')
-    async findOne(@Param('id') id: String): Promise<Response> {
+    async findOne(@Param('id') id: string): Promise<Response> {
         return this.responseService.findOne(id);
     }
 
     @Put(':id')
     async update(
-        @Param('id') id: String,
+        @Param('id') id: string,
         @Body() updateResponseDto: Partial<Response>,
     ): Promise<Response> {
         return this.responseService.update(id,updateResponseDto);
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: String): Promise<void> {
+    async delete(@Param('id') id: string): Promise<void> {
         return this.responseService.delete(id);
     }
 }

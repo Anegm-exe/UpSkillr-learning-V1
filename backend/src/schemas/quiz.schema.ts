@@ -7,10 +7,10 @@ export type QuizDocument = Quiz & Document;
 @Schema()
 export class Quiz {
   @Prop({ required: true , ref: 'Module' })
-  module_id: String;
+  module_id: string;
 
   @Prop({ required: true })
-  questions: String[];
+  questions: string[];
 
   @Prop({ default: Date.now })
   timestamp : Date;
