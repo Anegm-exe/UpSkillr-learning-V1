@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch } from "@nestjs/common";
+import { Controller, Get, Param, Post, Body, Delete, Patch, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { CreateContentDto } from "src/dto/createContent.dto";
 import { ContentService } from "./content.service";
 import { UpdateContentDto } from "src/dto/updateContent.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("api/content")
 export class ContentController {
@@ -30,16 +31,17 @@ export class ContentController {
 
   //this should also become moduleID not courseID, it is unlikely someone will fetch content based
   //on course and not module
-  @Get("course/:courseId")
-  getContentByCourseId(@Param("courseId") courseId: string) {
-    return this.contentService.getContentByCourseId(courseId);
-  }
+  // @Get("course/:courseId")
+  // getContentByCourseId(@Param("courseId") courseId: string) {
+  //   return this.contentService.getContentByCourseId(courseId);
+  // }
 
   //TODO:
   //yet to add the file attribute in the body
-  @Post()
-  uploadContent(@Body() createContentDto: CreateContentDto) {
-    return this.contentService.uploadContent(createContentDto);
+  @Post("upload")
+  @UseInterceptors(FileInterceptor("file"))
+  uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File) {
+    return this.contentService.uploadContent(createContentDto, file);
   }
   @Patch("id")
   update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto) {

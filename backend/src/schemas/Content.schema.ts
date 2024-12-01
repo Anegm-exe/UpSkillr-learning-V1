@@ -7,9 +7,6 @@ export type FileVersionDocument = FileVersion & Document;
 @Schema()
 export class FileVersion {
   @Prop({ required: true })
-  version: number;
-
-  @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
@@ -27,13 +24,10 @@ export const FileVersionSchema = SchemaFactory.createForClass(FileVersion);
 @Schema()
 export class Content {
   @Prop({ required: true })
-  id: string;
-
-  @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
-  currentVersion: number;
+  currentVersion: Types.ObjectId;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: "FileVersion" }], required: true })
   versions: Types.ObjectId[];
