@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateContentDto } from "src/dto/createContent.dto";
@@ -14,10 +14,11 @@ export class ContentService {
     @InjectModel(FileVersion.name) private fileVersionModel: Model<FileVersionDocument>
   ) {}
 
-  getAllContent() {
-    //
+  async getAllContent() {
+    return await this.contentModel.find().exec();
   }
 
+  //yet to add and check if student can access content, maybe by adding course id to content
   async getContentById(contentId: string) {
     return await this.contentModel.findById(contentId).exec();
   }
@@ -49,11 +50,57 @@ export class ContentService {
     };
   }
 
-  updateContent(contentId: string, updateContentDto: UpdateContentDto) {
-    //
+  async updateContent(contentId: string, updateContentDto: UpdateContentDto, file: Express.Multer.File) {
+    const content = await this.contentModel.findById(contentId).exec();
+    if (!content) {
+      throw new NotFoundException(`Content with ID ${contentId} not found`);
+    }
+
+    const uploadDir = "./uploads";
+    const fileName = `${uuidv4()}-${file.originalname}`;
+    const filePath = path.join(uploadDir, fileName);
+    fs.writeFileSync(filePath, file.buffer);
+
+    const newFileVersion = new this.fileVersionModel({
+      title: updateContentDto.title,
+      url: filePath,
+      desc: updateContentDto.desc,
+      createdAt: new Date(),
+    });
+
+    await newFileVersion.save();
+
+    content.versions.push(newFileVersion._id as any);
+    content.currentVersion = newFileVersion._id as any;
+
+    await content.save();
+
+    return {
+      updatedContent: content,
+      url: filePath,
+    };
   }
 
-  deleteContent(contentId: string) {
-    //
+  async deleteContent(contentId: string) {
+    const content = await this.contentModel.findById(contentId).exec();
+    if (!content) {
+      throw new NotFoundException(`Content with ID ${contentId} not found`);
+    }
+
+    for (const versionId of content.versions) {
+      const fileVersion = await this.fileVersionModel.findById(versionId).exec();
+      if (fileVersion) {
+        const filePath = fileVersion.url;
+        if (fs.existsSync(filePath)) {
+          //unlink deletes the file from the directory
+          fs.unlinkSync(filePath);
+        }
+        await this.fileVersionModel.findByIdAndDelete(versionId).exec();
+      }
+    }
+
+    await this.contentModel.findByIdAndDelete(contentId).exec();
+
+    return { message: "Content and associated file versions deleted successfully" };
   }
 }

@@ -44,8 +44,8 @@ export class ContentController {
     return this.contentService.uploadContent(createContentDto, file);
   }
   @Patch("id")
-  update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto) {
-    return this.contentService.updateContent(contentId, updateContentDto);
+  update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto, @UploadedFile() file: Express.Multer.File) {
+    return this.contentService.updateContent(contentId, updateContentDto, file);
   }
 
   @Delete(":id")
