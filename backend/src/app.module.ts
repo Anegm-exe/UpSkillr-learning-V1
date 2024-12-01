@@ -22,6 +22,7 @@ import { AuthenticationLogModule } from './authenticationlog/authenticationlog.m
 import { ContentModule } from './content/content.module';
 import { NotificationModule } from './notification/notification.module';
 import { ForumModule } from './forum/forum.module';
+import { AuthModule } from './Auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ForumModule } from './forum/forum.module';
     ContentModule,
     NotificationModule,
     ForumModule,
+    AuthModule
   ]
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ export class Chat {
   name: string;
 
   @Prop({
-    type: [string],
+    type: [String],
     ref: 'User',
     required: true,
     validate: {
