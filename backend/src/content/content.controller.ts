@@ -43,7 +43,8 @@ export class ContentController {
   uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File) {
     return this.contentService.uploadContent(createContentDto, file);
   }
-  @Patch("id")
+  @Patch(":id")
+  @UseInterceptors(FileInterceptor("file"))
   update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto, @UploadedFile() file: Express.Multer.File) {
     return this.contentService.updateContent(contentId, updateContentDto, file);
   }

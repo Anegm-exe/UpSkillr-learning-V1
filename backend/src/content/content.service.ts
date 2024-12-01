@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, isValidObjectId } from "mongoose";
 import { CreateContentDto } from "src/dto/createContent.dto";
 import { UpdateContentDto } from "src/dto/updateContent.dto";
 import { Content, ContentDocument, FileVersion, FileVersionDocument } from "src/schemas/content.schema";
@@ -20,6 +20,9 @@ export class ContentService {
 
   //yet to add and check if student can access content, maybe by adding course id to content
   async getContentById(contentId: string) {
+    if (!isValidObjectId(contentId)) {
+      throw new NotFoundException(`Invalid ID format: ${contentId}`);
+    }
     return await this.contentModel.findById(contentId).exec();
   }
 
@@ -50,34 +53,42 @@ export class ContentService {
     };
   }
 
-  async updateContent(contentId: string, updateContentDto: UpdateContentDto, file: Express.Multer.File) {
+  async updateContent(contentId: string, updateContentDto: UpdateContentDto, file?: Express.Multer.File) {
     const content = await this.contentModel.findById(contentId).exec();
     if (!content) {
       throw new NotFoundException(`Content with ID ${contentId} not found`);
     }
 
-    const uploadDir = "./uploads";
-    const fileName = `${uuidv4()}-${file.originalname}`;
-    const filePath = path.join(uploadDir, fileName);
-    fs.writeFileSync(filePath, file.buffer);
+    let newFileVersion;
+    if (file) {
+      const uploadDir = "./uploads";
+      const fileName = `${uuidv4()}-${file.originalname}`;
+      const filePath = path.join(uploadDir, fileName);
+      fs.writeFileSync(filePath, file.buffer);
 
-    const newFileVersion = new this.fileVersionModel({
-      title: updateContentDto.title,
-      url: filePath,
-      desc: updateContentDto.desc,
-      createdAt: new Date(),
-    });
+      newFileVersion = new this.fileVersionModel({
+        title: updateContentDto.title || content.title,
+        url: filePath,
+        desc: updateContentDto.desc || "",
+        createdAt: new Date(),
+      });
 
-    await newFileVersion.save();
-
-    content.versions.push(newFileVersion._id as any);
-    content.currentVersion = newFileVersion._id as any;
+      await newFileVersion.save();
+      console.log(newFileVersion);
+      content.versions.push(newFileVersion._id as any);
+      content.currentVersion = newFileVersion._id as any;
+    }
+    console.log(updateContentDto.title);
+    if (updateContentDto.title) {
+      content.title = updateContentDto.title;
+    }
 
     await content.save();
+    const updatedContent = await this.contentModel.findById(contentId).populate("versions").exec();
 
     return {
-      updatedContent: content,
-      url: filePath,
+      updatedContent,
+      url: newFileVersion ? newFileVersion.url : undefined,
     };
   }
 
