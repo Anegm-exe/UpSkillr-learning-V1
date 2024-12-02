@@ -22,6 +22,7 @@ import { ContentModule } from './content/content.module';
 import { NotificationModule } from './notification/notification.module';
 import { ForumModule } from './forum/forum.module';
 import { AuthModule } from './Auth/auth.module';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [
