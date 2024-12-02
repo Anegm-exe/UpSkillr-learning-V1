@@ -1,30 +1,21 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ResponseService } from './response.service';
 import { Response } from '../schemas/response.schema';
-import { QuestionService } from 'src/question/question.service';
+import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
+import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 
 @Controller('response')
 export class ResponseController {
     constructor(
         private readonly responseService: ResponseService,
-        private readonly qustionsService : QuestionService
     ) { }
 
+    // @Roles(Role.Student)
+    // @UseGuards(authorizationGuard)
     @Post()
-    async create(@Body() createResponseDto: Response): Promise<Response> {
-        const quiz = await this.responseService.create(createResponseDto);
-        console.log(quiz);
-        let score = 0;
-        for (const answerResponse of createResponseDto.answers) {
-            const question = await this.qustionsService.findOne(answerResponse.questionId);
-            if (question.answer === answerResponse.answer) {
-                score++;
-            }
-        }
-        createResponseDto.score = score;
-        return await this.responseService.update(quiz._id,createResponseDto)
+    async create(@Body() createResponseDto: Partial<Response>): Promise<Response> {
+        return this.responseService.create(createResponseDto)
     }
-
 
     @Get()
     async findAll(): Promise<Response[]> {

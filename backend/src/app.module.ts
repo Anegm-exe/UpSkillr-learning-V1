@@ -1,11 +1,3 @@
-import { QuizService } from './quiz/quiz.service';
-import { QuizController } from './quiz/quiz.controller';
-import { ResponseController } from './response/response.controller';
-import { ProgressController } from './progress/progress.controller';
-import { ProgressService } from './progress/progress.service';
-import { ResponseService } from './response/response.service';
-import { QuestionService } from './question/question.service';
-import { QuestionController } from './question/question.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProgressModule } from './progress/progress.module';
 import { QuizModule } from './quiz/quiz.module';
@@ -23,6 +15,7 @@ import { NotificationModule } from './notification/notification.module';
 import { ForumModule } from './forum/forum.module';
 import { AuthModule } from './Auth/auth.module';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -41,7 +34,10 @@ import { Module } from '@nestjs/common';
     ContentModule,
     NotificationModule,
     ForumModule,
-    AuthModule
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true, 
+    })
   ]
 })
 export class AppModule {}
