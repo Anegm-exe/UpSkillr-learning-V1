@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type ModuleDocument = module & Document;
+export type ModuleDocument = Modules & Document;
 
 @Schema()
-export class module {
+export class Modules {
   @Prop({ required: true , ref:'Course' })
   course_id: string;
 
@@ -26,4 +26,4 @@ export class module {
   readonly _id?: string;
 }
 
-export const ModuleSchema = SchemaFactory.createForClass(module);
+export const ModuleSchema = SchemaFactory.createForClass(Modules);
