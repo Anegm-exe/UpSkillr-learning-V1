@@ -24,6 +24,8 @@ export class Chat {
   messages: Message[];
 
   readonly _id?: string;
+
+
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

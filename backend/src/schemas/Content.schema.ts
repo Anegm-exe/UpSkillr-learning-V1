@@ -1,26 +1,36 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type ContentDocument = Content & Document;
+export type FileVersionDocument = FileVersion & Document;
+
+@Schema()
+export class FileVersion {
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  url: string;
+
+  @Prop({ required: true })
+  desc: string;
+
+  @Prop({ required: true })
+  createdAt: Date;
+}
+
+export const FileVersionSchema = SchemaFactory.createForClass(FileVersion);
 
 @Schema()
 export class Content {
   @Prop({ required: true })
-  versions: string;
+  title: string;
 
   @Prop({ required: true })
-  name: string;
+  currentVersion: Types.ObjectId;
 
-  @Prop({ required: true })
-  url_array: string[];
-
-  @Prop({ required: true })
-  timestamp: Date;
-
-  @Prop({ required: true })
-  latest_at: Date;
-
-  readonly _id?: string;
+  @Prop({ type: [{ type: Types.ObjectId, ref: "FileVersion" }], required: true })
+  versions: Types.ObjectId[];
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);
