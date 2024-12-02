@@ -1,35 +1,52 @@
-import { Controller, Post, Get, Body, Query, Put, Patch, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Put, Patch, Delete, Param, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Chat } from '../schemas/chat.schema'
-import { GetChatDetailsDTO } from './chat.dto';
-import { plainToInstance } from 'class-transformer';
+import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './chat.dto';
+import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
+import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) { }
 
+  //creating a chat
   @Post(':id')
-  async createChat(@Body('chat') createChatDTO: Partial<Chat>, @Body('emails') email: string[]) {
-    return this.chatService.createChat(createChatDTO, email); //creating 
+  async createChat(@Body('chat') createChatDTO: CreateChatDTO, @Body('emails') email: string[]) {
+    return await this.chatService.createChat(createChatDTO, email); //creating 
   }
 
-  @Get(':chat_id')
-  async getAllChats(@Param('chat_id') chat_id: string) { 
-    return this.chatService.findAllChats(chat_id);
+  //getting all chats based on user_id
+  @Get(':user_id')
+  async getAllChats(@Param('user_id') user_id: string) {
+    return await this.chatService.findAllChats(user_id);
   }
+
+  //check for chat details
+  /* a get method to get me a chat details by giving it the chat_id*/
   @Get(':chat_id/messages')
-  async getChatDetails(@Param('message_id') chat_id: string) {
-    const getChatDetailsDto = plainToInstance(GetChatDetailsDTO, { chat_id }) //which, message or chat id??
-    return this.chatService.getChatDetails(chat_id); /* a get method to get me a chat details by giving it the chat_id*/
+  async getChatDetails(@Param('chat_id') chat_id: string, createChatDTO: CreateChatDTO) {
+    return await this.chatService.getChatDetails(chat_id, createChatDTO);
   }
-  @Get(':recent')
-  async getRecentChat(@Param('chat_id') chat_id: string) {
-    return this.chatService.getRecentChat(chat_id);
-  }
+
+
+  // deleted a chat (only done by an admin)
+  //for when a user registers they should pass through the authorization guard
+  @Roles(Role.Admin)
+  @UseGuards(authorizationGuard)
+
   @Delete(':chat_id')
   async deleteChat(@Param('chat_id') chat_id: string) {
-    return this.chatService.deleteChat(chat_id);
+    return await this.chatService.deleteChat(chat_id);
   }
 
+  //updating a chat
+  @Roles(Role.Admin)
+  @UseGuards(authorizationGuard)
+
+
+  @Patch(':chat_id')
+  async updateChat(@Param('chat_id') chat_id: string, @Body() updateChatDTO: UpdateChatDTO) {
+    return await this.chatService.updateChat(chat_id, updateChatDTO);
+  }
 }
 
 /* body decorator binds the request body to the DTO parameter
