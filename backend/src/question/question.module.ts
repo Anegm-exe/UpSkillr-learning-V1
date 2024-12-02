@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { Questions, QuestionsSchema } from 'src/schemas/question.schema'
 import { QuestionService } from './question.service'
 import { QuestionController } from './question.controller'
+import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware'
 
 @Module({
     imports:[
@@ -18,4 +19,10 @@ import { QuestionController } from './question.controller'
     exports: [QuestionService]
 })
 
-export class QuestionModule {}
+export class QuestionModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(AuthenticationMiddleware)
+            .forRoutes(QuestionController);
+    }
+}
