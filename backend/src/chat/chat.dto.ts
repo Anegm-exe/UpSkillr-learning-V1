@@ -34,11 +34,11 @@ export class CreateMessageDTO {
 export class CreateChatDTO {
     @IsString()
     @IsNotEmpty()
-    readonly name: string;
+     name: string;
 
     @IsString()
     @IsNotEmpty()
-    readonly User_Id: string;
+    user_ids: string[];
 
     @IsArray()
     @ValidateNested({ each: true })
@@ -100,5 +100,17 @@ export class DeleteMessageDTO {
 
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
+    deleted_at:Date;
+
+
+    @IsString()
+    @IsNotEmpty()
     deletedBy: string;
+}
+export class UpdateChatDTO{
+@IsString()
+@IsNotEmpty()
+add_users?: string[]; 
+remove_users?:string[];
 }

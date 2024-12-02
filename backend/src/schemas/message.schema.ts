@@ -18,6 +18,11 @@ export class Message {
     timestamp: Date;
 
     readonly _id?: string;
+    
+    @Prop({default:Date.now})
+    updated_at: Date;
+
+
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
