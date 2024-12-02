@@ -19,7 +19,7 @@ export class QuestionService {
     }
 
     // Find A Specific Question by ID
-    async findOne(id: String): Promise<Questions> {
+    async findOne(id: string): Promise<Questions> {
         const question = await this.questionModel.findOne({ _id: id }).exec();
         if (!question) {
             throw new NotFoundException(`Question with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class QuestionService {
     }
 
     // Update A Question Based On New-Data
-    async update(id: String, updateData: Partial<Questions>): Promise<Questions> {
+    async update(id: string, updateData: Partial<Questions>): Promise<Questions> {
         const updatedQuestion = await this.questionModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();
@@ -39,7 +39,7 @@ export class QuestionService {
     }
 
     // Delete A Question
-    async delete(id: String): Promise<void> {
+    async delete(id: string): Promise<void> {
         const result = await this.questionModel.deleteOne({ _id: id }).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Question with ID ${id} not found`);

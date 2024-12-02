@@ -9,7 +9,7 @@ export class Questions {
   title: string;
 
   @Prop({ required: true })
-  options: String[];
+  options: string[];
 
   @Prop({ required: true }) 
   answer: number;

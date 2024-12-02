@@ -6,13 +6,13 @@ export type ResponseDocument = Response & Document;
 @Schema()
 export class Response{
   @Prop({ required: true, ref: 'User' })
-  user_id: String;
+  user_id: string;
 
   @Prop({ required: true, ref: 'Quiz' })
-  quiz_id: String;
+  quiz_id: string;
 
   @Prop({ required: true })
-  answers: {questionId: String; answer: number}[];
+  answers: {questionId: string; answer: number}[];
 
   @Prop({ default: 0 })
   score: number;
