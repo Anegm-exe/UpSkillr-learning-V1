@@ -12,7 +12,8 @@ import { MessageController } from './message.controller';
         }])
     ],
     controllers:[MessageController],
-    providers:[MessageService]
+    providers:[MessageService],
+    exports:[MessageService]
 })
 
 

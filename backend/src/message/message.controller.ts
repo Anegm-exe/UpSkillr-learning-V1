@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Delete, Body, Param, Put } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Message } from '../schemas/message.schema';
+import { UpdateMessageDTO } from './message.dto';
 
 @Controller('message')
 export class MessageController {
@@ -29,9 +30,9 @@ export class MessageController {
 
     @Put(':id')  // PUT /messages/:id
     async updateMessage(
-        @Param('id') id: string,           // Extract ID from route parameter
-        @Body() updateData: Partial<Message> // Accept raw object for update data
+      @Param('id') id: string,           // Path parameter for message ID
+      @Body() updateData: UpdateMessageDTO // Request body containing update data
     ): Promise<Message> {
-        return this.messageService.update(id, updateData);
+      return this.messageService.update(id, updateData);
     }
 }
