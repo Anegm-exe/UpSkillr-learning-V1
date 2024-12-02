@@ -1,12 +1,3 @@
-import { Module } from '@nestjs/common';
-import { QuizService } from './quiz/quiz.service';
-import { QuizController } from './quiz/quiz.controller';
-import { ResponseController } from './response/response.controller';
-import { ProgressController } from './progress/progress.controller';
-import { ProgressService } from './progress/progress.service';
-import { ResponseService } from './response/response.service';
-import { QuestionService } from './question/question.service';
-import { QuestionController } from './question/question.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProgressModule } from './progress/progress.module';
 import { QuizModule } from './quiz/quiz.module';
@@ -22,8 +13,9 @@ import { AuthenticationLogModule } from './authenticationlog/authenticationlog.m
 import { ContentModule } from './content/content.module';
 import { NotificationModule } from './notification/notification.module';
 import { ForumModule } from './forum/forum.module';
-import { MessagesService } from './messages/messages.service';
-import { MessagesController } from './messages/messages.controller';
+import { AuthModule } from './Auth/auth.module';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -42,8 +34,10 @@ import { MessagesController } from './messages/messages.controller';
     ContentModule,
     NotificationModule,
     ForumModule,
-  ],
-  providers: [MessagesService],
-  controllers: [MessagesController]
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true, 
+    })
+  ]
 })
 export class AppModule {}

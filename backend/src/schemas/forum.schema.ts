@@ -6,10 +6,10 @@ export type ForumDocument = Forum & Document;
 
 @Schema()
 export class Forum {
-  @Prop({ required: true, ref: 'Course' })
+  @Prop({ required: true , ref:'Course'})
   course_id: string;
 
-  @Prop({ required: true, ref: 'User' })
+  @Prop({ required: true , ref:'User'}) 
   user_id: string;
 
   @Prop({ required: true })

@@ -12,7 +12,10 @@ export class User  {
   email: string;
 
   @Prop({ required: true })
-  password_hash: string;
+  password: string;
+
+  @Prop({ required: true, unique: true })
+  dataOfBirth: Date;
 
   @Prop({ required: true, enum: ['student', 'instructor', 'admin'] })
   role: string;

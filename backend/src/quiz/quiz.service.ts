@@ -19,7 +19,7 @@ export class QuizService {
     }
 
     // Find A Specific Quiz by ID
-    async findOne(id: String): Promise<Quiz> {
+    async findOne(id: string): Promise<Quiz> {
         const quiz = await this.quizModel.findOne({ _id: id }).exec();
         if (!quiz) {
             throw new NotFoundException(`Quiz with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class QuizService {
     }
 
     // Update A Quiz Based On New-Data
-    async update(id: String, updateData: Partial<Quiz>): Promise<Quiz> {
+    async update(id: string, updateData: Partial<Quiz>): Promise<Quiz> {
         const updatedQuiz = await this.quizModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();
@@ -39,7 +39,7 @@ export class QuizService {
     }
 
     // Delete A Quiz
-    async delete(id: String): Promise<void> {
+    async delete(id: string): Promise<void> {
         const result = await this.quizModel.deleteOne({ _id: id }).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Quiz with ID ${id} not found`);
