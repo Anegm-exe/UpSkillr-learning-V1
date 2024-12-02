@@ -17,6 +17,9 @@ export class Notification {
   @Prop({ default: Date.now })
   timestamp: Date;
 
+  @Prop({ default: Date.now, expires: 86400 }) 
+  expiresAt: Date;
+
   readonly _id?: string;
 }
 
