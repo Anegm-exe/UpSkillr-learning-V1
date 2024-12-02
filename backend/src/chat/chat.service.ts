@@ -1,81 +1,82 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateChatDTO, CreateMessageDTO, GetChatDetailsDTO, GetAllChatsDTO, GetRecentChatDTO, EditMessagesDTO, DeleteMessageDTO } from './chat.dto';
 import { Chat, ChatDocument } from '../schemas/chat.schema';
 import { Message, MessageDocument } from 'src/schemas/message.schema';
 import { Model } from 'mongoose'
-
+import { UserService } from '../user/user.service';
+import { User } from 'src/schemas/user.schema';
+import { CreateChatDTO, UpdateChatDTO } from './chat.dto';
+import { timeStamp } from 'console';
+import { MessageService } from 'src/message/message.service';
 @Injectable()
 export class ChatService {
   constructor(
     @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
-    @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>
+    private readonly UserService: UserService,
+    private readonly MessageService: MessageService
+
+    // @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>
   ) { }
-  async createChat(User_Id, createChatDto: CreateChatDTO): Promise<Chat> {
-    const newChat = new this.chatModel(User_Id, createChatDto); //dto for creating a chat
-    return newChat.save(); // saves to db
+  async createChat(createChatDto: CreateChatDTO, emails: string[]): Promise<Chat> {
+    //loop around emails to get an email then find the user by email if not null, get id
+    const userIds = await Promise.all(
+      emails.map(async (email) => {
+        const user = (await this.UserService.findByEmail(email));
+        if (user) {
+          return user._id;
+        }
+      }
+      ));
+    createChatDto.user_ids = userIds;
+    if (userIds.length >= 2) {
+      const newChat = new this.chatModel(createChatDto); //dto for creating a chat
+      return newChat.save(); // saves to db
+    }
+    throw new Error('Chat should have at least 2 users');
   }
-  async createMessage(createMessageDTO: CreateMessageDTO): Promise<Message> {
-    const newMessage = new this.messageModel(createMessageDTO);
-    return newMessage.save(); //saves my new message to the db
-  }
-  async findAllChats(chat_id, getAllChatsDTO: GetAllChatsDTO) {
-    const User_Id = getAllChatsDTO.User_Id;
-    const chats = await this.chatModel.findById(chat_id);
+  async findAllChats(User_Id: string) {
+    const chats = await this.chatModel.find({ user_ids: User_Id });
     return chats;
   }
-  async getChatDetails(chat_id: String, getChatDetailsDto: GetChatDetailsDTO) {
-    const chat = await this.chatModel.findById(chat_id);
+  async getChatDetails(chat_id: String, createChatDTO: CreateChatDTO) { //byakhod kaman el dto 3ashan yekon feha kol haga
+    const chat = await this.chatModel.findById({ _id: chat_id }, createChatDTO);
     if (!chat) {
       throw new NotFoundException('Chat not found');
     }
-    return this.chatModel.findById(chat_id, getChatDetailsDto).sort(); //ezaayyy a3mela descendingg
+    return (await this.chatModel.findById({ _id: chat_id })).messages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
-  async getRecentChat(chat_id, getRecentChat: GetRecentChatDTO) {
-    const User_Id = getRecentChat;
-    const recent_chat = await this.chatModel.find(chat_id).sort().exec();
-    if (!recent_chat) {
-      throw new NotFoundException('not found');
-    }
-    return recent_chat;
-  }
-  async editMessages(editMessages: EditMessagesDTO) {
-    const message_id = EditMessagesDTO
-    const message = await this.messageModel.findById(message_id);
-    if (message) {
-      message.text = editMessages.newText;
-      return message.save()
-    }
-    throw new Error('You cannot edit this message')
-  }
+
+
   async deleteChat(chat_id: string) {
-    const chat = await this.chatModel.findById(chat_id)
+    const chat = await this.chatModel.findById({ _id: chat_id })
     if (!chat) {
       throw new Error('chat not found');
     }
-    await this.chatModel.deleteOne({ chat_id }, { deletedAt: new Date() });
+   await Promise.all(
+      chat.messages.map(async (message) => {
+           (await this.MessageService.delete(message._id));
+      }
+  ));
+    await this.chatModel.deleteOne({ chat_id });
     return { success: true };
   }
-  async deleteMessage(chat_id: string, message_id: string, dto: DeleteMessageDTO) {
-    const message = await this.messageModel.findOne({ where: { id: message_id, chat_id } }, dto);
-    if (!message) {
-      throw new NotFoundException('Message not found');
-    }
-    await this.messageModel.deleteOne({ message_id }, { deletedAt: new Date() })
-    return { success: true };
-  }
-  async editMessage(chat_id: string, message_id: string, newText: string) {
+
+
+  async updateChat(chat_id: string, updateChatDTO: UpdateChatDTO): Promise<Chat> {
     const chat = await this.chatModel.findById(chat_id);
     if (!chat) {
-      throw new Error('not found');
+      throw new NotFoundException('Chat is not found');
     }
-    const message = chat.messages.find((message) => message._id == message_id);
-    if (!message) {
-      throw new NotFoundException('message not found');
+    if (updateChatDTO.add_users) {
+      for (const user_ids of updateChatDTO.add_users) {
+        chat.user_ids.push(user_ids);
+      }
     }
-    message.text = newText;
-    message.updatedAt = new Date();
-    await this.messageModel.save(message);
-    return this.chatModel.findOne({ chat_id }, ['messages']);
+    if (updateChatDTO.remove_users) {
+      await this.chatModel.updateOne({ _id: chat_id }, {
+        $pop: { user_ids: { $each: updateChatDTO.remove_users } }  // Append new elements to the array
+      })
+    };
+    return await chat.save();
   }
 }
