@@ -41,7 +41,6 @@ export class ContentController {
 
   @Roles(Role.Student, Role.Instructor, Role.Admin)
   @UseGuards(authorizationGuard)
-  @Get()
   @Get(":contentId")
   getContentById(@Param("contentId") contentId: string, @Req() req: any) {
     const userRole: Role = req.user.role;

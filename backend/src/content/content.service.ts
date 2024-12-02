@@ -40,12 +40,13 @@ export class ContentService {
     if (!isValidObjectId(contentId)) {
       throw new NotFoundException(`Invalid ID format: ${contentId}`);
     }
-    const content = await this.contentModel.findById(contentId).exec();
+    const content = await this.contentModel.findById(contentId).populate("versions").exec();
     if (!content) {
       throw new NotFoundException(`Content with ID ${contentId} not found`);
     }
     if (userRole === Role.Student) {
-      content.versions = content[content.versions.length - 1];
+      const { versions: _, ...contentWithoutVersions } = content.toObject();
+      return contentWithoutVersions;
     }
     return content;
   }
