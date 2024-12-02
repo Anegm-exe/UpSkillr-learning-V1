@@ -28,7 +28,7 @@ export class ModuleService {
 
     // Delete a module
     async deleteModule(moduleId: String): Promise<void> {
-        const deletedModule = await this.moduleModel.findByIdAndDelete(moduleId).exec();
+        const deletedModule = await this.moduleModel.findByIdAndDelete({ _id: moduleId}).exec();
         if (!deletedModule) {
             throw new NotFoundException(`Module with ID ${moduleId} not found`);
         }
@@ -36,7 +36,7 @@ export class ModuleService {
 
     // Find module by id
     async findModuleById(moduleId: String): Promise<module> {
-        const module = await this.moduleModel.findById(moduleId).exec();
+        const module = await this.moduleModel.findById({ _id: moduleId}).exec();
         if (!module) {
             throw new NotFoundException(`Module with ID ${moduleId} not found`);
         }
