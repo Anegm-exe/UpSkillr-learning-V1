@@ -3,6 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Note, NoteSchema } from "src/schemas/note.schema";
 import { NoteController } from "./note.controller";
 import { NoteService } from "./note.service";
+import { NotificationModule } from "src/notification/notification.module";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { NoteService } from "./note.service";
         schema: NoteSchema,
       },
     ]),
+    NotificationModule
   ],
   controllers: [NoteController],
   providers: [NoteService],

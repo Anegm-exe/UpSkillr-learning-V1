@@ -13,9 +13,9 @@ import {
   UseGuards,
   Req,
 } from "@nestjs/common";
-import { CreateContentDto } from "src/dto/createContent.dto";
+import { CreateContentDto } from "src/content/dto/createContent.dto";
 import { ContentService } from "./content.service";
-import { UpdateContentDto } from "src/dto/updateContent.dto";
+import { UpdateContentDto } from "src/content/dto/updateContent.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
 import { Role, Roles } from "src/Auth/decorators/roles.decorator";

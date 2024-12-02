@@ -1,6 +1,9 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { AuthenticationLog, AuthenticationLogSchema } from 'src/schemas/authenticationLog.schema'
+import { AuthenticationLog, AuthenticationLogSchema } from 'src/schemas/authenticationlog.schema'
+import { AuthenticationLogService } from './authenticationlog.service';
+import { AuthenticationLogController} from './authenticationlog.controller';
+import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware';
 
 @Module({
     imports:[
@@ -9,9 +12,14 @@ import { AuthenticationLog, AuthenticationLogSchema } from 'src/schemas/authenti
             schema: AuthenticationLogSchema
         }])
     ],
-    controllers:[],
-    providers:[]
+    controllers:[AuthenticationLogController],
+    providers:[AuthenticationLogService],
+    exports:[AuthenticationLogService]
 })
 
 
-export class AuthenticationLogModule {}
+export class AuthenticationLogModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthenticationMiddleware).forRoutes(AuthenticationLogController);
+      }
+}

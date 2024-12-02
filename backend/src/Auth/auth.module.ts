@@ -4,12 +4,13 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { UserModule } from 'src/user/user.module';
+import { AuthenticationLogModule } from 'src/authenticationlog/authenticationlog.module';
 dotenv.config();
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService],
-  imports:[UserModule,
+  imports:[UserModule,AuthenticationLogModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

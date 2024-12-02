@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, isValidObjectId } from "mongoose";
-import { CreateContentDto } from "src/dto/createContent.dto";
-import { UpdateContentDto } from "src/dto/updateContent.dto";
+import { CreateContentDto } from "src/content/dto/createContent.dto";
+import { UpdateContentDto } from "src/content/dto/updateContent.dto";
 import { Content, ContentDocument, FileVersion, FileVersionDocument } from "src/schemas/content.schema";
 import * as fs from "fs";
 import * as path from "path";

@@ -15,7 +15,7 @@ export class User  {
   password: string;
 
   @Prop({ required: true, unique: true })
-  dataOfBirth: Date;
+  dateOfBirth: Date;
 
   @Prop({ required: true, enum: ['student', 'instructor', 'admin'] })
   role: string;

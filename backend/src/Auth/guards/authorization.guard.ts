@@ -18,6 +18,8 @@ export class authorizationGuard implements CanActivate {
       if(!user)
         throw new UnauthorizedException('no user attached');
       const userRole = user.role
+      console.log(user)
+      console.log(requiredRoles)
       if (!requiredRoles.includes(userRole)) 
         throw new UnauthorizedException('unauthorized access');
        

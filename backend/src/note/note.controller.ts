@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { NoteService } from './note.service';
 import { Note } from 'src/schemas/note.schema';
 import { Types } from 'mongoose';
-import { NotificationService } from 'src/notifications/notifications.service';
+import { NotificationService } from 'src/notification/notifications.service';
 
 @Controller('note')
 export class NoteController {
