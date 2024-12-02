@@ -19,7 +19,7 @@ export class CourseService{
     }
 
     // find a course by id
-    async findOne(id: String): Promise<Course> {
+    async findOne(id: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: id }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${id} not found`);
@@ -28,7 +28,7 @@ export class CourseService{
     }
 
     // update a course
-    async update(id: String, updateData: Partial<Course>): Promise<Course> {
+    async update(id: string, updateData: Partial<Course>): Promise<Course> {
         const updatedCourse = await this.courseModel
             .findOneAndUpdate({ _id: id },updateData, { new: true })
             .exec();
@@ -39,7 +39,7 @@ export class CourseService{
     }    
 
     // delete a course
-    async delete(id: String): Promise<void> {
+    async delete(id: string): Promise<void> {
         const result = await this.courseModel.deleteOne({ _id: id }).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Course with ID ${id} not found`);
@@ -47,7 +47,7 @@ export class CourseService{
     }
 
     // get course by name
-    async findByName(name: String): Promise<Course> {
+    async findByName(name: string): Promise<Course> {
         const course = await this.courseModel.findOne({ title: name }).exec();
         if (!course) {
             throw new NotFoundException(`Course with name ${name} not found`);
@@ -56,7 +56,7 @@ export class CourseService{
     }
 
     // get all instructors for a course
-    async getInstructors(courseId: String): Promise<String[]> {
+    async getInstructors(courseId: string): Promise<string[]> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -66,7 +66,7 @@ export class CourseService{
 
     // get all students for a course (Prof only)
     //need to add check for current user role- wait on negm
-    async getStudents(courseId: String): Promise<String[]> {
+    async getStudents(courseId: string): Promise<string[]> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -75,7 +75,7 @@ export class CourseService{
     }
 
     // get all modules for a course
-    async getModules(courseId: String): Promise<String[]> {
+    async getModules(courseId: string): Promise<string[]> {
     const course = await this.courseModel.findOne({ _id: courseId }).exec();
     if (!course) {
         throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -86,7 +86,7 @@ export class CourseService{
 
     //get a specific student in a course  by ID (Prof only)
     //need to add check for current user role- wait on negm
-    async getStudent(courseId: String, studentId: String): Promise<String> {
+    async getStudent(courseId: string, studentId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -100,7 +100,7 @@ export class CourseService{
     // get a specific student in a course by name (Prof only)
     //need to add check for current user role- wait on negm
     // dont think this works need to test first (WIP)
-    async getStudentByName(courseId: String, studentName: String): Promise<String> {
+    async getStudentByName(courseId: string, studentName: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -113,7 +113,7 @@ export class CourseService{
     }
 
     // get a specific instructor in a course
-    async getInstructor(courseId: String, instructorId: String): Promise<String> {
+    async getInstructor(courseId: string, instructorId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -126,7 +126,7 @@ export class CourseService{
 
  
     // get a specific module in a course
-    async getModule(courseId: String, moduleId: String): Promise<String> {
+    async getModule(courseId: string, moduleId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -138,7 +138,7 @@ export class CourseService{
     }
 
     // add an instructor to a course
-    async addInstructor(courseId: String, instructorId: String): Promise<Course> {
+    async addInstructor(courseId: string, instructorId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -148,7 +148,7 @@ export class CourseService{
     }
 
     // add a student to a course
-    async addStudent(courseId: String, studentId: String): Promise<Course> {
+    async addStudent(courseId: string, studentId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -158,7 +158,7 @@ export class CourseService{
     }
 
     // add a module to a course
-    async addModule(courseId: String, moduleId: String): Promise<Course> {
+    async addModule(courseId: string, moduleId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -168,7 +168,7 @@ export class CourseService{
     }
 
     // remove an instructor from a course
-    async removeInstructor(courseId: String, instructorId: String): Promise<Course> {
+    async removeInstructor(courseId: string, instructorId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -178,7 +178,7 @@ export class CourseService{
     }
 
     // remove a student from a course
-    async removeStudent(courseId: String, studentId: String): Promise<Course> {
+    async removeStudent(courseId: string, studentId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -188,7 +188,7 @@ export class CourseService{
     }
 
     // remove a module from a course
-    async removeModule(courseId: String, moduleId: String): Promise<Course> {
+    async removeModule(courseId: string, moduleId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -198,7 +198,7 @@ export class CourseService{
     }
 
     //get course difficulty level
-    async getDifficultyLevel(courseId: String): Promise<String> {
+    async getDifficultyLevel(courseId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -207,7 +207,7 @@ export class CourseService{
     }
 
     //get course category
-    async getCategory(courseId: String): Promise<String> {
+    async getCategory(courseId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -216,7 +216,7 @@ export class CourseService{
     }
 
     //get course rating
-    async getRating(courseId: String): Promise<number> {
+    async getRating(courseId: string): Promise<number> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
@@ -225,18 +225,47 @@ export class CourseService{
     }
 
     // get course by difficulty level
-    async getByDifficultyLevel(difficultyLevel: String): Promise<Course[]> {
+    async getByDifficultyLevel(difficultyLevel: string): Promise<Course[]> {
         return this.courseModel.find({ difficulty_Level: difficultyLevel }).exec();
     }
 
     // get course by category
-    async getByCategory(category: String): Promise<Course[]> {
+    async getByCategory(category: string): Promise<Course[]> {
         return this.courseModel.find({ category: category }).exec();
     }
 
     // get course by rating
     async getByRating(rating: number): Promise<Course[]> {
         return this.courseModel.find({ rating: rating }).exec();
+    }
+
+    //get quizzes by course
+    async getQuizzes(courseId: string): Promise<string[]> {
+        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`);
+        }
+        return course.quizzes;
+    }
+    
+    //add quiz to course
+    async addQuiz(courseId: string, quizId: string): Promise<Course> {
+        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`);
+        }
+        course.quizzes.push(quizId);
+        return course.save();
+    }
+
+    //remove quiz from course
+    async removeQuiz(courseId: string, quizId: string): Promise<Course> {
+        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`);
+        }
+        course.quizzes = course.quizzes.filter(id => id !== quizId);
+        return course.save();
     }
 
 

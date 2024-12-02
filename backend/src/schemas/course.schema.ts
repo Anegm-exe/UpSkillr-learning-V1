@@ -6,7 +6,7 @@ export type CourseDocument = Course & Document;
 @Schema()
 export class Course {
   @Prop({ required: true , ref: 'User'})
-  instructor_ids: String[]; //each course can have more than one instructor, ex. ML has dr.caroline ,sandra and nouran ?
+  instructor_ids: string[]; //each course can have more than one instructor, ex. ML has dr.caroline ,sandra and nouran ?
 
   @Prop({ required: true })
   title: string;
@@ -27,10 +27,13 @@ export class Course {
   timestamp: Date;
 
   @Prop({ required: true, ref: "User" })
-  students: String[]; //each course can have more than one student
+  students: string[]; //each course can have more than one student
 
   @Prop({ required: true,ref: "Module" })
-  modules: String[]; //each course can have more than one module
+  modules: string[]; //each course can have more than one module
+
+  @Prop({ required: true, ref: "Quiz" })
+  quizzes: string[]; //each course can have more than one quiz
 
   readonly _id?: string;
 }
