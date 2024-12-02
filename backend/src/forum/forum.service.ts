@@ -4,13 +4,12 @@ import { Model } from 'mongoose';
 import { Forum, ForumDocument } from '../schemas/forum.schema';
 import { MessageService } from 'src/message/message.service';
 import { Message } from 'src/schemas/message.schema';
-
 @Injectable()
 export class ForumService {
     constructor(@InjectModel(
         Forum.name) private forumModel: Model<ForumDocument>,
-    private readonly messageService: MessageService
-) { }
+        private readonly messageService: MessageService
+    ) { }
 
     // Create A forum With Data Provided
     async create(forum: Forum): Promise<Forum> {
@@ -22,7 +21,7 @@ export class ForumService {
         return this.forumModel.find().exec();
     }
 
-    async findOne(id: number): Promise<Forum> {
+    async findOne(id: string): Promise<Forum> {
         const forum = await this.forumModel.findOne({ _id: id }).exec();
         if (!forum) {
             throw new NotFoundException(`Forum with ID ${id} not found`);
@@ -30,7 +29,7 @@ export class ForumService {
         return forum;
     }
 
-    async update(id: number, updateData: Partial<Forum>): Promise<Forum> {
+    async update(id: string, updateData: Partial<Forum>): Promise<Forum> {
         const updatedForum = await this.forumModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();
@@ -49,6 +48,15 @@ export class ForumService {
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Forum with ID ${id} not found`);
         }
+    }
+
+    async addMessage(id: string, messageId: string): Promise<void> {
+        const forum = await this.forumModel.findOne({ _id: id }).exec();
+        if (!forum) {
+            throw new NotFoundException(`Forum with ID ${id} not found`);
+        }
+        forum.messages.push(messageId);
+        await forum.save();
     }
 
     async getMessages(id: string): Promise<Message[]> {
@@ -77,5 +85,12 @@ export class ForumService {
         await forum.save();
         await this.messageService.delete(messageId);
     }
-    
+
+    async getByCourse(courseId: string): Promise<Forum[]> {
+        return this.forumModel.find({ course: courseId }).exec();
+    }
+
+    async getByUser(userId: string): Promise<Forum[]> { 
+        return this.forumModel.find({ user: userId }).exec();
+    }
 }

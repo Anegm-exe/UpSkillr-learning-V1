@@ -13,15 +13,12 @@ export class Forum {
   user_id: string;
 
   @Prop({ required: true })
-  title: Message;
+  title: string;
 
   @Prop({
     type: [String],
     required: true,
-    validate: {
-      validator: (value: Message[]) => value.length >= 1,
-      message: 'At least 1 Message for the forum to be created !',
-    },
+   
   })
   messages: string[];
 
