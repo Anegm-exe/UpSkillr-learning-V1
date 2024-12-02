@@ -1,38 +1,21 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Patch } from '@nestjs/common';
 import { QuizService } from './quiz.service';
-import { QuestionService as QuestionService } from '../question/question.service';
 import { Quiz } from '../schemas/quiz.schema';
-import { Questions } from 'src/schemas/question.schema';
+import { CreateQuestionDto } from 'src/question/dtos/question.dto';
+import { UpdateQuizDto } from './dtos/quiz.dto';
 
 @Controller('quiz')
 export class QuizController {
     constructor(
         private readonly quizService: QuizService,
-        private readonly questionService: QuestionService
     ) {}
 
-    @Post()
+    @Post(':module_id')
     async create(
-        @Body('quiz') createQuizDto: Quiz, 
-        @Body('questions') questionDto: Questions[]
+        @Param('module_id') module_id : string,
+        @Body('questions') questionDtos: CreateQuestionDto[]
     ): Promise<Quiz> {
-        const questions = await Promise.all(
-            questionDto.map(async (question) => {
-                return (await this.questionService.create(question))._id;
-            }
-        ));
-        createQuizDto.questions = questions;
-        try {
-            const quiz = this.quizService.create(createQuizDto);
-            return quiz;
-        }catch(err) {
-            await Promise.all(
-                questions.map(async (id) => {
-                    await this.questionService.delete(id);
-                }
-            ));            
-            throw err;
-        }
+        return await this.quizService.create(questionDtos,module_id);
     }
 
     @Get()
@@ -48,25 +31,13 @@ export class QuizController {
     @Put(':id')
     async update(
         @Param('id') id: string,
-        @Body('quiz') updateQuizDto: Partial<Quiz>,
-        @Body('questions') updateQestionDto: Partial<Questions[]>
+        @Body('quiz') updateQuizDto: UpdateQuizDto,
     ): Promise<Quiz> {
-        await Promise.all(
-            updateQestionDto.map(async (question) => {
-                await this.questionService.update(question._id,question);
-            }
-        ));
         return this.quizService.update(id,updateQuizDto);
     }
 
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<void> {
-        const quiz = await this.quizService.findOne(id);
-        await Promise.all(
-            quiz.questions.map(async (id) => {
-                return await this.questionService.delete(id);
-            })
-        );
         return this.quizService.delete(id);
     }
 }

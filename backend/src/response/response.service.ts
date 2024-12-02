@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Response, ResponseDocument } from '../schemas/response.schema';
-import { QuestionsDocument } from 'src/schemas/question.schema';
 import { QuestionService } from 'src/question/question.service';
+import { CreateResponseDto, UpdatedResponseDto } from './dtos/response.dto';
 
 @Injectable()
 export class ResponseService {
@@ -13,7 +13,10 @@ export class ResponseService {
     ) { }
 
     // Create A Response With The Data Provided
-    async create(response: Partial<Response>): Promise<Response> {
+    async create(response: CreateResponseDto): Promise<Response> {
+        if(!response) {
+            throw new NotFoundException('Response missing UserId or QuizId');
+        }
         let score = 0;
         for (const answerResponse of response.answers) {
             const question = await this.questionService.findOne(answerResponse.questionId);
@@ -58,7 +61,7 @@ export class ResponseService {
     }
 
     // Update A Response Based On New-Data
-    async update(id: string, updateData: Partial<Response>): Promise<Response> {
+    async update(id: string, updateData: UpdatedResponseDto): Promise<Response> {
         const updatedResponse = await this.responseModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();

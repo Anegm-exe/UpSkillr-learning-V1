@@ -9,7 +9,7 @@ export class Quiz {
   @Prop({ required: true , ref: 'Module' })
   module_id: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true , ref: 'Question' })
   questions: string[];
 
   @Prop({ default: Date.now })

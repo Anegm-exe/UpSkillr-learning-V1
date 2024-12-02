@@ -11,16 +11,16 @@ export class Progress {
   @Prop({ required: true , ref: 'Course'})
   course_id: string;
 
-  @Prop({ required: true, min: 0, max: 100 })
+  @Prop({ default: 0, min: 0, max: 100 })
   completion_percentage: number;
 
   @Prop({ default: Date.now })
   last_accessed: Date;
 
-  @Prop({ required: false, default: 0 })
+  @Prop({ default: 0 })
   average_quiz: number;
 
-  @Prop({ required: false, default: 0 })
+  @Prop({ default: 0 })
   opened_times: number;
 
   readonly _id?: string;
