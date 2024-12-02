@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Param, Post, Body, Delete, Patch, UploadedFile, UseInterceptors, Res, NotFoundException } from "@nestjs/common";
 import { CreateContentDto } from "src/dto/createContent.dto";
 import { ContentService } from "./content.service";
 import { UpdateContentDto } from "src/dto/updateContent.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Response } from "express";
 
 @Controller("api/content")
 export class ContentController {
@@ -22,6 +23,21 @@ export class ContentController {
   @Get(":contentId")
   getContentById(@Param("contentId") contentId: string) {
     return this.contentService.getContentById(contentId);
+  }
+
+  @Get("download/:fileVersionId")
+  async downloadFile(@Param("fileVersionId") fileVersionId: string, @Res() res: Response) {
+    try {
+      const filePath = await this.contentService.getFilePath(fileVersionId);
+
+      res.download(filePath, (err) => {
+        if (err) {
+          throw new NotFoundException(`Failed to download file: ${err.message}`);
+        }
+      });
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
   }
 
   // CHECK LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
