@@ -1,9 +1,25 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, UploadedFile, UseInterceptors, Res, NotFoundException } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Delete,
+  Patch,
+  UploadedFile,
+  UseInterceptors,
+  Res,
+  NotFoundException,
+  UseGuards,
+  Req,
+} from "@nestjs/common";
 import { CreateContentDto } from "src/dto/createContent.dto";
 import { ContentService } from "./content.service";
 import { UpdateContentDto } from "src/dto/updateContent.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
+import { Role, Roles } from "src/Auth/decorators/roles.decorator";
+import { authorizationGuard } from "src/Auth/guards/authorization.guard";
 
 @Controller("api/content")
 export class ContentController {
@@ -16,15 +32,24 @@ export class ContentController {
   //5 update content (patch)
   //6 delete content (admin only)
 
+  @Roles(Role.Admin)
+  @UseGuards(authorizationGuard)
   @Get()
   getAllContent() {
     return this.contentService.getAllContent();
   }
+
+  @Roles(Role.Student, Role.Instructor, Role.Admin)
+  @UseGuards(authorizationGuard)
+  @Get()
   @Get(":contentId")
-  getContentById(@Param("contentId") contentId: string) {
-    return this.contentService.getContentById(contentId);
+  getContentById(@Param("contentId") contentId: string, @Req() req: any) {
+    const userRole: Role = req.user.role;
+    return this.contentService.getContentById(contentId, userRole);
   }
 
+  @Roles(Role.Student, Role.Instructor, Role.Admin)
+  @UseGuards(authorizationGuard)
   @Get("download/:fileVersionId")
   async downloadFile(@Param("fileVersionId") fileVersionId: string, @Res() res: Response) {
     try {
@@ -52,19 +77,24 @@ export class ContentController {
   //   return this.contentService.getContentByCourseId(courseId);
   // }
 
-  //TODO:
-  //yet to add the file attribute in the body
+  @Roles(Role.Instructor, Role.Admin)
+  @UseGuards(authorizationGuard)
   @Post("upload")
   @UseInterceptors(FileInterceptor("file"))
   uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File) {
     return this.contentService.uploadContent(createContentDto, file);
   }
+
+  @Roles(Role.Instructor, Role.Admin)
+  @UseGuards(authorizationGuard)
   @Patch(":id")
   @UseInterceptors(FileInterceptor("file"))
   update(@Param("id") contentId: string, @Body() updateContentDto: UpdateContentDto, @UploadedFile() file: Express.Multer.File) {
     return this.contentService.updateContent(contentId, updateContentDto, file);
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(authorizationGuard)
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.contentService.deleteContent(id);

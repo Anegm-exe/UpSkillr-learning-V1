@@ -8,6 +8,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { existsSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
+import { Role } from "src/Auth/decorators/roles.decorator";
 @Injectable()
 export class ContentService {
   constructor(
@@ -35,13 +36,16 @@ export class ContentService {
   }
 
   //yet to add and check if student can access content, maybe by adding course id to content
-  async getContentById(contentId: string) {
+  async getContentById(contentId: string, userRole: Role) {
     if (!isValidObjectId(contentId)) {
       throw new NotFoundException(`Invalid ID format: ${contentId}`);
     }
     const content = await this.contentModel.findById(contentId).exec();
     if (!content) {
       throw new NotFoundException(`Content with ID ${contentId} not found`);
+    }
+    if (userRole === Role.Student) {
+      content.versions = content[content.versions.length - 1];
     }
     return content;
   }

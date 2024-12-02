@@ -19,8 +19,8 @@ import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr'), //mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr
-    MongooseModule.forRoot("mongodb://localhost:27017"),
+    MongooseModule.forRoot("mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr"), //mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr
+    // MongooseModule.forRoot("mongodb://localhost:27017"),
     MessageModule,
     QuizModule,
     QuestionModule,
