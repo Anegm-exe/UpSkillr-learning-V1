@@ -78,7 +78,7 @@ export class ChatService {
   }
 
   // Reply to a message
-  async replyToMessage(chat_id: string, message_id: string, text: string, req: Request) : Promise<Chat> {
+  async replyToMessage(chat_id: string, message_id: string, text: string, req: Request) {
     const chat = await this.chatModel.findById(chat_id);
     if (!chat) {
       throw new NotFoundException('Chat not found');
@@ -101,7 +101,7 @@ export class ChatService {
     return chat.save();
   }
 
-  async deleteChat(chat_id: string, req: Request) {
+  async delete(chat_id: string, req: Request) {
     const chat = await this.chatModel.findById({ _id: chat_id })
     if (!chat) {
       throw new Error('chat not found');
@@ -122,8 +122,8 @@ export class ChatService {
         }
       }
   ));
-    await this.chatModel.deleteOne({ chat_id });
-    return { success: true };
+  await this.chatModel.deleteOne({ _id: chat_id }).exec();
+  return { success: true };
   }
 
   async addUserToChat(chat_id: string, email: string, req: Request): Promise<Chat> {
@@ -216,9 +216,7 @@ export class ChatService {
       this.MessageService.delete(message_id);
 
       // remove from chat messages array
-      chat.messages.splice(index, 1);
-      
-      return;
+      chat.messages.splice(index, 1);      
   }
 
   // Leave chat 
@@ -257,5 +255,13 @@ export class ChatService {
     // now remove from the user_ids 
     chat.user_ids.splice(index, 1);
     chat.save()
+  }
+
+  // search by name
+  async searchByName(name: string, req: Request): Promise<Chat[]> {
+    return this.chatModel.find({ 
+      name: { $regex: name, $options: 'i'}, 
+      user_ids : req['user'].userid
+    })
   }
 }

@@ -44,10 +44,10 @@ export class ChatController {
   //for when a user registers they should pass through the authorization guard
   @Delete(':chat_id')
   async deleteChat(@Param('chat_id') chat_id: string, @Req() req: Request) {
-    return await this.chatService.deleteChat(chat_id, req);
+    return await this.chatService.delete(chat_id, req);
   }
 
-  @Post(':chat_id/add/:email')
+  @Post(':chat_id/user/:email')
   async addUserToChat(
     @Param('chat_id') chat_id: string,
     @Param('email') email: string,
@@ -56,30 +56,36 @@ export class ChatController {
     return await this.chatService.addUserToChat(chat_id, email, req);
   }
 
-  @Delete(':chat_id/delete/:user_id')
+  @Delete(':chat_id/user/:user_id')
   async removeUserFromChat(
     @Param('chat_id') chat_id: string,
     @Param('user_id') user_id: string,
     @Req() req: Request
     ): Promise<void> {
       await this.chatService.removeUsersFromChat(chat_id, user_id, req);
-    }
+  }
 
-    // Delete message from chat
-    @Delete(':chat_id/message/:message_id')
-    async deleteMessageFromChat(
-      @Param('chat_id') chat_id: string,
-      @Param('message_id') message_id: string,
-      @Req() req: Request
-      ): Promise<void> {
-        await this.chatService.deleteMessageFromChat(chat_id, message_id, req);
-    }
+  // Delete message from chat
+  @Delete(':chat_id/message/:message_id')
+  async deleteMessageFromChat(
+    @Param('chat_id') chat_id: string,
+    @Param('message_id') message_id: string,
+    @Req() req: Request
+    ): Promise<void> {
+      await this.chatService.deleteMessageFromChat(chat_id, message_id, req);
+  }
 
-    // leave chat
-    @Delete(':chat_id/leave')
-    async leaveChat(@Param('chat_id') chat_id: string, @Req() req: Request): Promise<void> {
-      await this.chatService.leaveChat(chat_id, req);
-    }
+  // leave chat
+  @Delete(':chat_id/leave')
+  async leaveChat(@Param('chat_id') chat_id: string, @Req() req: Request): Promise<void> {
+    await this.chatService.leaveChat(chat_id, req);
+  }
+
+  // search by name
+  @Get('search/:name')
+  async searchByName(@Param('name') name: string, @Req() req: Request): Promise<Chat[]> {
+    return await this.chatService.searchByName(name, req);
+  }
 }
 
 /* body decorator binds the request body to the DTO parameter
