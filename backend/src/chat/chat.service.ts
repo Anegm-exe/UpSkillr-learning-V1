@@ -236,6 +236,15 @@ export class ChatService {
 
     // check if the chat is only 2 people if so delete the whole chat
     if (chat.user_ids.length === 2) {
+      await Promise.all(
+        chat.messages.map(async (id) => {
+          try{
+            await this.MessageService.delete(id);
+          }catch (err){
+            console.error(`Failed to delete message ${id}:`, err.message);
+          }
+        }
+    ));
       await this.chatModel.deleteOne({ _id: chat_id });
       return ;
     }
