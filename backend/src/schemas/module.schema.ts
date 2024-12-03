@@ -20,8 +20,8 @@ export class Modules {
   @Prop({ default: Date.now })
   timestamp: Date;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Content' }], required: true })
-  contentIDs: Types.ObjectId[];
+  @Prop({ ref: 'Content', required: true })
+  contentIDs: string[];
 
   readonly _id?: string;
 }

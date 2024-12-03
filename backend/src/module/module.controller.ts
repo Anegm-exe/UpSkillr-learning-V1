@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { Modules } from "../schemas/module.schema";
-import { ModuleService } from "src/module/module.service";
+import { ModuleService } from "./module.service";
 
 @Controller('module')
 export class ModuleController {
@@ -32,7 +32,7 @@ export class ModuleController {
 
     // Find a module by id
     @Get(':moduleId')
-    async findModuleById(@Param('moduleId') moduleId: string): Promise<Modules> {
-        return this.moduleService.findModuleById(moduleId);
+    async findOne(@Param('moduleId') moduleId: string): Promise<Modules> {
+        return this.moduleService.findOne(moduleId);
     }
 }
