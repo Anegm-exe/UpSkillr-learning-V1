@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Patch } from '@nestjs/common';
-import { CourseService } from 'src/course/Courses.service';
+import { CourseService } from 'src/course/course.service';
 import { Course } from 'src/schemas/course.schema';
 import {Role, Roles} from 'src/Auth/decorators/roles.decorator';
 import {authorizationGuard} from 'src/Auth/guards/authorization.guard';
 @Controller('courses')
-export class CoursesController {
+export class CourseController {
     constructor(private readonly courseService: CourseService) { }
     //create a course
     @Post()

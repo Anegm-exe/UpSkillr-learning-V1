@@ -34,30 +34,21 @@ export class CreateMessageDTO {
 export class CreateChatDTO {
     @IsString()
     @IsNotEmpty()
-     name: string;
+    admin_id: string;
 
     @IsString()
     @IsNotEmpty()
-    user_ids: string[];
+    name: string;
+
+    @IsString()
+    @IsOptional()
+    user_ids?: string[];
 
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => CreateMessageDTO)
     @IsOptional()
     messages?: CreateMessageDTO[];
-
-    @IsDate()
-    @IsOptional()
-    createdAt?: Date;
-
-    @IsDate()
-    @IsOptional()
-    updatedAt?: Date;
-
-    @IsDate()
-    @IsOptional()
-    deletedAt?: Date;
-
 }
 export class GetChatDetailsDTO {
     @IsString()

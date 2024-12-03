@@ -3,13 +3,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Message, MessageDocument } from '../schemas/message.schema';
+import { CreateMessageDTO } from './dtos/message.dto';
 
 @Injectable()
 export class MessageService {
     constructor(@InjectModel(Message.name) private messageModel: Model<MessageDocument>) { }
 
     // Create A message With Data Provided
-    async create(message: Message): Promise<Message> {
+    async create(message: CreateMessageDTO): Promise<Message> {
         const newMessage = new this.messageModel(message);
         return newMessage.save();
     }
@@ -41,14 +42,10 @@ export class MessageService {
             throw new NotFoundException(`Message with ID ${id} not found`);
         }
     }
-    // async update(id: string, updateData: Partial<Message>): Promise<Message> {
-    //     const updatedQuiz = await this.quizModel
-    //         .findOneAndUpdate({ _id: id }, updateData, { new: true })
-    //         .exec();
-    //     if (!updatedQuiz) {
-    //         throw new NotFoundException(`Quiz with ID ${id} not found`);
-    //     }
-    //     return updatedQuiz;
-    // }
-    
+
+    // Get message details
+    async getMessageDetails(id: string): Promise<Message> {
+        const message = await this.messageModel.findById(id).populate(['user_id','repliedTo_id']).exec();
+        return message;
+    }
 }

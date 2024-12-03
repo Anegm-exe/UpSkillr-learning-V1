@@ -4,7 +4,7 @@ import { Notification } from 'src/schemas/Notification.schema';
 import { Types } from 'mongoose';
 
 @Controller('notifications')
-export class NotificationsController {
+export class NotificationController {
   constructor(private readonly notificationsService: NotificationService) {}
 
   // Create a Notification

@@ -6,6 +6,9 @@ export type ChatDocument = Chat & Document;
 
 @Schema()
 export class Chat {
+  @Prop({ required: true, ref: 'User' })
+  admin_id: string
+
   @Prop({ required: true })
   name: string;
 
@@ -20,12 +23,10 @@ export class Chat {
   })
   user_ids: string[];
 
-  @Prop({default: []})
-  messages: Message[];
+  @Prop({ default: [], ref: 'Message' })
+  messages: string[];
 
   readonly _id?: string;
-
-
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

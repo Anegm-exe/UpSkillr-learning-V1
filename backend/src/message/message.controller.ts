@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Delete, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Put, Patch } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Message } from '../schemas/message.schema';
-import { UpdateMessageDTO } from './message.dto';
+import { CreateMessageDTO, UpdateMessageDTO } from './dtos/message.dto';
 
 @Controller('message')
 export class MessageController {
@@ -9,7 +9,7 @@ export class MessageController {
 
     //create a forum
     @Post()
-    async createForum(@Body() createMessageDTO: Message): Promise<Message> {
+    async createForum(@Body() createMessageDTO: CreateMessageDTO): Promise<Message> {
         return this.messageService.create(createMessageDTO);
 
     }
@@ -17,6 +17,12 @@ export class MessageController {
     @Get()
     async findAll(): Promise<Message[]> {
         return this.messageService.findAll();
+    }
+
+    //get by id
+    @Get(':id')
+    async findOne(@Param('id') id: string): Promise<Message> {
+      return this.messageService.findOne(id);
     }
 
     //delete a forum
@@ -28,7 +34,7 @@ export class MessageController {
     //   async editMessage(@Param('chat_id') chat_id: string, @Param('message_id') message_id: string, @Body() text: string) {
     //     return this.messageService.editMessage(chat_id, message_id, text);
 
-    @Put(':id')  // PUT /messages/:id
+    @Patch(':id')  // PUT /messages/:id
     async updateMessage(
       @Param('id') id: string,           // Path parameter for message ID
       @Body() updateData: UpdateMessageDTO // Request body containing update data

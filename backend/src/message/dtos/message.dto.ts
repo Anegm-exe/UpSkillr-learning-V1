@@ -11,7 +11,6 @@ export class CreateMessageDTO {
 
   @IsString()
   @MaxLength(3000)
-  @IsOptional()
   text: string;
 }
 
@@ -19,8 +18,4 @@ export class UpdateMessageDTO {
   @IsOptional()
   @IsString()
   text: string;
-
-  @IsOptional()
-  @IsString()
-  user_id: string;
 }

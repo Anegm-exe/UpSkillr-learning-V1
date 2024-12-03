@@ -24,6 +24,6 @@ export class ChatModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(AuthenticationMiddleware)
-            .forRoutes(ChatService);
+            .forRoutes(ChatController);
     }
 }
