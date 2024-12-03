@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Modules } from "src/schemas/module.schema";
+import { ModuleDocument, Modules } from "../schemas/module.schema";
 
 @Injectable()
 export class ModuleService {
     constructor(
-        @InjectModel(Modules.name) private moduleModel: Model<Modules>, 
+        @InjectModel(Modules.name) private moduleModel: Model<ModuleDocument>, 
     ) {}
 
     // Create a new module
-    async createModule(createModuleDto: Modules): Promise<Modules> {
-        const newModule = new this.moduleModel(createModuleDto);
+    async createModule(CreateModuleDto: Modules): Promise<Modules> {
+        const newModule = new this.moduleModel(CreateModuleDto);
         return newModule.save();
     }
         
@@ -35,8 +35,8 @@ export class ModuleService {
     }
 
     // Find module by id
-    async findModuleById(moduleId: String): Promise<Modules> {
-        const Module = await this.moduleModel.findById({ _id: moduleId}).exec();
+    async findOne(moduleId: String): Promise<Modules> {
+        const Module = await this.moduleModel.findOne({ _id: moduleId }).exec();
         if (!Module) {
             throw new NotFoundException(`Module with ID ${moduleId} not found`);
         }
