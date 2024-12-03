@@ -77,7 +77,7 @@ export class ChatService {
     return chat.save();
   }
 
-  // Reply to a message
+  // Reply to a message (working in thunderclient)
   async replyToMessage(chat_id: string, message_id: string, text: string, req: Request) : Promise<Chat> {
     const chat = await this.chatModel.findById(chat_id);
     if (!chat) {
@@ -100,7 +100,7 @@ export class ChatService {
     chat.messages.push(message._id);
     return chat.save();
   }
-
+//works in thunder client
   async deleteChat(chat_id: string, req: Request) {
     const chat = await this.chatModel.findById({ _id: chat_id })
     if (!chat) {
@@ -125,7 +125,7 @@ export class ChatService {
     await this.chatModel.deleteOne({ chat_id });
     return { success: true };
   }
-
+//works in thunder client
   async addUserToChat(chat_id: string, email: string, req: Request): Promise<Chat> {
     // Find the chat by ID
     const chat = await this.chatModel.findById(chat_id);
@@ -218,10 +218,10 @@ export class ChatService {
       // remove from chat messages array
       chat.messages.splice(index, 1);
       
-      return;
+      return; //not working in thunderclient 
   }
 
-  // Leave chat 
+  // Leave chat works in thunderclient
   async leaveChat(chat_id: string, req: Request): Promise<void> {
     // Find the chat by ID
     const chat = await this.chatModel.findById(chat_id);

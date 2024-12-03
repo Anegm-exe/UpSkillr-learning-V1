@@ -73,7 +73,7 @@ export class ChatController {
       @Req() req: Request
       ): Promise<void> {
         await this.chatService.deleteMessageFromChat(chat_id, message_id, req);
-    }
+    } //not working in thunderclient
 
     // leave chat
     @Delete(':chat_id/leave')
