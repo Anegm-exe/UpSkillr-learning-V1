@@ -3,34 +3,41 @@ import { CourseService } from 'src/course/course.service';
 import { Course } from 'src/schemas/course.schema';
 import {Role, Roles} from 'src/Auth/decorators/roles.decorator';
 import {authorizationGuard} from 'src/Auth/guards/authorization.guard';
+import { CreateCourseDto } from './dto/createCourse.dto';
+import { UpdateCourseDto } from './dto/updateCourse.dto';
 @Controller('courses')
 export class CourseController {
+    
     constructor(private readonly courseService: CourseService) { }
     //create a course
+    //works
     @Post()
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
-    async create(@Body() createCourseDto: Course): Promise<Course> {
-        return this.courseService.create(createCourseDto);
-    }
+    @Post()
+    async create(@Body() createCourseDto: CreateCourseDto): Promise<Course> {
+    return this.courseService.create(createCourseDto);
+}
 
+    //works
     //get all courses
     @Get()
     async findAll(): Promise<Course[]> {
         return this.courseService.findAll();
     }
-    
+    //works
     //find a course by id
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Course> {
         return this.courseService.findOne(id);
     }
 
+
     //update a course
     @Patch(':id')
     async update(
         @Param('id') id: string,
-        @Body() updateCourseDto: Partial<Course>,
+        @Body() updateCourseDto: UpdateCourseDto,
     ): Promise<Course> {
         return this.courseService.update(id, updateCourseDto);
     }
@@ -48,12 +55,14 @@ export class CourseController {
     }
 
     //get all instructors for a course
+    // change it to display names
     @Get(':id/instructors')
     async getInstructors(@Param('id') courseId: string): Promise<string[]> {
         return this.courseService.getInstructors(courseId);
     }
 
     //get all students for a course
+    //change to get names
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':id/students')
@@ -62,12 +71,14 @@ export class CourseController {
     }
 
     //get all modules for a course
+    //change to get names
     @Get(':id/modules')
     async getModules(@Param('id') courseId: string): Promise<string[]> {
         return this.courseService.getModules(courseId);
     }
 
     //get a specific student by ID
+    //change to display data of student
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':id/students/:studentId')
@@ -79,6 +90,7 @@ export class CourseController {
     }
 
     //get a specific student by name
+    //needs to be updated-- returns error so :/
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':id/students/name/:studentName')
@@ -90,6 +102,7 @@ export class CourseController {
     }
 
     //get a specific instructor by ID
+    //change to display data of instructor
     @Get(':id/instructors/:instructorId')
     async getInstructor(
         @Param('id') courseId: string,
@@ -99,6 +112,7 @@ export class CourseController {
     }
 
     //get a specific module
+    //change to display data of module
     @Get(':id/modules/:moduleId')
     async getModule(
         @Param('id') courseId: string,
@@ -108,6 +122,7 @@ export class CourseController {
     }
 
     //add an instructor to a course
+    //works
     @Patch(':id/instructors/:instructorId')
     async addInstructor(
         @Param('id') courseId: string,
@@ -117,6 +132,7 @@ export class CourseController {
     }
 
     //add a student to a course
+    //works
     @Patch(':id/students/:studentId')
     async addStudent(
         @Param('id') courseId: string,
@@ -162,6 +178,7 @@ export class CourseController {
     }
 
     //get difficulty level of a course
+    //works
     @Get(':id/difficulty')
     async getDifficultyLevel(@Param('id') courseId: string): Promise<string> {
         return this.courseService.getDifficultyLevel(courseId);
@@ -180,6 +197,7 @@ export class CourseController {
     }
 
     //get course by category
+    //works need to change to display name of course only
     @Get('category/:category')
     async getByCategory(@Param('category') category: string): Promise<Course[]> {
         return this.courseService.getByCategory(category);

@@ -2,16 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {Course, CourseDocument} from '../schemas/course.schema';
+import { CreateCourseDto } from './dto/createCourse.dto';
+import { UpdateCourseDto } from './dto/updateCourse.dto';
+
 
 @Injectable()
 export class CourseService{
     constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>,) { }
 
     // create a new course
-    async create(course: Course): Promise<Course> {
-        const newCourse = new this.courseModel(course);
+    async create(createCourseDto: CreateCourseDto): Promise<Course> {
+        const newCourse = new this.courseModel(createCourseDto);
         return newCourse.save();
     }
+    
 
     // get all courses
     async findAll(): Promise<Course[]> {
@@ -28,15 +32,16 @@ export class CourseService{
     }
 
     // update a course
-    async update(id: string, updateData: Partial<Course>): Promise<Course> {
+    async update(id: string, updateCourseDto: UpdateCourseDto): Promise<Course> {
         const updatedCourse = await this.courseModel
-            .findOneAndUpdate({ _id: id },updateData, { new: true })
+            .findOneAndUpdate({ _id: id }, updateCourseDto, { new: true })
             .exec();
         if (!updatedCourse) {
             throw new NotFoundException(`Course with ID ${id} not found`);
         }
         return updatedCourse;
-    }    
+    }
+       
 
     // delete a course
     async delete(id: string): Promise<void> {
