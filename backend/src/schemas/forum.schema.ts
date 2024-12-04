@@ -15,11 +15,7 @@ export class Forum {
   @Prop({ required: true })
   title: string;
 
-  @Prop({
-    type: [String],
-    required: true,
-   
-  })
+  @Prop({ default: [], ref: 'Message'})
   messages: string[];
 
   @Prop({ default: Date.now })

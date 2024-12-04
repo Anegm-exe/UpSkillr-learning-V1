@@ -4,10 +4,12 @@ import { Chat } from '../schemas/chat.schema'
 import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
 import { Request } from 'express';
 import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/schemas/user.schema';
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) { }
-
+  constructor(private readonly chatService: ChatService) 
+{}
   //creating a chat
   @Post()
   async createChat(@Body('chat') createChatDTO: CreateChatDTO, @Body('emails') email: string[]) {
@@ -44,10 +46,10 @@ export class ChatController {
   //for when a user registers they should pass through the authorization guard
   @Delete(':chat_id')
   async deleteChat(@Param('chat_id') chat_id: string, @Req() req: Request) {
-    return await this.chatService.deleteChat(chat_id, req);
+    return await this.chatService.delete(chat_id, req);
   }
 
-  @Post(':chat_id/add/:email')
+  @Post(':chat_id/user/:email')
   async addUserToChat(
     @Param('chat_id') chat_id: string,
     @Param('email') email: string,
@@ -56,14 +58,14 @@ export class ChatController {
     return await this.chatService.addUserToChat(chat_id, email, req);
   }
 
-  @Delete(':chat_id/delete/:user_id')
+  @Delete(':chat_id/user/:user_id')
   async removeUserFromChat(
     @Param('chat_id') chat_id: string,
     @Param('user_id') user_id: string,
     @Req() req: Request
     ): Promise<void> {
       await this.chatService.removeUsersFromChat(chat_id, user_id, req);
-    }
+  }
 
     // Delete message from chat
     @Delete(':chat_id/message/:message_id')
@@ -73,13 +75,19 @@ export class ChatController {
       @Req() req: Request
       ): Promise<void> {
         await this.chatService.deleteMessageFromChat(chat_id, message_id, req);
-    } //not working in thunderclient
-
-    // leave chat
-    @Delete(':chat_id/leave')
-    async leaveChat(@Param('chat_id') chat_id: string, @Req() req: Request): Promise<void> {
-      await this.chatService.leaveChat(chat_id, req);
     }
+
+  // leave chat
+  @Delete(':chat_id/leave')
+  async leaveChat(@Param('chat_id') chat_id: string, @Req() req: Request): Promise<void> {
+    await this.chatService.leaveChat(chat_id, req);
+  }
+
+  // search by name
+  @Get('search/:name')
+  async searchByName(@Param('name') name: string, @Req() req: Request): Promise<Chat[]> {
+    return await this.chatService.searchByName(name, req);
+  }
 }
 
 /* body decorator binds the request body to the DTO parameter

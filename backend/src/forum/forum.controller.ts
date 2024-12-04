@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Delete, Body, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Put, UseGuards, Req, Patch } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { Forum } from '../schemas/forum.schema';
 import { Roles } from 'src/Auth/decorators/roles.decorator';
 import { Role } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
+import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';
+import { Request } from 'express';
 
 
 @Controller('forum')
@@ -12,14 +14,14 @@ export class ForumController {
 
     //create a forum
     @Post()
-    async createForum(@Body() createForumDTO: Forum): Promise<Forum> {
-        return this.forumService.create(createForumDTO);
+    async createForum(@Body() createForumDTO: CreateForumDto,@Req() req: Request): Promise<Forum> {
+        return this.forumService.create(createForumDTO, req);
     }
 
     //get one forum
-    @Get(':_id')
-    async findOne(@Param('_id') _id: string): Promise<Forum> {
-        return this.forumService.findOne(_id);
+    @Get(':forum_id')
+    async findOne(@Param('forum_id') forum_id: string): Promise<Forum> {
+        return this.forumService.findOne(forum_id);
     }
 
     //get all forums
@@ -28,44 +30,47 @@ export class ForumController {
         return this.forumService.findAll();
     }
 
-    @Get(':_id')
+    @Get('course/:_id')
     async getByCourse(@Param('_id') _id: string): Promise<Forum[]> {
         return this.forumService.getByCourse(_id);
     }
 
-    @Get(':_id')
+    @Get('user/:_id')
     async getByUser(@Param('_id') _id: string): Promise<Forum[]> {
         return this.forumService.getByUser(_id);
     }
 
-    @Put(':_id')
-    async update(@Param('_id') _id: string, @Body() updateData: Partial<Forum>): Promise<Forum> {
-        return this.forumService.update(_id, updateData);
+    @Patch(':forum_id')
+    async update(
+        @Param('forum_id') forum_id: string,
+        @Body() updateData: UpdateForumDto,
+        @Req() req: Request
+    ) : Promise<Forum> {
+        return this.forumService.update(forum_id, updateData,req);
     }
 
-    @Post(':_id/:messageId')
-    async addMessage(@Param('_id') _id: string, @Param('messageId') messageId: string): Promise<void> {
-        return this.forumService.addMessage(_id, messageId);
+    @Post(':forum_id')
+    async sendMessage(@Param('forum_id') _id: string, @Body('message') message: string, @Req() req: Request) {
+        return await this.forumService.sendMessage(_id, message,req);
     }
 
-    //add message to forum
-    @Delete(':_id')
-    async delete(@Param('_id') _id: string): Promise<void> {
-        return this.forumService.delete(_id);
-    }
-    
-    //delete a forum
-    @Roles(Role.Admin, Role.Instructor)
-    @UseGuards(authorizationGuard)
-    @Put(':_id')
-    async deleteMessage(@Param('_id') _id: string, @Body() message_id: string): Promise<void> {
-        return this.forumService.deleteMessage(_id, message_id);
+    @Post(':forum_id/reply/:message_id')
+    async reply(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Body('message') message: string, @Req() req: Request) {
+        return await this.forumService.replyToMessage(forum_id, message_id, message, req);
     }
 
+    @Delete(':forum_id')
+    async delete(@Param('forum_id') forum_id: string, @Req() req: Request): Promise<void> {
+        return this.forumService.delete(forum_id,req);
+    }    
 
+    @Delete(':forum_id/message/:message_id')
+    async deleteMessage(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Req() req: Request): Promise<void> {
+        return this.forumService.deleteMessageFromForum(forum_id, message_id,req);
+    }
+
+    @Get('search/:title')
+    async searchByTitle(@Param('title') title: string): Promise<Forum[]> {
+        return this.forumService.searchByTitle(title);
+    }
 }
-//     @Post(':_id/:id')
-//     async findOne(@Param('_id') _id: string): Promise<Forum> {
-//         Forum newForum = this.forumService.findOne(_id);
-//         newForum.messages.push(id);
-// }
