@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs
 import { NotificationService } from './notifications.service';
 import { Notification } from 'src/schemas/Notification.schema';
 import { Types } from 'mongoose';
+import { CreateNotificationDto, UpdateNotificationDto } from './dtos/notifications.dtos';
 
 @Controller('notifications')
 export class NotificationController {
@@ -9,7 +10,7 @@ export class NotificationController {
 
   // Create a Notification
   @Post()
-  async createNotification(@Body() notificationData: Notification): Promise<Notification> {
+  async createNotification(@Body() notificationData: CreateNotificationDto): Promise<Notification> {
     return this.notificationsService.create(notificationData);
   }
 
@@ -29,7 +30,7 @@ export class NotificationController {
   @Patch(':id')
   async updateNotification(
     @Param('id') id: string, 
-    @Body() updateData: Partial<Notification>
+    @Body() updateData: UpdateNotificationDto
   ): Promise<Notification> {
     return this.notificationsService.update((id), updateData);
   }
