@@ -21,8 +21,8 @@ export class ForumService {
 
     async findAll(): Promise<Forum[]> {
         return this.forumModel.find().populate([
-            { path: 'messages', populate: { path: 'user_id', select: 'name' } },
-            { path: 'user_id', select: 'name' } 
+            { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
+            { path: 'user_id', select: ['name','profile_picture_url'] } 
         ]).exec();
     }
 
@@ -30,8 +30,8 @@ export class ForumService {
         const forum = await this.forumModel
             .findById({ _id: id })
             .populate([
-                { path: 'messages', populate: { path: 'user_id', select: 'name' } },
-                { path: 'user_id', select: 'name' } 
+                { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
+                { path: 'user_id', select: ['name','profile_picture_url'] } 
             ])
             .exec();
         if (!forum) {
@@ -140,14 +140,37 @@ export class ForumService {
     }
 
     async getByCourse(courseId: string): Promise<Forum[]> {
-        return this.forumModel.find({ course: courseId }).exec();
+        const forum = await this.forumModel
+        .find({ course_id: courseId })
+        .populate([
+            { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
+            { path: 'user_id', select: ['name','profile_picture_url'] } 
+        ])
+        .exec();
+    if (!forum) {
+        throw new NotFoundException(`Forum with course ID ${courseId} not found`);
+    }
+    return forum;
     }
 
     async getByUser(userId: string): Promise<Forum[]> { 
-        return this.forumModel.find({ user: userId }).exec();
+        const forum = await this.forumModel
+            .find({ user_id: userId })
+            .populate([
+                { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
+                { path: 'user_id', select: ['name','profile_picture_url'] } 
+            ])
+            .exec();
+        if (!forum) {
+            throw new NotFoundException(`Forum with user ID ${userId} not found`);
+        }
+        return forum;
     }
 
     async searchByTitle(title: string): Promise<Forum[]> {
-        return this.forumModel.find({ title: { $regex: title, $options: 'i' } });
+        return this.forumModel.find({ title: { $regex: title, $options: 'i' } }).populate([
+            { path: 'user_id', select: 'name' },
+            { path: 'course_id', select: 'title' } 
+        ]);
     }
 }

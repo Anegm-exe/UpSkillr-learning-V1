@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/schemas/user.schema';
 import { AuthenticationLogService } from 'src/authenticationlog/authenticationlog.service';
+import { CreateUserDto } from 'src/user/dtos/user.dto';
 @Injectable()
 export class AuthService {
     constructor(
@@ -11,14 +12,14 @@ export class AuthService {
         private jwtService: JwtService,
         private readonly authenticationlogService: AuthenticationLogService
     ) { }
-    async register(user: Partial<User>): Promise<string> {
+    async register(user: CreateUserDto): Promise<string> {
         const existingUser = await this.usersService.findByEmail(user.email);
         if (existingUser) {
           this.authenticationlogService.create({user_id:existingUser._id,event:"Email already exists",status:"Failure"})
           throw new ConflictException('email already exists');
         }
         const hashedPassword = await bcrypt.hash(user.password, 10);
-        const newUser:  Partial<User> = { ...user, password: hashedPassword };
+        const newUser:  CreateUserDto = { ...user, password: hashedPassword };
         const USER = await this.usersService.create(newUser);
         this.authenticationlogService.create({user_id:USER._id,event:"Registered successfully",status:"Success"})
         return 'registered successfully';

@@ -2,13 +2,14 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
+import { CreateUserDto, updateUserDto } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,) { }
 
     // Create A User With The Data Provided
-    async create(user: Partial<User>): Promise<User> {
+    async create(user: CreateUserDto): Promise<User> {
         const newUser = new this.userModel(user);
         return newUser.save();
     }
@@ -37,7 +38,7 @@ export class UserService {
     }
 
     // Update A User Based On New-Data
-    async update(id: string, updateData: Partial<User>): Promise<User> {
+    async update(id: string, updateData: updateUserDto): Promise<User> {
         if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid ID format');
         }
