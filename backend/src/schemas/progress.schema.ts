@@ -6,10 +6,10 @@ export type ProgressDocument = Progress & Document;
 @Schema()
 export class Progress {
   @Prop({ required: true , ref: 'User'})
-  user_id: String;
+  user_id: string;
 
   @Prop({ required: true , ref: 'Course'})
-  course_id: String;
+  course_id: string;
 
   @Prop({ required: true, min: 0, max: 100 })
   completion_percentage: number;

@@ -1,15 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Document } from 'mongoose';
 
-export type QuestionDocument = Question & Document;
+export type QuestionsDocument = Questions & Document;
 
 @Schema()
-export class Question {
+export class Questions {
   @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
-  options: String[];
+  options: string[];
 
   @Prop({ required: true }) 
   answer: number;
@@ -17,4 +17,4 @@ export class Question {
   readonly _id?: string;
 }
 
-export const QuestionSchema = SchemaFactory.createForClass(Question);
+export const QuestionsSchema = SchemaFactory.createForClass(Questions);
