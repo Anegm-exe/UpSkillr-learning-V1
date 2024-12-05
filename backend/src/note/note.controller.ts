@@ -3,6 +3,7 @@ import { NoteService } from './note.service';
 import { Note } from 'src/schemas/note.schema';
 import { Types } from 'mongoose';
 import { NotificationService } from 'src/notification/notifications.service';
+import { CreateNoteDto, UpdateNoteDto } from './dtos/note.dto';
 
 @Controller('note')
 export class NoteController {
@@ -10,7 +11,7 @@ export class NoteController {
 
   // Create a new note
   @Post()
-  async create(@Body() body: Note): Promise<Note> {
+  async create(@Body() body: CreateNoteDto): Promise<Note> {
     return this.noteService.create(body);
   }
 
@@ -29,14 +30,14 @@ export class NoteController {
   // Get notes by course ID
   @Get('course/:courseId')
   async findByCourseId(@Param('courseId') courseId: string): Promise<Note[]> {
-    return this.noteService.findByCourseId(Number(courseId));
+    return this.noteService.findByCourseId((courseId));
   }
 
   // Update a note by ID
   @Patch(':id')
   async update(
     @Param('id') id: string, 
-    @Body() body: Partial<Note>
+    @Body() body: UpdateNoteDto
   ): Promise<Note> {
     return this.noteService.update((id), body);
   }

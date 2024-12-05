@@ -2,12 +2,13 @@ import { Injectable,NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model,Types } from 'mongoose';
 import { Note,NoteDocument} from 'src/schemas/note.schema';
+import { CreateNoteDto, UpdateNoteDto } from './dtos/note.dto';
 
 @Injectable()
 export class NoteService {
   constructor(@InjectModel(Note.name) private noteModel: Model<NoteDocument>,) { }
   // create a note
-  async create(noteData: Partial<Note>): Promise<Note> { 
+  async create(noteData: CreateNoteDto): Promise<Note> { 
     const note = new this.noteModel(noteData); 
     return await note.save(); 
   }
@@ -18,7 +19,7 @@ export class NoteService {
 }
   //get note by id
  async findOne(id: String): Promise<Note> {
-    const note = await this.noteModel.findOne(id).exec();
+    const note = await this.noteModel.findOne({_id:id}).exec();
     if (!note) {
       throw new NotFoundException(`Note with id #${id} not found`);
     }
@@ -26,8 +27,8 @@ export class NoteService {
   }
 
   //get note by course id
-  async findByCourseId(courseId: number): Promise<Note[]> {
-    const notes = await this.noteModel.find({ courseId }).exec(); // Query notes with the given courseId
+  async findByCourseId(courseId: string): Promise<Note[]> {
+    const notes = await this.noteModel.find({ course_id:courseId }).exec(); // Query notes with the given courseId
     if (!notes || notes.length === 0) {
       throw new NotFoundException(`No notes found for course id #${courseId}`);
     }
@@ -35,7 +36,7 @@ export class NoteService {
   }
 
   //update note
-  async update(id: String, updateData: Partial<Note>): Promise<Note> {
+  async update(id: String, updateData: UpdateNoteDto): Promise<Note> {
     const updatedNote = await this.noteModel
         .findOneAndUpdate({ _id: id }, updateData, { new: true })
         .exec();

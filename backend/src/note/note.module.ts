@@ -1,9 +1,10 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Note, NoteSchema } from "src/schemas/note.schema";
 import { NoteController } from "./note.controller";
 import { NoteService } from "./note.service";
 import { NotificationModule } from "src/notification/notification.module";
+import { AuthenticationMiddleware } from "src/Auth/middleware/authentication.middleware";
 
 @Module({
   imports: [
@@ -18,4 +19,10 @@ import { NotificationModule } from "src/notification/notification.module";
   controllers: [NoteController],
   providers: [NoteService],
 })
-export class NoteModule {}
+export class NoteModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(AuthenticationMiddleware)
+            .forRoutes(NoteController);
+    }
+}
