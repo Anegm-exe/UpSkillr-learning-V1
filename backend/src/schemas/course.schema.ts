@@ -29,7 +29,7 @@ export class Course {
   @Prop({ required: true, ref: "User" })
   students: string[]; //each course can have more than one student
 
-  @Prop({ required: true,ref: "Module" })
+  @Prop({ required: true,ref: "Modules" })
   modules: string[]; //each course can have more than one module
 
   @Prop({ required: true, ref: "Quiz" })

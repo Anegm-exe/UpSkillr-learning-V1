@@ -55,14 +55,14 @@ export class CourseController {
     }
 
     //get all instructors for a course
-    // change it to display names
+    
     @Get(':id/instructors')
     async getInstructors(@Param('id') courseId: string): Promise<string[]> {
         return this.courseService.getInstructors(courseId);
     }
 
     //get all students for a course
-    //change to get names
+    
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':id/students')
@@ -221,6 +221,15 @@ export class CourseController {
     @Get(':id/quizzes')
     async getQuizzes(@Param('id') courseId: string): Promise<string[]> {
         return this.courseService.getQuizzes(courseId);
+    }
+
+    //get a specific quiz
+    @Get(':id/quizzes/:quizId')
+    async getQuiz(
+        @Param('id') courseId: string,
+        @Param('quizId') quizId: string,
+    ): Promise<string> {
+        return this.courseService.getQuiz(courseId, quizId);
     }
 
     //add a quiz to a course

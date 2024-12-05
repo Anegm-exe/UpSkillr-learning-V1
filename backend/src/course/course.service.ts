@@ -1,14 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {Course, CourseDocument} from '../schemas/course.schema';
 import { CreateCourseDto } from './dto/createCourse.dto';
 import { UpdateCourseDto } from './dto/updateCourse.dto';
+import { UserService } from '../user/user.service'; // Import UserService
 
 
 @Injectable()
 export class CourseService{
-    constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>,) { }
+    constructor(
+        @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
+        private userService: UserService // Inject UserService
+    ) { }
 
     // create a new course
     async create(createCourseDto: CreateCourseDto): Promise<Course> {
@@ -61,18 +65,31 @@ export class CourseService{
     }
 
     // get all instructors for a course
-    async getInstructors(courseId: string): Promise<string[]> {
+    async getInstructors(courseId: string): Promise<any[]> { // Change the return type to match your needs
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        return course.instructor_ids;
+    
+        const instructors = await Promise.all(
+            course.instructor_ids.map(async (id: string) => {
+                const user = await this.userService.findOne(id); // Assuming userService is injected
+                return {
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    profilePicture: user.profile_picture_url, // Include profile picture
+                };
+            })
+        );
+    
+        return instructors;
     }
 
     // get all students for a course (Prof only)
     //need to add check for current user role- wait on negm
-    async getStudents(courseId: string): Promise<string[]> {
-        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+    async getStudents(courseId: string): Promise<any[]> {
+        const course = await this.courseModel.findOne({ _id: courseId }).populate([{path: 'students',select:["name","email","profile_picture_url"]}]).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
@@ -81,7 +98,7 @@ export class CourseService{
 
     // get all modules for a course
     async getModules(courseId: string): Promise<string[]> {
-    const course = await this.courseModel.findOne({ _id: courseId }).exec();
+    const course = await this.courseModel.findOne({ _id: courseId }).populate([{path : `modules`, select:["title","content","resources","contentIDs"]}]).exec();
     if (!course) {
         throw new NotFoundException(`Course with ID ${courseId} not found`);
     }
@@ -90,43 +107,63 @@ export class CourseService{
 
 
     //get a specific student in a course  by ID (Prof only)
-    //need to add check for current user role- wait on negm
     async getStudent(courseId: string, studentId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        if (!course.students.includes(studentId)) {
+        const index=course.students.indexOf(studentId);
+        if (index===-1) {
             throw new NotFoundException(`Student with ID ${studentId} not found in course with ID ${courseId}`);
         }
-        return studentId;
+        return (await course.populate([{path: 'students',select:["name","email","profile_picture_url"]}])).students[index];
     }
 
     // get a specific student in a course by name (Prof only)
     //need to add check for current user role- wait on negm
     // dont think this works need to test first (WIP)
-    async getStudentByName(courseId: string, studentName: string): Promise<string> {
-        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+    async getStudentByName(courseId: string, studentName: string): Promise<any> {
+        // Find the course and populate the students array with specific fields
+        const course = await this.courseModel
+            .findOne({ _id: courseId })
+            .populate({
+                path: 'students', // Replace 'students' with the actual field name in your schema
+                select: ['name', 'email', 'profile_picture_url'], // Select only required fields
+            })
+            .exec();
+    
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        const student = await this.courseModel.findOne({ title: studentName }).exec();
+    
+        // Search for the student by name within the populated students
+        const student = course.students.find((student: any) =>
+            new RegExp(studentName, 'i').test(student.name) // Assuming student documents have a 'name' field
+        );
+    
         if (!student) {
-            throw new NotFoundException(`Student with name ${studentName} not found in course with ID ${courseId}`);
+            throw new NotFoundException(`Student with name "${studentName}" not found in course with ID ${courseId}`);
         }
-        return studentName;
+    
+        // Return the matched student's selected fields
+        return student;
     }
+    
+    
 
+   
     // get a specific instructor in a course
     async getInstructor(courseId: string, instructorId: string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        if (!course.instructor_ids.includes(instructorId)) {
+        const index=course.instructor_ids.indexOf(instructorId);
+        if (index===-1) {
             throw new NotFoundException(`Instructor with ID ${instructorId} not found in course with ID ${courseId}`);
         }
-        return instructorId;
+
+       return (await course.populate([{path: 'instructor_ids',select:["name","email","profile_picture_url"]}])).instructor_ids[index];
     }
 
  
@@ -136,10 +173,12 @@ export class CourseService{
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        if (!course.modules.includes(moduleId)) {
+        const index=course.modules.indexOf(moduleId);
+        if (index===-1) {
             throw new NotFoundException(`Module with ID ${moduleId} not found in course with ID ${courseId}`);
         }
-        return moduleId;
+
+        return (await course.populate([{path : `modules`, select:["title","content","resources","contentIDs"]}])).modules[index];
     }
 
     // add an instructor to a course
@@ -246,11 +285,24 @@ export class CourseService{
 
     //get quizzes by course
     async getQuizzes(courseId: string): Promise<string[]> {
-        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        const course = await this.courseModel.findOne({ _id: courseId }).populate([{path: 'quizzes',select:["module_id","questions"]}]).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
         return course.quizzes;
+    }
+
+    //get quiz by id
+    async getQuiz(courseId: string, quizId: string): Promise<string> {
+        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`);
+        }
+        const index=course.quizzes.indexOf(quizId);
+        if (index===-1) {
+            throw new NotFoundException(`Quiz with ID ${quizId} not found in course with ID ${courseId}`);
+        }
+        return (await course.populate([{path: 'quizzes',select:["module_id","questions"]}])).quizzes[index];
     }
     
     //add quiz to course
