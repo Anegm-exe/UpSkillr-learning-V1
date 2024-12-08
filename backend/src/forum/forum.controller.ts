@@ -1,9 +1,6 @@
 import { Controller, Get, Post, Delete, Body, Param, Put, UseGuards, Req, Patch } from '@nestjs/common';
 import { ForumService } from './forum.service';
-import { Forum } from '../schemas/forum.schema';
-import { Roles } from 'src/Auth/decorators/roles.decorator';
-import { Role } from 'src/Auth/decorators/roles.decorator';
-import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
+import { Forum } from './model/forum.schema';
 import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';
 import { Request } from 'express';
 

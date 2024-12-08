@@ -11,17 +11,29 @@ export class Modules {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
-  content: string;
+  @Prop({ required: true, enum:['hard','medium','easy']})
+  difficulty: string;
 
   @Prop({ default: [] })
   resources: string[];
 
+  @Prop({ default: [], ref: 'Content' })
+  content_ids: string[];
+
+  @Prop({ required: true})
+  no_question: number;
+
+  @Prop({ required: true , enum:['mcq','truefalse','both']})
+  type: string;
+
+  @Prop({ default: [], ref:'Question'})
+  question_bank: string[];
+
+  @Prop({ default: [], ref:'Quiz'})
+  quizzes: string[];
+  
   @Prop({ default: Date.now })
   timestamp: Date;
-
-  @Prop({ ref: 'Content', required: true })
-  contentIDs: string[];
 
   readonly _id?: string;
 }

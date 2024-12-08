@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors, Patch } from '@nestjs/common';
 import { ResponseService } from './response.service';
-import { Response } from '../schemas/response.schema';
+import { Response } from './model/response.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 import { CreateResponseDto, UpdatedResponseDto } from './dtos/response.dto';

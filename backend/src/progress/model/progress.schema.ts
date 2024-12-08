@@ -17,7 +17,10 @@ export class Progress {
   @Prop({ default: Date.now })
   last_accessed: Date;
 
-  @Prop({ default: 0 })
+  @Prop({ default: [] })
+  completed_modules: { module_id: string, score: number}[];
+
+  @Prop({ required: false })
   average_quiz: number;
 
   @Prop({ default: 0 })

@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException, 
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/schemas/user.schema';
+import { User } from 'src/user/model/user.schema';
 import { AuthenticationLogService } from 'src/authenticationlog/authenticationlog.service';
 import { CreateUserDto } from 'src/user/dtos/user.dto';
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
           }
 
-        const payload = { user:{userid: user._id, role: user.role} };
+        const payload = { user:{userid: user._id, role: user.role,name:user.name} };
         this.authenticationlogService.create({user_id:user._id,event:"Login successful",status:"Success"})
         return {
             access_token: await this.jwtService.signAsync(payload),

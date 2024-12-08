@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Query, Put, Patch, Delete, Param, UseGuards, Res, Req, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { Chat } from '../schemas/chat.schema'
+import { Chat } from './model/chat.schema'
 import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
 import { Request } from 'express';
 import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware';

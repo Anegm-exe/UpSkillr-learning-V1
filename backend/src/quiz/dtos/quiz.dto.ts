@@ -1,11 +1,12 @@
-import { UpdateQuestionDto } from "src/question/dtos/question.dto";
-
 export class CreateQuizDto {
-    module_id: string;
+    user_id:string;
     questions: string[];
+    type: string;
+    module_id:string;
 }
 
 export class UpdateQuizDto {
-    module_id?: string;
-    questions?: {question_id: string, question:UpdateQuestionDto}[];
+    user_id?: string;
+    type?: string;
+    questions?: string[];
 }

@@ -1,4 +1,4 @@
-import { FileVersion } from "src/schemas/content.schema";
+import { FileVersion } from "src/content/model/Content.schema";
 
 export class UpdateContentDto {
   readonly title?: string;

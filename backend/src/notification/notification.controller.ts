@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs/common';
 import { NotificationService } from './notifications.service';
-import { Notification } from 'src/schemas/Notification.schema';
+import { Notification } from 'src/notification/model/Notification.schema';
 import { Types } from 'mongoose';
 import { CreateNotificationDto, UpdateNotificationDto } from './dtos/notifications.dtos';
 
@@ -18,6 +18,11 @@ export class NotificationController {
   @Get()
   async findAllNotifications(): Promise<Notification[]> {
     return this.notificationsService.findAll();
+  }
+
+  @Get('user/:user_id')
+  async getNotificationsByUser(@Param('user_id') user_id: string): Promise<Notification[]> {
+    return this.notificationsService.findByUserId(user_id);
   }
 
   // Get Notification by ID
@@ -43,6 +48,5 @@ export class NotificationController {
   @Delete()
   async removeExpiredNotifications(): Promise<void> {
     const deletedCount = await this.notificationsService.deleteExpiredNotifications();
-    console.log(`Deleted ${deletedCount} expired notifications.`);
   }
 }

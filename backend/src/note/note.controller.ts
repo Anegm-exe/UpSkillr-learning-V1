@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { NoteService } from './note.service';
-import { Note } from 'src/schemas/note.schema';
+import { Note } from 'src/note/model/note.schema';
 import { Types } from 'mongoose';
 import { NotificationService } from 'src/notification/notifications.service';
 import { CreateNoteDto, UpdateNoteDto } from './dtos/note.dto';
+import { Request } from 'express';
 
 @Controller('note')
 export class NoteController {
@@ -28,9 +29,9 @@ export class NoteController {
   }
 
   // Get notes by course ID
-  @Get('course/:courseId')
-  async findByCourseId(@Param('courseId') courseId: string): Promise<Note[]> {
-    return this.noteService.findByCourseId((courseId));
+  @Get('user')
+  async findByUser(@Req() req: Request): Promise<Note[]> {
+    return this.noteService.findByUser(req);
   }
 
   // Update a note by ID
@@ -46,15 +47,5 @@ export class NoteController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.noteService.delete(id);
-  }
-  // Share a note 
-  @Post('share/:noteId/:userId')
-  async share(@Param('noteId') noteId: string,@Param('userId') userId: string):Promise<void>{
-    const note = await this.noteService.findOne(noteId);
-    await this.notificationService.create({
-      user_id:userId,
-      message:`Would you like to receive a note from ${userId} ${noteId}`,
-      sender_id:note.user_id
-     })
   }
 }

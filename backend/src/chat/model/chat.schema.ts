@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types, Document } from 'mongoose';
-import { Message } from './message.schema';
+import { Document } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
 

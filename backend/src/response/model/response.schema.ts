@@ -12,7 +12,10 @@ export class Response{
   quiz_id: string;
 
   @Prop({ required: true })
-  answers: {questionId: string; answer: number}[];
+  answers: {question_id: string; answer: number}[];
+
+  @Prop({ required: false })
+  correctAnswers: {question_id: string; answer: number}[];
 
   @Prop({ default: 0 })
   score: number;

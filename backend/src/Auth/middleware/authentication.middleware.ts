@@ -3,6 +3,7 @@ import { UnauthorizedException } from '@nestjs/common/exceptions/unauthorized.ex
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import { AuthenticationLogService } from 'src/authenticationlog/authenticationlog.service';
 dotenv.config();
 
 export function AuthenticationMiddleware(req: Request, res: Response, next: NextFunction) {

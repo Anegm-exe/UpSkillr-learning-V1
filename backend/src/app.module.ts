@@ -14,13 +14,17 @@ import { ContentModule } from "./content/content.module";
 import { NotificationModule } from "./notification/notification.module";
 import { ForumModule } from "./forum/forum.module";
 import { AuthModule } from "./Auth/auth.module";
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { AuthenticationLogService } from "./authenticationlog/authenticationlog.service";
+import { APP_FILTER } from '@nestjs/core';
+import { UnauthorizedExceptionFilter } from "./Auth/middleware/UnauthorizedExceptionFilter";
+import { AppController } from "./app.controller";
+import { AuthenticationMiddleware } from "./Auth/middleware/authentication.middleware";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr"), //mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr
-    // MongooseModule.forRoot("mongodb://localhost:27017"),
+    MongooseModule.forRoot("mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr"),
     MessageModule,
     QuizModule,
     QuestionModule,
@@ -40,5 +44,18 @@ import { ConfigModule } from "@nestjs/config";
       isGlobal: true,
     }),
   ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: UnauthorizedExceptionFilter,
+    }
+  ],
+  controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+        .apply(AuthenticationMiddleware)
+        .forRoutes(AppController);
+  }
+}

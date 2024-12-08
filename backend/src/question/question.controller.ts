@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { QuestionService as QuestionService } from './question.service';
-import { Questions as Question } from '../schemas/question.schema';
+import { Questions as Question } from './model/question.schema';
 import { CreateQuestionDto, UpdateQuestionDto } from './dtos/question.dto';
 
 @Controller('question')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) { }
 
-    @Post()
+    @Post('module/:module_id')
     async create(@Body() createQuestionDto: CreateQuestionDto): Promise<Question> {
         return this.questionService.create(createQuestionDto);
     }

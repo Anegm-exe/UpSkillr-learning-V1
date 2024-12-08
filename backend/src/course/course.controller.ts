@@ -1,17 +1,22 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Patch, Req } from '@nestjs/common';
 import { CourseService } from 'src/course/course.service';
-import { Course } from 'src/schemas/course.schema';
+import { Course } from 'src/course/model/course.schema';
 import {Role, Roles} from 'src/Auth/decorators/roles.decorator';
 import {authorizationGuard} from 'src/Auth/guards/authorization.guard';
-@Controller('courses')
+import { CreateCourseDto, UpdateCourseDto } from './dtos/course.dto';
+import { Request } from 'express';
+import { CreateResponseDto } from 'src/response/dtos/response.dto';
+import { Response } from 'src/response/model/response.schema';
+import { CreateModuleDto } from 'src/module/dtos/module.dto';
+@Controller('course')
 export class CourseController {
     constructor(private readonly courseService: CourseService) { }
     //create a course
     @Post()
-    @Roles(Role.Instructor,Role.Admin)
+    @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    async create(@Body() createCourseDto: Course): Promise<Course> {
-        return this.courseService.create(createCourseDto);
+    async create(@Body() createCourseDto: CreateCourseDto, @Req() req:Request): Promise<Course> {
+        return this.courseService.create(createCourseDto,req);
     }
 
     //get all courses
@@ -27,15 +32,19 @@ export class CourseController {
     }
 
     //update a course
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
     @Patch(':id')
     async update(
         @Param('id') id: string,
-        @Body() updateCourseDto: Partial<Course>,
+        @Body() updateCourseDto: UpdateCourseDto,
     ): Promise<Course> {
         return this.courseService.update(id, updateCourseDto);
     }
 
     //delete a course
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<void> {
         return this.courseService.delete(id);
@@ -47,68 +56,11 @@ export class CourseController {
         return this.courseService.findByName(name);
     }
 
-    //get all instructors for a course
-    @Get(':id/instructors')
-    async getInstructors(@Param('id') courseId: string): Promise<string[]> {
-        return this.courseService.getInstructors(courseId);
-    }
-
-    //get all students for a course
-    @Roles(Role.Instructor,Role.Admin)
-    @UseGuards(authorizationGuard)
-    @Get(':id/students')
-    async getStudents(@Param('id') courseId: string): Promise<string[]> {
-        return this.courseService.getStudents(courseId);
-    }
-
-    //get all modules for a course
-    @Get(':id/modules')
-    async getModules(@Param('id') courseId: string): Promise<string[]> {
-        return this.courseService.getModules(courseId);
-    }
-
-    //get a specific student by ID
-    @Roles(Role.Instructor,Role.Admin)
-    @UseGuards(authorizationGuard)
-    @Get(':id/students/:studentId')
-    async getStudent(
-        @Param('id') courseId: string,
-        @Param('studentId') studentId: string,
-    ): Promise<string> {
-        return this.courseService.getStudent(courseId, studentId);
-    }
-
-    //get a specific student by name
-    @Roles(Role.Instructor,Role.Admin)
-    @UseGuards(authorizationGuard)
-    @Get(':id/students/name/:studentName')
-    async getStudentByName(
-        @Param('id') courseId: string,
-        @Param('studentName') studentName: string,
-    ): Promise<string> {
-        return this.courseService.getStudentByName(courseId, studentName);
-    }
-
-    //get a specific instructor by ID
-    @Get(':id/instructors/:instructorId')
-    async getInstructor(
-        @Param('id') courseId: string,
-        @Param('instructorId') instructorId: string,
-    ): Promise<string> {
-        return this.courseService.getInstructor(courseId, instructorId);
-    }
-
-    //get a specific module
-    @Get(':id/modules/:moduleId')
-    async getModule(
-        @Param('id') courseId: string,
-        @Param('moduleId') moduleId: string,
-    ): Promise<string> {
-        return this.courseService.getModule(courseId, moduleId);
-    }
 
     //add an instructor to a course
-    @Patch(':id/instructors/:instructorId')
+    @Roles(Role.Instructor,Role.Admin)
+    @UseGuards(authorizationGuard)
+    @Post(':id/instructors/:instructorId')
     async addInstructor(
         @Param('id') courseId: string,
         @Param('instructorId') instructorId: string,
@@ -117,24 +69,19 @@ export class CourseController {
     }
 
     //add a student to a course
-    @Patch(':id/students/:studentId')
-    async addStudent(
+    @Roles(Role.Student)
+    @UseGuards(authorizationGuard)
+    @Post(':id/apply')
+    async apply(
         @Param('id') courseId: string,
-        @Param('studentId') studentId: string,
+        @Req() req: Request,
     ): Promise<Course> {
-        return this.courseService.addStudent(courseId, studentId);
-    }
-
-    //add a module to a course
-    @Patch(':id/modules/:moduleId')
-    async addModule(
-        @Param('id') courseId: string,
-        @Param('moduleId') moduleId: string,
-    ): Promise<Course> {
-        return this.courseService.addModule(courseId, moduleId);
+        return this.courseService.apply(courseId, req);
     }
 
     //remove a instructor from a course
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
     @Delete(':id/instructors/:instructorId')
     async deleteInstructor(
         @Param('id') courseId: string,
@@ -144,6 +91,8 @@ export class CourseController {
     }
 
     //remove a student from a course
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
     @Delete(':id/students/:studentId')
     async deleteStudent(
         @Param('id') courseId: string,
@@ -153,6 +102,8 @@ export class CourseController {
     }
 
     //remove a module from a course
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
     @Delete(':id/modules/:moduleId')
     async deleteModule(
         @Param('id') courseId: string,
@@ -161,34 +112,22 @@ export class CourseController {
         return this.courseService.removeModule(courseId, moduleId);
     }
 
-    //get difficulty level of a course
-    @Get(':id/difficulty')
-    async getDifficultyLevel(@Param('id') courseId: string): Promise<string> {
-        return this.courseService.getDifficultyLevel(courseId);
-    }
-
-    //get course rating
-    @Get(':id/rating')
-    async getRating(@Param('id') courseId: string): Promise<number> {
-        return this.courseService.getRating(courseId);
-    }
-
-    //get course category
-    @Get(':id/category')
-    async getCategory(@Param('id') courseId: string): Promise<string> {
-        return this.courseService.getCategory(courseId);
-    }
-
     //get course by category
-    @Get('category/:category')
-    async getByCategory(@Param('category') category: string): Promise<Course[]> {
-        return this.courseService.getByCategory(category);
+    @Get('find/categories')
+    async getByCategorys(@Body() categorys: string[]): Promise<Course[]> {
+        return this.courseService.getByCategorys(categorys);
+    }
+
+    // get unique categories
+    @Get('categories')
+    async getCategories(): Promise<string[]> {
+        return this.courseService.getUniqueCategories();
     }
 
     //get course by difficulty level
     @Get('difficulty/:difficulty')
     async getByDifficulty(@Param('difficulty') difficulty: string): Promise<Course[]> {
-        return this.courseService.getByDifficultyLevel(difficulty);
+        return await this.courseService.getByDifficultyLevel(difficulty);
     }
 
     //get course by rating
@@ -196,35 +135,62 @@ export class CourseController {
     async getByRating(@Param('rating') rating: number): Promise<Course[]> {
         return this.courseService.getByRating(rating);
     }
-    
-    //get all quizzes for a course
-    @Roles(Role.Instructor,Role.Admin)
-    @UseGuards(authorizationGuard)
-    @Get(':id/quizzes')
-    async getQuizzes(@Param('id') courseId: string): Promise<string[]> {
-        return this.courseService.getQuizzes(courseId);
+
+    // search
+    @Get('search/:search')
+    async search(@Param('search') search: string): Promise<Course[]> {
+        return this.courseService.searchByTitle(search);
     }
 
-    //add a quiz to a course
-    @Roles(Role.Instructor,Role.Admin)
+    // Get course by instructor 
+    @Get('instructor/:instructorId')
+    async getByInstructor(@Param('instructorId') instructorId: string): Promise<Course[]> {
+        return await this.courseService.getByInstructor(instructorId);
+    }
+
+    @Roles(Role.Student)
     @UseGuards(authorizationGuard)
-    @Patch(':id/quizzes/:quizId')
-    async addQuiz(
+    @Post(':id/module/:moduleId/solvequiz')
+    async solveQuiz(
+        @Param('id') courseId: string, 
+        @Param('moduleId') moduleId: string, 
+        @Body() createResponseDto: CreateResponseDto,
+        @Req() req: Request
+    ): Promise<string> {
+        return this.courseService.solveQuiz(courseId, moduleId,req,createResponseDto);
+    }
+
+    // retake quiz
+    @Roles(Role.Student)
+    @UseGuards(authorizationGuard)
+    @Post(':id/module/:moduleId/retakequiz')
+    async retakeQuiz(
+        @Param('id') courseId: string, 
+        @Param('moduleId') moduleId: string, 
+        @Req() req: Request
+    ): Promise<string> {
+        return this.courseService.retakeQuiz(courseId, moduleId,req);
+    }
+
+    // Create module in course
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Post(':id/module')
+    async addModule(
         @Param('id') courseId: string,
-        @Param('quizId') quizId: string,
-    ): Promise<Course> {
-        return this.courseService.addQuiz(courseId, quizId);
+        @Body() createModuleDto: CreateModuleDto,
+        @Req() req: Request
+    ) : Promise<Course> {
+        return this.courseService.createModule(courseId, createModuleDto,req);
     }
 
-    //remove a quiz from a course
-    @Roles(Role.Instructor,Role.Admin)
+    @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @Delete(':id/quizzes/:quizId')
-    async deleteQuiz(
-        @Param('id') courseId: string,
-        @Param('quizId') quizId: string,
-    ): Promise<Course> {
-        return this.courseService.removeQuiz(courseId, quizId);
+    @Post(':course_id/module/:module_id/quizzes')
+    async createQuizzes(
+        @Param('course_id') courseId: string,
+        @Param('module_id') moduleId: string
+    ) : Promise<void> {
+        return this.courseService.initializeAllQuizzes(courseId, moduleId);
     }
-
 }

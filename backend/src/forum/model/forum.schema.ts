@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Message } from './message.schema';
 
 export type ForumDocument = Forum & Document;
 

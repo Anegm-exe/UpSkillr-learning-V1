@@ -6,7 +6,7 @@ export type NotificationDocument = Notification & Document;
 @Schema()
 export class Notification {
   @Prop({ required: true , ref: 'User'})
-  user_id: string;
+  user_ids: string[];
 
   @Prop({ required: true })
   message: string;
@@ -16,9 +16,6 @@ export class Notification {
 
   @Prop({ default: Date.now })
   timestamp: Date;
-
-  @Prop({ default: Date.now, expires: 86400 }) 
-  expiresAt: Date;
 
   readonly _id?: string;
 }

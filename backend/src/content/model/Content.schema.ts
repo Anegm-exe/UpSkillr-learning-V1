@@ -31,6 +31,8 @@ export class Content {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: "FileVersion" }], required: true })
   versions: Types.ObjectId[];
+
+  readonly _id?:string;
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);

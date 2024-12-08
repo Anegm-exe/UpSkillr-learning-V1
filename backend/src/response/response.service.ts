@@ -1,31 +1,34 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Response, ResponseDocument } from '../schemas/response.schema';
-import { QuestionService } from 'src/question/question.service';
+import { Response, ResponseDocument } from './model/response.schema';
 import { CreateResponseDto, UpdatedResponseDto } from './dtos/response.dto';
+import { QuizService } from 'src/quiz/quiz.service';
 
 @Injectable()
 export class ResponseService {
-  constructor(@InjectModel(Response.name) private responseModel: Model<ResponseDocument>, private readonly questionService: QuestionService) {}
+  constructor(
+    @InjectModel(Response.name) private responseModel: Model<ResponseDocument>, 
+    private readonly quizService: QuizService,
+  ) {}
 
     // Create A Response With The Data Provided
     async create(response: CreateResponseDto): Promise<Response> {
-        if(!response) {
-            throw new NotFoundException('Response missing UserId or QuizId');
-        }
-        let score = 0;
-        for (const answerResponse of response.answers) {
-            const question = await this.questionService.findOne(answerResponse.questionId);
-            if (question.answer === answerResponse.answer) {
-                score++;
-            }
-        }
-        response.score = score;
-        const newResponse = new this.responseModel(response);
-        return newResponse.save();
+      const answers = await this.quizService.getAnswers(response.quiz_id);
+      response.correctAnswers = answers;
+      let score = 0;
+      for (const answerResponse of response.answers) {      
+        // find answer in correctAnswer
+        const correctAnswer = answers.find((answer) => answer.question_id === answerResponse.question_id)
+          if (answerResponse.answer === correctAnswer.answer) {
+            score ++;
+          }
+      }
+      response.score = score/response.answers.length;
+      const newResponse = new this.responseModel(response);
+      return await newResponse.save();
     }
-
+    
   // Get All Responses Existing
   async findAll(): Promise<Response[]> {
     return this.responseModel.find().exec();
@@ -68,10 +71,21 @@ export class ResponseService {
     }
 
   // Delete A Response
-  async delete(id: string): Promise<void> {
-    const result = await this.responseModel.deleteOne({ _id: id }).exec();
-    if (result.deletedCount === 0) {
-      throw new NotFoundException(`Response with ID ${id} not found`);
+  async delete(response_id: string): Promise<void> {
+    const response = await this.responseModel.findById({_id:response_id});
+    if (!response) {
+        throw new NotFoundException(`Response with ID ${response_id} not found`);
     }
+
+    // Delete the response and associated quiz (if applicable)
+    await this.quizService.delete(response.quiz_id);
+    await this.responseModel.findByIdAndDelete({_id:response_id});
   }
+
+  // find by quiz and user
+  async findByQuizAndUser(quizId: string, userId: string): Promise<Response | null> {
+    return this.responseModel.findOne({ quiz_id: quizId, user_id: userId }).exec();
+  }  
+
+
 }

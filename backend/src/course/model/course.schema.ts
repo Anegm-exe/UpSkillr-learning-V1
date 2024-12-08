@@ -14,7 +14,7 @@ export class Course {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   category: string;
 
   @Prop({ required: true, enum: ['Beginner', 'Intermediate', 'Advanced'] })
@@ -26,15 +26,15 @@ export class Course {
   @Prop({ default: Date.now })
   timestamp: Date;
 
-  @Prop({ required: true, ref: "User" })
+  @Prop({ default: [], ref: "User" })
   students: string[]; //each course can have more than one student
 
-  @Prop({ required: true,ref: "Module" })
+  @Prop({ default: [],ref: "Module" })
   modules: string[]; //each course can have more than one module
 
-  @Prop({ required: true, ref: "Quiz" })
-  quizzes: string[]; //each course can have more than one quiz
-
+  @Prop({ default:false })
+  isArchived: boolean;
+  
   readonly _id?: string;
 }
 

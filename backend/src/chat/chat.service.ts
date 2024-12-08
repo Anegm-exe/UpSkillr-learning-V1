@@ -1,21 +1,21 @@
 import { ConflictException, Injectable, NotFoundException, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Chat, ChatDocument } from '../schemas/chat.schema';
-import { Message, MessageDocument } from 'src/schemas/message.schema';
+import { Chat, ChatDocument } from './model/chat.schema';
 import { Model } from 'mongoose'
 import { UserService } from '../user/user.service';
-import { User } from 'src/schemas/user.schema';
 import { CreateChatDTO, UpdateChatDTO } from './dtos/chat.dto';
-import { timeStamp } from 'console';
 import { MessageService } from 'src/message/message.service';
 import { Request } from 'express';
+import { NotificationService } from 'src/notification/notifications.service';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
     private readonly UserService: UserService,
-    private readonly MessageService: MessageService
+    private readonly MessageService: MessageService,
+    private readonly notificationService: NotificationService
+
   ) { }
   async createChat(createChatDto: CreateChatDTO, emails: string[]): Promise<Chat> {
     //loop around emails to get an email then find the user by email if not null, get id
@@ -30,8 +30,9 @@ export class ChatService {
       }));
     createChatDto.user_ids = userIds;
     if (userIds.length >= 2) {
-      const newChat = new this.chatModel(createChatDto); //dto for creating a chat
-      return newChat.save(); // saves to db
+      const newChat = await new this.chatModel(createChatDto); //dto for creating a chat
+      this.notificationService.create({user_ids:userIds,message:`You have been added to a Chat named ${newChat.name}`})
+      return await newChat.save(); // saves to db
     }
     throw new RangeError('Chat should have at least 2 users');
   }
@@ -44,16 +45,19 @@ export class ChatService {
     return chats;
   }
 
-  async getChatDetails(chat_id: String) : Promise<Chat> { //byakhod kaman el dto 3ashan yekon feha kol haga
+  async getChatDetails(chat_id: string) : Promise<Chat> { //byakhod kaman el dto 3ashan yekon feha kol haga
     const chat = await this.chatModel
-  .findById({ _id: chat_id })
-  .populate([
-    { path: 'messages', populate: { path: 'user_id', select: 'name' } }, // Populate only the name of the user in messages
-    { path: 'user_ids', select: 'name' } // Populate only the name of the users in user_ids
-  ])
-  .exec();
+    .findById({ _id: chat_id })
+    .populate([
+      { path: 'messages', populate: [
+        { path: 'user_id', select: ['name','profile_picture_url'] },
+        { path: 'repliedTo_id', populate: { path: 'user_id', select: ['name','profile_picture_url'] } }
+      ]},
+      { path: 'user_ids', select: ['name','profile_picture_url'] }
+    ])
+    .exec();
 
-      if (!chat) {
+    if (!chat) {
       throw new NotFoundException('Chat not found');
     }
     return chat;
@@ -73,6 +77,10 @@ export class ChatService {
       text: text,
       user_id: req['user'].userid
     })
+    await this.notificationService.create({
+      user_ids: chat.user_ids.filter(user_id => user_id !== req['user'].userid),
+      message: `${req['user'].name} sent a message in ${chat.name}`,
+    });
     chat.messages.push(message._id);
     return chat.save();
   }
@@ -91,12 +99,27 @@ export class ChatService {
     if (!chat.messages.includes(message_id)) {
       throw new NotFoundException('Message not found in chat');
     }
+    const repliedToMessage = await this.MessageService.findOne(message_id);
+    if(!repliedToMessage) 
+      throw new NotFoundException('Message not found');
     // create message
     const message = await this.MessageService.create({
       text: text,
       user_id: req['user'].userid,
       repliedTo_id: message_id
     });
+
+    // notify the replied to user
+    await this.notificationService.create({
+      user_ids: [repliedToMessage.user_id],
+      message: `${req['user'].name} replied to your message in ${chat.name}`
+    });
+    // notify the others
+    await this.notificationService.create({
+      user_ids: chat.user_ids.filter(user_id => user_id !== req['user'].userid && user_id !== repliedToMessage.user_id),
+      message: `${req['user'].name} sent a message in ${chat.name}`,
+    });
+
     chat.messages.push(message._id);
     return chat.save();
   }
@@ -113,7 +136,7 @@ export class ChatService {
     }
 
     // Delete all messages
-   await Promise.all(
+    await Promise.all(
       chat.messages.map(async (id) => {
         try{
           await this.MessageService.delete(id);
@@ -121,8 +144,8 @@ export class ChatService {
           console.error(`Failed to delete message ${id}:`, err.message);
         }
       }
-  ));
-  await this.chatModel.deleteOne({ _id: chat_id }).exec();
+    ));
+    await this.chatModel.deleteOne({ _id: chat_id }).exec();
   return { success: true };
   }
 
@@ -180,7 +203,12 @@ export class ChatService {
     }
     // Remove the user ID from the chat
     chat.user_ids.splice(userIndex, 1);
-  
+
+    await this.notificationService.create({
+      user_ids: [user_id],
+      message: `You have been removed from the chat ${chat.name}`
+    });
+
     // Save the updated chat document
     return await chat.save();
   }
@@ -231,7 +259,12 @@ export class ChatService {
     if (index === -1) {
       throw new UnauthorizedException('You are not in this chat');
     }
-
+    // tell the chat member you left
+    await this.notificationService.create({
+      user_ids: chat.user_ids.filter(id => id !== req['user'].userid),
+      message: `${req['user'].username} has left the chat ${chat.name}`
+    });
+  
     // check if the chat is only 2 people if so delete the whole chat
     if (chat.user_ids.length === 2) {
       await Promise.all(
@@ -242,9 +275,8 @@ export class ChatService {
             console.error(`Failed to delete message ${id}:`, err.message);
           }
         }
-    ));
-      await this.chatModel.deleteOne({ _id: chat_id });
-      return ;
+      ));
+      await this.chatModel.deleteOne({ _id: chat_id }).exec();
     }
 
     // if user is admin of the chat

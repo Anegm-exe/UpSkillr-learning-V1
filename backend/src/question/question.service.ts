@@ -1,17 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Questions, QuestionsDocument as QuestionDocument } from '../schemas/question.schema';
+import { Questions, QuestionsDocument as QuestionDocument } from './model/question.schema';
 import { CreateQuestionDto, UpdateQuestionDto } from './dtos/question.dto';
+import { ModuleModule } from 'src/module/module.module';
+import { ModuleService } from 'src/module/module.service';
 
 @Injectable()
 export class QuestionService {
-    constructor(@InjectModel(Questions.name) private questionModel: Model<QuestionDocument>,) { }
+    constructor(
+        @InjectModel(Questions.name) private questionModel: Model<QuestionDocument>,
+    ) { }
 
     // Create A Question With The Data Provided
     async create(question: CreateQuestionDto): Promise<Questions> {
         const newQuestion = new this.questionModel(question);
         return newQuestion.save();
+    }
+    // create many
+    async createMany(questions: CreateQuestionDto[]): Promise<Questions[]> {
+        const newQuestions = await Promise.all(questions.map(async(question) => {
+            return new this.questionModel(question);
+        }));
+        return await Promise.all(newQuestions.map(question => question.save()));
     }
 
     // Get All Questions Existing
@@ -31,7 +42,7 @@ export class QuestionService {
     // Update A Question Based On New-Data
     async update(question_id: string, updateQuestionDto: UpdateQuestionDto): Promise<Questions> {
         const updatedQuestion = await this.questionModel
-            .findOneAndUpdate({ _id: question_id }, updateQuestionDto)
+            .findOneAndUpdate({ _id: question_id }, updateQuestionDto , { new: true })
             .exec();
         if (!updatedQuestion) {
             throw new NotFoundException(`Question with ID ${question_id} not found`);
