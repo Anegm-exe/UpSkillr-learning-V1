@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, Patch } from '@nestjs/common';
 import { ResponseService } from './response.service';
 import { Response } from './model/response.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';

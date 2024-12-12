@@ -16,7 +16,6 @@ import { ForumModule } from "./forum/forum.module";
 import { AuthModule } from "./Auth/auth.module";
 import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { AuthenticationLogService } from "./authenticationlog/authenticationlog.service";
 import { APP_FILTER } from '@nestjs/core';
 import { UnauthorizedExceptionFilter } from "./Auth/middleware/UnauthorizedExceptionFilter";
 import { AppController } from "./app.controller";

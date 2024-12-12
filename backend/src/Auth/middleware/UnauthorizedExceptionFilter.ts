@@ -15,7 +15,7 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
 
     // Log the exception to the database
     await this.authenticationLogService.create({
-      user_id: request['user']?.id || 'unknown',
+      user_id: request['user']?.userid || 'unknown',
       event: message,
       status: 'Failure',
     });

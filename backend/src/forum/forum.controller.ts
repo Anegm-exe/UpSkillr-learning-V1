@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Put, UseGuards, Req, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Req, Patch } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { Forum } from './model/forum.schema';
 import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';

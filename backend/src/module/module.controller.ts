@@ -4,7 +4,6 @@ import { ModuleService } from "./module.service";
 import { CreateModuleDto, UpdateModuleDto } from "./dtos/module.dto";
 import { Role, Roles } from "src/Auth/decorators/roles.decorator";
 import { authorizationGuard } from "src/Auth/guards/authorization.guard";
-import { Request } from "express";
 import { CreateQuestionDto } from "src/question/dtos/question.dto";
 
 @Controller('module')

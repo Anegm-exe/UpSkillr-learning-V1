@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, BadRequestException, UnauthorizedException, UseGuards, Req, Patch } from '@nestjs/common';
+import { Controller, Get, Delete, Body, Param, UseGuards, Req, Patch } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { User } from './model/user.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';

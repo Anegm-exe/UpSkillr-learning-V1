@@ -6,8 +6,8 @@ import {authorizationGuard} from 'src/Auth/guards/authorization.guard';
 import { CreateCourseDto, UpdateCourseDto } from './dtos/course.dto';
 import { Request } from 'express';
 import { CreateResponseDto } from 'src/response/dtos/response.dto';
-import { Response } from 'src/response/model/response.schema';
 import { CreateModuleDto } from 'src/module/dtos/module.dto';
+
 @Controller('course')
 export class CourseController {
     constructor(private readonly courseService: CourseService) { }

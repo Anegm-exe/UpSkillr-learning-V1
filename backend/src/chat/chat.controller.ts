@@ -3,7 +3,7 @@ import { ChatService } from './chat.service';
 import { Chat } from './model/chat.schema'
 import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
 import { Request } from 'express';
-import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware';
+
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) { }

@@ -1,9 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat, ChatDocument } from './model/chat.schema';
 import { Model } from 'mongoose'
 import { UserService } from '../user/user.service';
-import { CreateChatDTO, UpdateChatDTO } from './dtos/chat.dto';
+import { CreateChatDTO } from './dtos/chat.dto';
 import { MessageService } from 'src/message/message.service';
 import { Request } from 'express';
 import { NotificationService } from 'src/notification/notifications.service';

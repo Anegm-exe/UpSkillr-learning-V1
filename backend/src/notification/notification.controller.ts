@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { NotificationService } from './notifications.service';
 import { Notification } from 'src/notification/model/Notification.schema';
-import { Types } from 'mongoose';
 import { CreateNotificationDto, UpdateNotificationDto } from './dtos/notifications.dtos';
 
 @Controller('notifications')
