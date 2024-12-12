@@ -1,8 +1,7 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/user/model/user.schema';
 import { AuthenticationLogService } from 'src/authenticationlog/authenticationlog.service';
 import { CreateUserDto } from 'src/user/dtos/user.dto';
 @Injectable()

@@ -1,10 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Questions, QuestionsDocument as QuestionDocument } from './model/question.schema';
 import { CreateQuestionDto, UpdateQuestionDto } from './dtos/question.dto';
-import { ModuleModule } from 'src/module/module.module';
-import { ModuleService } from 'src/module/module.service';
 
 @Injectable()
 export class QuestionService {

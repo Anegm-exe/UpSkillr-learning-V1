@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { Note } from 'src/note/model/note.schema';
-import { Types } from 'mongoose';
 import { NotificationService } from 'src/notification/notifications.service';
 import { CreateNoteDto, UpdateNoteDto } from './dtos/note.dto';
 import { Request } from 'express';
