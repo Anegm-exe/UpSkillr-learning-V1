@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import '../../styles/login.css';
+import logincss from '../../styles/register.module.css';
 export default function Login() {
     return (
         <div className="loginco">

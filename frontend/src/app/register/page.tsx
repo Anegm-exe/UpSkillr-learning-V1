@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import '../../styles/register.css'; // Assuming you'll create this CSS file
+import registercss from '../../styles/register.module.css';
 
 export default function Register() {
     const [formData, setFormData] = useState({
