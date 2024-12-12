@@ -1,0 +1,82 @@
+/* src/styles/Register.module.css */
+
+.registerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Full page height */
+    background-color: #f9f9f9; /* Light background */
+    padding: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Space between form fields */
+    width: 100%;
+    max-width: 500px; /* Limit form width */
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+    .inputGroup label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .inputGroup input,
+    .inputGroup select {
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+        .inputGroup input:focus,
+        .inputGroup select:focus {
+            border-color: #007bff;
+        }
+
+.signupButton {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .signupButton:hover {
+        background-color: #0056b3;
+    }
+
+.loginText {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.loginLink {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .loginLink:hover {
+        text-decoration: underline;
+    }

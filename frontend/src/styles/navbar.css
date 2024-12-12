@@ -1,0 +1,23 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    background-color: black;
+    margin: 0;
+    justify-content: center;
+}
+
+.button {
+    height: 1rem;
+    text-decoration: none;
+    color: white;
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .button:hover {
+        color: lightcoral;
+    }
