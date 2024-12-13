@@ -1,23 +1,29 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import logincss from '../../styles/register.module.css';
+import axios from 'axios';
+import logincss from '../../styles/login.module.css';
+import '../../styles/globals.css';
+
 export default function Login() {
     return (
-        <div className="loginco">
+        <div className={logincss.loginContainer}>
             <h1>Login</h1>
-            <form className="loginForm">
-                <div className="inputGroup">
+            <form className={logincss.loginForm}>
+                <div className={logincss.inputGroup}> 
                     <label htmlFor="email">Email</label>
                     <input type="email" id="email" placeholder="Enter your email" required />
                 </div>
-                <div className="styles.inputGroup">
+                <div className={logincss.inputGroup}>
                     <label htmlFor="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password" required />
                 </div>
-                <button type="submit" className="signInButton">Sign In</button>
+                <button type="submit" className={logincss.signInButton}>Sign In</button>
             </form>
-            <p className="signupText">
+            <p className={logincss.signupText}>
                 Don't have an account?{' '}
-                <Link href="/register" className="signupLink">
+                <Link href="/register" className={logincss.signupLink}>
                     Sign up now
                 </Link>
             </p>

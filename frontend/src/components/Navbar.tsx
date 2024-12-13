@@ -1,12 +1,15 @@
 import Link from 'next/link';
-import '../styles/navbar.css';
+import Image from 'next/image';
+import navbarcss from '../styles/navbar.module.css';
+import '../styles/globals.css';
 
 const Navbar = () => {
     return (
-        <nav className="navbar">
-            <Link href="/" className="button">Home</Link>
-            <Link href="/about" className="button">About</Link>
-            <Link href="/login" className="button">Login</Link>
+        <nav className={navbarcss.navbar}>
+            <Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={800} height={250}></Image>
+            <Link href="/" className={navbarcss.button}>Home</Link>
+            <Link href="/about" className={navbarcss.button}>About</Link>
+            <Link href="/login" className={navbarcss.button}>Login</Link>
         </nav>
     );
 };

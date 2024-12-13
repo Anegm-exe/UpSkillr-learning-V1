@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
+import axios from 'axios';
 import registercss from '../../styles/register.module.css';
+import '../../styles/globals.css';
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -34,11 +35,12 @@ export default function Register() {
             // Handle error (show error message to the user)
         }
     };
+
     return (
-        <div className="registerContainer">
-            <h1>Register</h1>
-            <form className="registerForm" onSubmit={handleSubmit}>
-                <div className="inputGroup">
+        <div className={registercss.registerContainer}> {/* Apply the CSS class */}
+            <h1 className={registercss.h1}>Register</h1>
+            <form className={registercss.registerForm} onSubmit={handleSubmit}> {/* Apply the CSS class */}
+                <div className={registercss.inputGroup}> {/* Apply the CSS class */}
                     <label htmlFor="name">Name</label>
                     <input
                         type="text"
@@ -50,7 +52,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className="inputGroup">
+                <div className={registercss.inputGroup}> {/* Apply the CSS class */}
                     <label htmlFor="email">Email</label>
                     <input
                         type="email"
@@ -62,7 +64,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className="inputGroup">
+                <div className={registercss.inputGroup}> {/* Apply the CSS class */}
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
@@ -74,7 +76,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className="inputGroup">
+                <div className={registercss.inputGroup}> {/* Apply the CSS class */}
                     <label htmlFor="dateOfBirth">Date of Birth</label>
                     <input
                         type="date"
@@ -85,7 +87,7 @@ export default function Register() {
                         required
                     />
                 </div>
-                <div className="inputGroup">
+                <div className={registercss.inputGroup}> {/* Apply the CSS class */}
                     <label htmlFor="role">Role</label>
                     <select
                         id="role"
@@ -101,11 +103,11 @@ export default function Register() {
                         <option value="instructor">Instructor</option>
                     </select>
                 </div>
-                <button type="submit" className="signupButton">Sign Up</button>
+                <button type="submit" className={registercss.signupButton}>Sign Up</button> {/* Apply the CSS class */}
             </form>
-            <p className="loginText">
+            <p className={registercss.loginText}>
                 Already have an account?{' '}
-                <Link href="/login" className="loginLink">
+                <Link href="/login" className={registercss.loginLink}>
                     Login now
                 </Link>
             </p>

@@ -1,19 +1,18 @@
-/* src/styles/Register.module.css */
-
 .registerContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Full page height */
-    background-color: #f9f9f9; /* Light background */
+    min-height: 80vh;
     padding: 2rem;
+    color: white;
 }
 
-h1 {
+.h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #333;
+    color: white;
+    font-family: 'Roboto-BoldCondensed';
 }
 
 .registerForm {
