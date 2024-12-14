@@ -12,6 +12,7 @@ export class AuthService {
         private readonly authenticationlogService: AuthenticationLogService
     ) { }
     async register(user: CreateUserDto): Promise<string> {
+        user.email = user.email.toLowerCase();
         const existingUser = await this.usersService.findByEmail(user.email);
         if (existingUser) {
           this.authenticationlogService.create({user_id:existingUser._id,event:"Email already exists",status:"Failure"})
@@ -25,6 +26,7 @@ export class AuthService {
       }
 
     async signIn(email: string, password: string): Promise< {access_token:string,payload:{ user:{userid:string, role:string}}}> {
+        email = email.toLowerCase()
         const user = await this.usersService.findByEmail(email);
         if (!user) {
             throw new NotFoundException('User not found');
@@ -35,7 +37,7 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
           }
 
-        const payload = { user:{userid: user._id, role: user.role,name:user.name} };
+        const payload = { user:{userid: user._id, role: user.role,name:user.name,profile_picture_url:user.profile_picture_url} };
         this.authenticationlogService.create({user_id:user._id,event:"Login successful",status:"Success"})
         return {
             access_token: await this.jwtService.signAsync(payload),

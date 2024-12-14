@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-import registercss from '../../styles/register.module.css';
-import '../../styles/globals.css';
+import registercss from '../../../styles/register.module.css';
+import '../../../styles/globals.css';
+import { useRouter } from 'next/navigation'
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ export default function Register() {
         dateOfBirth: '',
         role: ''
     });
+
+    const router = useRouter(); // Initialize the router
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -27,11 +30,13 @@ export default function Register() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3001/register', formData);
+            const response = await axios.post('http://127.0.0.1:3000/auth/register', formData);
             console.log('Registration successful:', response.data);
             // Redirect or show success message
+            console.log('Redirecting to home...');
+            router.push('/'); 
         } catch (error) {
-            console.error('Error registering:', error);
+            alert('Registration failed');
             // Handle error (show error message to the user)
         }
     };
@@ -107,7 +112,7 @@ export default function Register() {
             </form>
             <p className={registercss.loginText}>
                 Already have an account?{' '}
-                <Link href="/login" className={registercss.loginLink}>
+                <Link href="/auth/login" className={registercss.loginLink}>
                     Login now
                 </Link>
             </p>
