@@ -11,7 +11,7 @@ export class AuthController {
     try {
       const result = await this.authService.signIn(signInDto.email, signInDto.password);
       res.cookie('token', result.access_token, {
-        httpOnly: true, // Prevents client-side JavaScript access
+        httpOnly: false, // Prevents client-side JavaScript access
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
         maxAge: 3600 * 1000, // Cookie expiration time in milliseconds
       });
