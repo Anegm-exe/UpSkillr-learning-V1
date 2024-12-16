@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import logincss from "../../../styles/login.module.css";
 import "../../../styles/globals.css";
-import { toast } from "react-toastify";
 
 export default function Login() {
   const router = useRouter();
@@ -14,10 +13,6 @@ export default function Login() {
     email: "",
     password: "",
   });
-  useEffect(() => {
-    // Example: Show a toast message when the component mounts
-    toast.success("Welcome to the login page!");
-  }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -70,13 +65,12 @@ export default function Login() {
           </button>
         </form>
         <p className={logincss.signupText}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className={logincss.signupLink}>
             Sign up now
           </Link>
         </p>
       </div>
-      {/* <ToastContainer /> */}
     </>
   );
 }
