@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import axios from '../../../../api/axios';
+import axios from '../../api/axios';
 import registercss from '../../../styles/register.module.css';
 import '../../../styles/globals.css';
 import { useRouter } from 'next/navigation'

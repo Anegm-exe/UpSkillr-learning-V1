@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "../../../../api/axios";
+import axios from "../../api/axios";
 import logincss from "../../../styles/login.module.css";
 import "../../../styles/globals.css";
 

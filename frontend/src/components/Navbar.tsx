@@ -5,28 +5,40 @@ import navbarcss from "../styles/navbar.module.css";
 import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getTokenDetails } from "../../api/services/getTokenDetails";
+import { getTokenDetails } from "../app/api/services/getTokenDetails";
 
 const Navbar = () => {
   const router = useRouter();
-  const [tokenDetails, setTokenDetails] = useState(false);
+  const [isToken, setIsToken] = useState(false);
+  const [tokenDetails, setTokenDetails] = useState({});
 
   useEffect(() => {
     const fetchTokenDetails = async () => {
       try{
-        const tokenDetails = await getTokenDetails();
-        setTokenDetails(true);
+        const userDetails = await getTokenDetails();
+        setTokenDetails(userDetails);
+        setIsToken(true);
       }catch {
-        setTokenDetails(false);
+        setIsToken(false);
       }
     }
     fetchTokenDetails();
   }, []);
 
-  const handleLogOut = () => {
-    setTokenDetails(false);
-    router.push("/login");
+  const handleLogOut = async () => {
+    try {
+      const response = await fetch('/api/logout', { method: 'POST' });
+      if (response.ok) {
+        setIsToken(false);
+        router.push('/login');
+      } else {
+        console.error('Failed to log out');
+      }
+    } catch (error) {
+      console.error('An error occurred during logout:', error);
+    }
   };
+  
 
   return (
     <nav className={navbarcss.navbar}>
@@ -37,7 +49,7 @@ const Navbar = () => {
       <Link href="/about" className={navbarcss.button}>
         About
       </Link>
-      {tokenDetails? (
+      {isToken? (
         <a onClick={handleLogOut} className={navbarcss.button}>
           Log Out
         </a>
