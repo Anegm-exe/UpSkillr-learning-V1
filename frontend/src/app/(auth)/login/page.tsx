@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
+import axios from "../../../../api/axios";
 import logincss from "../../../styles/login.module.css";
 import "../../../styles/globals.css";
 
@@ -25,11 +25,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        formData,
-        { withCredentials: true } // Include cookies in the request
-      );
+      const response = await axios.post("/auth/login",formData);
 
       console.log("Login successful:", response.data);
       router.push("/");

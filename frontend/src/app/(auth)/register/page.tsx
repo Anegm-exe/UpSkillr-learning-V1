@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import axios from '../../../../api/axios';
 import registercss from '../../../styles/register.module.css';
 import '../../../styles/globals.css';
 import { useRouter } from 'next/navigation'
@@ -30,7 +30,7 @@ export default function Register() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/auth/register', formData);
+            const response = await axios.post('/auth/register', formData);
             console.log('Registration successful:', response.data);
             // Redirect or show success message
             console.log('Redirecting to home...');

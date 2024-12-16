@@ -5,27 +5,26 @@ import navbarcss from "../styles/navbar.module.css";
 import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { getTokenDetails } from "../../api/services/getTokenDetails";
 
 const Navbar = () => {
-  const [isLockedIn, setLockedIn] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const [tokenDetails, setTokenDetails] = useState(false);
 
   useEffect(() => {
-    const checkAuthStatus = () => {
-      setLockedIn(document.cookie.includes("token="));
-    };
-
-    // Check authentication status on initial load
-    checkAuthStatus();
-
-    // Check authentication status on route change
-    checkAuthStatus();
-  }, [pathname]);
+    const fetchTokenDetails = async () => {
+      try{
+        const tokenDetails = await getTokenDetails();
+        setTokenDetails(true);
+      }catch {
+        setTokenDetails(false);
+      }
+    }
+    fetchTokenDetails();
+  }, []);
 
   const handleLogOut = () => {
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    setLockedIn(false);
+    setTokenDetails(false);
     router.push("/login");
   };
 
@@ -38,7 +37,7 @@ const Navbar = () => {
       <Link href="/about" className={navbarcss.button}>
         About
       </Link>
-      {isLockedIn ? (
+      {tokenDetails? (
         <button onClick={handleLogOut} className={navbarcss.button}>
           Log Out
         </button>
