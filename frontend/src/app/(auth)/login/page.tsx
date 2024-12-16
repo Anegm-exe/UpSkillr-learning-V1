@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import logincss from "../../../styles/login.module.css";
 import "../../../styles/globals.css";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const router = useRouter();
@@ -13,7 +14,10 @@ export default function Login() {
     email: "",
     password: "",
   });
-
+  useEffect(() => {
+    // Example: Show a toast message when the component mounts
+    toast.success("Welcome to the login page!");
+  }, []);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -36,39 +40,43 @@ export default function Login() {
       router.push("/");
     } catch (error) {
       alert("login failed");
+      console.log(error);
     }
   };
 
   return (
-    <div className={logincss.loginContainer}>
-      <h1>Login</h1>
-      <form className={logincss.loginForm} onSubmit={handleSubmit}>
-        <div className={logincss.inputGroup}>
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div className={logincss.inputGroup}>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className={logincss.signInButton}>
-          Sign In
-        </button>
-      </form>
-      <p className={logincss.signupText}>
-        Don't have an account?{" "}
-        <Link href="/register" className={logincss.signupLink}>
-          Sign up now
-        </Link>
-      </p>
-    </div>
+    <>
+      <div className={logincss.loginContainer}>
+        <h1>Login</h1>
+        <form className={logincss.loginForm} onSubmit={handleSubmit}>
+          <div className={logincss.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className={logincss.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className={logincss.signInButton}>
+            Sign In
+          </button>
+        </form>
+        <p className={logincss.signupText}>
+          Don't have an account?{" "}
+          <Link href="/register" className={logincss.signupLink}>
+            Sign up now
+          </Link>
+        </p>
+      </div>
+      {/* <ToastContainer /> */}
+    </>
   );
 }
