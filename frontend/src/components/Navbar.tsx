@@ -38,9 +38,9 @@ const Navbar = () => {
         About
       </Link>
       {tokenDetails? (
-        <button onClick={handleLogOut} className={navbarcss.button}>
+        <a onClick={handleLogOut} className={navbarcss.button}>
           Log Out
-        </button>
+        </a>
       ) : (
         <Link href="/login" className={navbarcss.button}>
           Login
