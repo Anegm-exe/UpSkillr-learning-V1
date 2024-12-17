@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { Note } from 'src/note/model/note.schema';
 import { NotificationService } from 'src/notification/notifications.service';
 import { CreateNoteDto, UpdateNoteDto } from './dtos/note.dto';
 import { Request } from 'express';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('note')
 export class NoteController {
-  constructor(private readonly noteService: NoteService,private readonly notificationService: NotificationService) {}
+  constructor(private readonly noteService: NoteService) {}
 
   // Create a new note
   @Post()

@@ -2,10 +2,12 @@ import { Controller, Post, UseGuards } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 import { Role, Roles } from './Auth/decorators/roles.decorator';
 import { authorizationGuard } from './Auth/guards/authorization.guard';
+import { AuthGuard } from './Auth/guards/authentication.guard';
 
-@Controller()
 @Roles(Role.Admin)
 @UseGuards(authorizationGuard)
+@UseGuards(AuthGuard)
+@Controller()
 export class AppController {
   private readonly mainDbUri = 'mongodb+srv://AbdelrahmanAhmed:2ZV4Schbo21korHV@maincluster.dch36.mongodb.net/UpSkillr';
   private readonly backupDbUri = 'mongodb://localhost:27017/backup-db';

@@ -20,7 +20,9 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
 import { Role, Roles } from "src/Auth/decorators/roles.decorator";
 import { authorizationGuard } from "src/Auth/guards/authorization.guard";
+import { AuthGuard } from "src/Auth/guards/authentication.guard";
 
+@UseGuards(AuthGuard)
 @Controller("content")
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}

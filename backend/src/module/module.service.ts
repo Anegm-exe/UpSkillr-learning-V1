@@ -6,6 +6,8 @@ import { CreateModuleDto, UpdateModuleDto } from "./dtos/module.dto";
 import { CreateQuestionDto } from "src/question/dtos/question.dto";
 import { QuestionService } from "src/question/question.service";
 import { NotificationService } from "src/notification/notifications.service";
+import { Request } from "express";
+import { ProgressService } from "src/progress/progress.service";
 
 
 @Injectable()
@@ -13,6 +15,7 @@ export class ModuleService {
     constructor(
         @InjectModel(Modules.name) private moduleModel: Model<ModuleDocument>,
         private readonly questionService: QuestionService,
+        private readonly progressService: ProgressService
     ) {}
     
     // Find all modules
@@ -21,8 +24,20 @@ export class ModuleService {
     }
 
     // Find all Modules by course
-    async findAllByCourse(course_id: string) : Promise<Modules[]> {
-        return await this.moduleModel.find({course_id:course_id});
+    async findAllByCourse(course_id: string, req:Request) : Promise<Modules[]> {
+        const modules = await this.moduleModel.find({course_id:course_id});
+        const progress = await this.progressService.findByUserAndCourse(req['user'].userid,course_id);
+        let filterModules = [];
+        if(!progress.average_quiz || progress.average_quiz >= 0.75) {
+            filterModules = modules;
+        }
+        else if(progress.average_quiz >= 0.50) {
+            filterModules = modules.filter(modules => modules.difficulty !== 'hard');
+        }
+        else {
+            filterModules = modules.filter(modules => modules.difficulty !== 'medium' && modules.difficulty !== 'hard');
+        }
+        return filterModules;
     }
 
     // Create a new module

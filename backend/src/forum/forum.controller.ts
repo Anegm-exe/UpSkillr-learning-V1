@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Delete, Body, Param, Req, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Req, Patch, UseGuards } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { Forum } from './model/forum.schema';
 import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';
 import { Request } from 'express';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
 
 @Controller('forum')
@@ -10,6 +11,7 @@ export class ForumController {
     constructor(private readonly forumService: ForumService) { }
 
     //create a forum
+    @UseGuards(AuthGuard)
     @Post()
     async createForum(@Body() createForumDTO: CreateForumDto,@Req() req: Request): Promise<Forum> {
         return this.forumService.create(createForumDTO, req);
@@ -37,6 +39,7 @@ export class ForumController {
         return this.forumService.getByUser(_id);
     }
 
+    @UseGuards(AuthGuard)
     @Patch(':forum_id')
     async update(
         @Param('forum_id') forum_id: string,
@@ -46,21 +49,25 @@ export class ForumController {
         return this.forumService.update(forum_id, updateData,req);
     }
 
+    @UseGuards(AuthGuard)
     @Post(':forum_id')
     async sendMessage(@Param('forum_id') _id: string, @Body('message') message: string, @Req() req: Request) {
         return await this.forumService.sendMessage(_id, message,req);
     }
 
+    @UseGuards(AuthGuard)
     @Post(':forum_id/reply/:message_id')
     async reply(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Body('message') message: string, @Req() req: Request) {
         return await this.forumService.replyToMessage(forum_id, message_id, message, req);
     }
 
+    @UseGuards(AuthGuard)
     @Delete(':forum_id')
     async delete(@Param('forum_id') forum_id: string, @Req() req: Request): Promise<void> {
         return this.forumService.delete(forum_id,req);
     }    
 
+    @UseGuards(AuthGuard)
     @Delete(':forum_id/message/:message_id')
     async deleteMessage(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Req() req: Request): Promise<void> {
         return this.forumService.deleteMessageFromForum(forum_id, message_id,req);

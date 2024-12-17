@@ -1,3 +1,7 @@
+'use client';
+import { useAuth } from "@/components/AuthContext";
+
 export default function Home() {
-    return <h1>Home Page info and main page</h1>;
+    const {tokenDetails} = useAuth();
+    return <h1>Welcome back {tokenDetails?.name} !</h1>;
 }

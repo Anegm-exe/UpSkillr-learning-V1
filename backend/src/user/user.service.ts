@@ -53,7 +53,7 @@ export class UserService {
 
   // Delete A User
   async delete(id: string, req: Request): Promise<void> {
-    if (req["user"].userid !== id && req["user"].role === "student") {
+    if (req["user"].userid !== id && req["user"].role !== "admin") {
       throw new UnauthorizedException("You are not authorized to perform this action");
     }
     const result = await this.userModel.findByIdAndDelete(id).exec();
@@ -62,12 +62,19 @@ export class UserService {
     }
   }
 
-  // search user by name
-  async searchByName(name: string): Promise<UserDto[]> {
-    const users = await this.userModel.find({ name: { $regex: name, $options: "i" } }).exec();
-    return users.map((user) => new UserDto(user));
+  // search student by name
+  async searchStudentByName(name: string): Promise<UserDto[]> {
+    const users = await this.userModel.find({ name: { $regex: name, $options: "i" },role: 'student'}).exec();
+    return users;
   }
 
+  // search instructor by name
+  async searchInstructorByName(name: string): Promise<UserDto[]> {
+    const users = await this.userModel.find({ name: { $regex: name, $options: "i" }, role: 'instructor'}).exec();
+    return users;
+  }
+
+  
   // get Instructors in course
   async getInstructorsInCourse(courseId: string): Promise<UserDto[]> {
     const course = await this.courseService.findOne(courseId);

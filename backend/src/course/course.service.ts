@@ -113,8 +113,24 @@ export class CourseService{
     }
 
     // search course by title
-    async searchByTitle(title: string): Promise<Course[]> {
+    async searchByCategory(caetegory: string): Promise<Course[]> {
+        return this.courseModel.find({ category: { $regex: caetegory, $options: 'i' } }).exec();
+    }
+
+    async searchByName(title: string): Promise<Course[]> {
         return this.courseModel.find({ title: { $regex: title, $options: 'i' } }).exec();
+    }
+
+    // courses completed
+    async findCompletedCourses(req:Request) : Promise<Course[]> {
+        const courses = await this.findEnrolledCourses(req);
+        const completedCourses = await Promise.all(
+            courses.map(async (course) => {
+                if(await this.progressService.isCourseCompletedByUser(course._id,req['user'].userid))
+                    return course;
+            })
+        );
+        return completedCourses;
     }
 
     // add a student to a course
@@ -123,11 +139,19 @@ export class CourseService{
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
+        if(course.isArchived) {
+            throw new BadRequestException('Course is unavailable');
+        }
         course.students.push(req['user'].userid);
         this.progressService.create({course_id:courseId,user_id: req['user'].userid});
         // send a notification
         await this.notificationService.create({user_ids:[req['user'].userid],message:`You successfuly enrolled in ${course.title} course!`});
         return course.save();
+    }
+
+    // find enrolled courses for user
+    async findEnrolledCourses(req: Request): Promise<Course[]> {
+        return this.courseModel.find({ students: req['user'].userid }).exec(); 
     }
 
     // remove an instructor from a course

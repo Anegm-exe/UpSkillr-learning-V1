@@ -4,7 +4,9 @@ import { Quiz } from './model/quiz.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 import { CreateQuizDto } from './dtos/quiz.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('quiz')
 export class QuizController {
     constructor(

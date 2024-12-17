@@ -61,4 +61,33 @@ export class ProgressService {
     async findByCourse(courseId: string): Promise<Progress[]> {
         return this.progressModel.find({ course_id: courseId }).exec();
     }
+
+    async isCourseCompletedByUser(course_id:string,user_id:string) : Promise<Boolean> {
+        const progress = await this.progressModel.findOne({course_id:course_id,user_id:user_id});
+        if(progress.completion_percentage === 100) {
+            return true;
+        }
+        return false;
+    }
+
+    async getFinishedStudentsCount(course_id: string): Promise<number>
+    {
+        const progresses = await this.findByCourse(course_id);
+        let count = 0;
+        progresses.forEach(progress => {
+            if(progress.completion_percentage === 100) {
+                count++;
+            }
+        })
+        return count;
+    }
+    async averageScoreCourse(course_id:string) {
+        const progresses = await this.findByCourse(course_id);
+        let sum = 0.0;
+        progresses.forEach(progress => {
+            sum += progress.average_quiz;
+        })
+        const average = sum / progresses.length;
+        return average;
+    }
 }
