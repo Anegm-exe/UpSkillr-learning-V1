@@ -4,7 +4,9 @@ import { Response } from './model/response.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 import { CreateResponseDto, UpdatedResponseDto } from './dtos/response.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('response')
 export class ResponseController {
     constructor(

@@ -1,19 +1,19 @@
-import { Controller, Get, Post, Delete, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Patch, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Message } from './model/message.schema';
 import { CreateMessageDTO, UpdateMessageDTO } from './dtos/message.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('message')
 export class MessageController {
     constructor(private readonly messageService: MessageService) { }
 
-    //create a forum
+    
     @Post()
-    async createForum(@Body() createMessageDTO: CreateMessageDTO): Promise<Message> {
+    async create(@Body() createMessageDTO: CreateMessageDTO): Promise<Message> {
         return this.messageService.create(createMessageDTO);
-
     }
-    //get all forums
     @Get()
     async findAll(): Promise<Message[]> {
         return this.messageService.findAll();

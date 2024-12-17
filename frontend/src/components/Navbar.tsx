@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import navbarcss from "../styles/navbar.module.css";
@@ -12,28 +13,28 @@ export default function Navbar() {
   if (isLoading) {
     return (
       <nav className={navbarcss.navbar}>
-        <Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={800} height={65} />
-        <div style={{ color: "#a2a2a2" }}>Loading...</div>
+          <Link href="/"><Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={100} height={25}/></Link>
+          <div style={{ color: "#a2a2a2" }}>Loading...</div>
       </nav>
     );
   }
 
   return (
     <nav className={navbarcss.navbar}>
-      <Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={800} height={65} />
       <div className={navbarcss.navLinks}>
+        <Link href="/"><Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={100} height={25}/></Link>
         <Link href="/" className={navbarcss.button}>Home</Link>
         <Link href="/about" className={navbarcss.button}>About</Link>
         <Link href="/courses" className={navbarcss.button}>Courses</Link>
         <Link href="/forums" className={navbarcss.button}>Forums</Link>
         <Link href="/chats" className={navbarcss.button}>Chats</Link>
       </div>
-      <div className={navbarcss.profileSection}>
+      <div className="flex items-center gap-3 justify-end">
         {tokenDetails ? (
-          <div className={navbarcss.profileInfo}>
+          <div className={navbarcss.navLinks}>
             <a onClick={logout} className={navbarcss.button}>Log out</a>
+            <Link href="/profile" className={navbarcss.button}>{tokenDetails.name || 'User'}</Link>
             <Link href="/profile" className={navbarcss.button}>
-              <span>{tokenDetails.name || 'User'}</span>
               <Image
                 src={tokenDetails.profile_picture_url || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}
                 alt="Profile"
