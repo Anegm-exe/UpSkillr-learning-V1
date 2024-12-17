@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { Notification, NotificationSchema } from 'src/schemas/Notification.schema'
+import { Notification, NotificationSchema } from 'src/notification/model/Notification.schema'
 import { NotificationController } from './notification.controller'
 import { NotificationService } from './notifications.service'
 

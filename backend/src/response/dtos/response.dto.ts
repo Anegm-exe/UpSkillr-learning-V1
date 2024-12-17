@@ -1,7 +1,8 @@
 export class CreateResponseDto {
     user_id: string;
     quiz_id: string;
-    answers?: {questionId: string; answer: number}[];
+    answers: {question_id: string; answer: number}[];
+    correctAnswers?: {question_id: string; answer: number}[]
     score?: number;
 }
 

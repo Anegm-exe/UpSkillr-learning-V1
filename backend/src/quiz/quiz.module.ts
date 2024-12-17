@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-import { Quiz, QuizSchema } from 'src/schemas/quiz.schema'
+import { Quiz, QuizSchema } from './model/quiz.schema'
 import { QuizController } from './quiz.controller'
 import { QuizService } from './quiz.service'
 import { QuestionModule } from 'src/question/question.module'
@@ -15,7 +15,8 @@ import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.mid
         QuestionModule
     ],
     controllers:[QuizController],
-    providers:[QuizService]
+    providers:[QuizService],
+    exports:[QuizService]
 })
 
 export class QuizModule {

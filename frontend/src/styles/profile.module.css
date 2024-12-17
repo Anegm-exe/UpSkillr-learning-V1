@@ -1,0 +1,21 @@
+
+
+.container {
+    background-color: black;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile_picture {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  
+  .profile_details {
+    text-align: center;
+  }
