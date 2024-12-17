@@ -50,14 +50,13 @@ export class CourseService{
     // update a course
     async update(id: string, updateData: UpdateCourseDto): Promise<Course> {
         const updatedCourse = await this.courseModel
-            .findOneAndUpdate({ _id: id }, updateCourseDto, { new: true })
+            .findOneAndUpdate({ _id: id },updateData, { new: true })
             .exec();
         if (!updatedCourse) {
             throw new NotFoundException(`Course with ID ${id} not found`);
         }
         return updatedCourse;
-    }
-       
+    }    
 
     // delete a course
     async delete(id: string): Promise<void> {
@@ -77,25 +76,12 @@ export class CourseService{
     }
 
     // get all instructors for a course
-    async getInstructors(courseId: string): Promise<any[]> { // Change the return type to match your needs
+    async getInstructors(courseId: string): Promise<string[]> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-    
-        const instructors = await Promise.all(
-            course.instructor_ids.map(async (id: string) => {
-                const user = await this.userService.findOne(id); // Assuming userService is injected
-                return {
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
-                    profilePicture: user.profile_picture_url, // Include profile picture
-                };
-            })
-        );
-    
-        return instructors;
+        return course.instructor_ids;
     }
 
     // add an instructor to a course
