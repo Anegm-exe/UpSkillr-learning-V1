@@ -4,8 +4,6 @@ import { Chat } from '../schemas/chat.schema'
 import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
 import { Request } from 'express';
 import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/schemas/user.schema';
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) 
@@ -42,11 +40,9 @@ export class ChatController {
     return await this.chatService.replyToMessage(chat_id,message_id,message, req);
   }
 
-  // deleted a chat (only done by an admin)
-  //for when a user registers they should pass through the authorization guard
   @Delete(':chat_id')
   async deleteChat(@Param('chat_id') chat_id: string, @Req() req: Request) {
-    return await this.chatService.delete(chat_id, req);
+    return await this.chatService.deleteChat(chat_id, req);
   }
 
   @Post(':chat_id/user/:email')

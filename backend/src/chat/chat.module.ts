@@ -18,7 +18,7 @@ import { UserService } from 'src/user/user.service'
     ],
     controllers:[ChatController],
     providers:[ChatService], 
-    exports:[ChatService, UserService] 
+    exports:[ChatService] 
 })
 
 

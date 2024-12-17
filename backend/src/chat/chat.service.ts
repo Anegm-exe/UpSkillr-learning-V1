@@ -258,4 +258,11 @@ export class ChatService {
     chat.user_ids.splice(index, 1);
     chat.save()
   }
+  async searchByName(name: string, req: Request): Promise<Chat[]> {
+    return this.chatModel.find({ 
+      name: { $regex: name, $options: 'i'}, 
+      user_ids : req['user'].userid
+    })
+    
+  }
 }
