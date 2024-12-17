@@ -112,7 +112,7 @@ export default function Register() {
             </form>
             <p className={registercss.loginText}>
                 Already have an account?{' '}
-                <Link href="/auth/login" className={registercss.loginLink}>
+                <Link href="/login" className={registercss.loginLink}>
                     Login now
                 </Link>
             </p>

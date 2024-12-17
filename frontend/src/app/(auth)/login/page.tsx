@@ -6,9 +6,11 @@ import Link from "next/link";
 import axios from "../../api/axios";
 import logincss from "../../../styles/login.module.css";
 import "../../../styles/globals.css";
+import { useAuth } from "@/components/AuthContext"; // Import useAuth
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth(); // Use the auth context
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,7 +28,7 @@ export default function Login() {
 
     try {
       const response = await axios.post("/auth/login",formData);
-
+      login(response.data.user)
       console.log("Login successful:", response.data);
       router.push("/");
     } catch (error) {

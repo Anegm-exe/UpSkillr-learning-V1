@@ -3,63 +3,53 @@ import Link from "next/link";
 import Image from "next/image";
 import navbarcss from "../styles/navbar.module.css";
 import "../styles/globals.css";
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { getTokenDetails } from "../app/api/services/getTokenDetails";
+import { useAuth } from "./AuthContext";
 
-const Navbar = () => {
-  const router = useRouter();
-  const [isToken, setIsToken] = useState(false);
-  const [tokenDetails, setTokenDetails] = useState({});
+export default function Navbar() {
+  const { tokenDetails, isLoading, logout } = useAuth();
 
-  useEffect(() => {
-    const fetchTokenDetails = async () => {
-      try{
-        const userDetails = await getTokenDetails();
-        setTokenDetails(userDetails);
-        setIsToken(true);
-      }catch {
-        setIsToken(false);
-      }
-    }
-    fetchTokenDetails();
-  }, []);
-
-  const handleLogOut = async () => {
-    try {
-      const response = await fetch('/api/logout', { method: 'POST' });
-      if (response.ok) {
-        setIsToken(false);
-        router.push('/login');
-      } else {
-        console.error('Failed to log out');
-      }
-    } catch (error) {
-      console.error('An error occurred during logout:', error);
-    }
-  };
-  
+  // Show nothing or a loading indicator while authentication is being verified
+  if (isLoading) {
+    return (
+      <nav className={navbarcss.navbar}>
+        <Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={800} height={65} />
+        <div style={{ color: "#a2a2a2" }}>Loading...</div>
+      </nav>
+    );
+  }
 
   return (
     <nav className={navbarcss.navbar}>
       <Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={800} height={65} />
-      <Link href="/" className={navbarcss.button}>
-        Home
-      </Link>
-      <Link href="/about" className={navbarcss.button}>
-        About
-      </Link>
-      {isToken? (
-        <a onClick={handleLogOut} className={navbarcss.button}>
-          Log Out
-        </a>
-      ) : (
-        <Link href="/login" className={navbarcss.button}>
-          Login
-        </Link>
-      )}
+      <div className={navbarcss.navLinks}>
+        <Link href="/" className={navbarcss.button}>Home</Link>
+        <Link href="/about" className={navbarcss.button}>About</Link>
+        <Link href="/courses" className={navbarcss.button}>Courses</Link>
+        <Link href="/forums" className={navbarcss.button}>Forums</Link>
+        <Link href="/chats" className={navbarcss.button}>Chats</Link>
+      </div>
+      <div className={navbarcss.profileSection}>
+        {tokenDetails ? (
+          <div className={navbarcss.profileInfo}>
+            <a onClick={logout} className={navbarcss.button}>Log out</a>
+            <Link href="/profile" className={navbarcss.button}>
+              <span>{tokenDetails.name || 'User'}</span>
+              <Image
+                src={tokenDetails.profile_picture_url || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'}
+                alt="Profile"
+                width={40}
+                height={40}
+                style={{
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Link>
+          </div>
+        ) : (
+          <Link href="/login" className={navbarcss.button}>Login</Link>
+        )}
+      </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

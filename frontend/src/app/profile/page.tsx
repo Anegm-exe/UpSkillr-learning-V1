@@ -1,35 +1,27 @@
+'use client';
+
+import Image from "next/image";
 import styles from "../../styles/profile.module.css";
-import { cookies } from "next/headers";
-import ProfileClient from "./ProfileClient";
+import { useAuth } from "@/components/AuthContext";
 
-interface UserType {
-  _id: string;
-  role: string;
-  name: string;
-  profile_picture_url: string;
-  dateOfBirth: Date;
-}
 
-export default async function Profile() {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token")?.value;
-
-  if (!token) {
-    return <ProfileClient user={null} error="No token found" />;
+export default function Profile() {
+  const {tokenDetails,isLoading} = useAuth();
+  if (isLoading) {
+    return <div className={styles.container}>Loading...</div>;
   }
-
-  const res = await fetch("http://localhost:3000/user/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    return <ProfileClient user={null} error="Failed to fetch user data" />;
+  const user = tokenDetails;
+  if (!user) {
+    return <div className={styles.container}>Error: please sign in</div>;
   }
-
-  const fetchedUser: UserType = await res.json();
-
-  return <ProfileClient user={fetchedUser} error={null} />;
+  return (
+    <div className={styles.container}>
+      <Image src={user.profile_picture_url} alt={`${user.name}'s profile`} className={styles["profile_picture"]} width={150} height={150} />
+      <div className={styles["profile_details"]}>
+        <h1>{user.name}</h1>
+        <p>Role: {user.role}</p>
+        <p>User ID: {user._id}</p>
+      </div>
+    </div>
+  );
 }
