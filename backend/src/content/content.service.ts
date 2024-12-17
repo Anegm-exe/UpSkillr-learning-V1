@@ -3,17 +3,19 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model, isValidObjectId } from "mongoose";
 import { CreateContentDto } from "src/content/dto/createContent.dto";
 import { UpdateContentDto } from "src/content/dto/updateContent.dto";
-import { Content, ContentDocument, FileVersion, FileVersionDocument } from "src/schemas/content.schema";
+import { Content, ContentDocument, FileVersion, FileVersionDocument } from "src/content/model/Content.schema";
 import * as fs from "fs";
 import * as path from "path";
 import { existsSync } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { Role } from "src/Auth/decorators/roles.decorator";
+import { ModuleService } from "src/module/module.service";
 @Injectable()
 export class ContentService {
   constructor(
     @InjectModel(Content.name) private contentModel: Model<ContentDocument>,
-    @InjectModel(FileVersion.name) private fileVersionModel: Model<FileVersionDocument>
+    @InjectModel(FileVersion.name) private fileVersionModel: Model<FileVersionDocument>,
+    private readonly moduleService: ModuleService
   ) {}
 
   async getAllContent() {
@@ -51,7 +53,7 @@ export class ContentService {
     return content;
   }
 
-  async uploadContent(createContentDto: CreateContentDto, file: Express.Multer.File) {
+  async uploadContent(createContentDto: CreateContentDto, file: Express.Multer.File,module_id:string) {
     const uploadDir = "./uploads";
     const fileName = `${uuidv4()}-${file.originalname}`;
     const filePath = path.join(uploadDir, fileName);
@@ -72,6 +74,7 @@ export class ContentService {
       versions: [newFileVersion._id],
     });
     await newContent.save();
+    await this.moduleService.addContent(module_id,newContent._id)
     return {
       newContent,
       url: filePath,
@@ -117,7 +120,7 @@ export class ContentService {
     };
   }
 
-  async deleteContent(contentId: string) {
+  async deleteContent(contentId: string,module_id:string) {
     const content = await this.contentModel.findById(contentId).exec();
     if (!content) {
       throw new NotFoundException(`Content with ID ${contentId} not found`);
@@ -134,7 +137,7 @@ export class ContentService {
         await this.fileVersionModel.findByIdAndDelete(versionId).exec();
       }
     }
-
+    this.moduleService.deleteContent(module_id,contentId);
     await this.contentModel.findByIdAndDelete(contentId).exec();
 
     return { message: "Content and associated file versions deleted successfully" };

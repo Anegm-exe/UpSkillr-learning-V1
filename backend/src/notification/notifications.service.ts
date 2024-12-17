@@ -1,13 +1,14 @@
 import { Injectable,NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model,Types } from 'mongoose';
-import { Notification,NotificationDocument} from 'src/schemas/Notification.schema';
+import { Model } from 'mongoose';
+import { Notification,NotificationDocument} from 'src/notification/model/Notification.schema';
+import { CreateNotificationDto, UpdateNotificationDto } from './dtos/notifications.dtos';
 
 @Injectable()
 export class NotificationService {
   constructor(@InjectModel(Notification.name) private notificationModel: Model<NotificationDocument>,) { }
   // create a notification
-  async create(notificationData: Partial <Notification>): Promise<Notification> { 
+  async create(notificationData: CreateNotificationDto): Promise<Notification> { 
     const notification = new this.notificationModel(notificationData); 
     return await notification.save(); 
   }
@@ -17,8 +18,8 @@ export class NotificationService {
     return this.notificationModel.find().exec();
 }
   //get notification by id
- async findOne(id: String): Promise<Notification> {
-    const notification = await this.notificationModel.findOne(id).exec();
+ async findOne(id: string): Promise<Notification> {
+    const notification = await this.notificationModel.findOne({_id:id}).exec();
     if (!notification) {
       throw new NotFoundException(`Notification with id #${id} not found`);
     }
@@ -26,7 +27,7 @@ export class NotificationService {
   }
 
   //update notification
-  async update(id: String, updateData: Partial<Notification>): Promise<Notification> {
+  async update(id: string, updateData: UpdateNotificationDto): Promise<Notification> {
     const updatedNotification = await this.notificationModel
         .findOneAndUpdate({ _id: id }, updateData, { new: true })
         .exec();
@@ -36,7 +37,7 @@ export class NotificationService {
     return updatedNotification;
 }
   //delete a notification
-  async delete(id: String): Promise<void> {
+  async delete(id: string): Promise<void> {
     const result = await this.notificationModel.deleteOne({ _id: id }).exec();
     if (result.deletedCount === 0) {
         throw new NotFoundException(`Notification with ID ${id} not found`);
@@ -56,5 +57,10 @@ async deleteExpiredNotifications(): Promise<number> {
     }).exec();
 
     return result.deletedCount ?? 0;
+  }
+
+  // find by user_id
+  async findByUserId(userId: string): Promise<Notification[]> {
+    return this.notificationModel.find({user_ids:userId }).exec();
   }
 }

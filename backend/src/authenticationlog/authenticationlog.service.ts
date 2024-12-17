@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AuthenticationLog, AuthenticationLogDocument } from '../schemas/authenticationlog.schema';
+import { AuthenticationLog, AuthenticationLogDocument } from './model/authenticationLog.schema';
 import { CreateAuthenticationLogDto, UpdateAuthenticationLogDto } from './dtos/authenticationlog.dto';
 import { createObjectCsvStringifier } from 'csv-writer';
 

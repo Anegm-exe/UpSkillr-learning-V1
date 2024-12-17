@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors, Patch, Res } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, UseInterceptors, Patch, Res } from '@nestjs/common';
 import { AuthenticationLogService } from './authenticationlog.service';
-import { AuthenticationLog } from '../schemas/authenticationlog.schema';
+import { AuthenticationLog } from './model/authenticationLog.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 import { Response } from 'express';

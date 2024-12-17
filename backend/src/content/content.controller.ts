@@ -21,7 +21,7 @@ import { Response } from "express";
 import { Role, Roles } from "src/Auth/decorators/roles.decorator";
 import { authorizationGuard } from "src/Auth/guards/authorization.guard";
 
-@Controller("api/content")
+@Controller("content")
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
   //five endpoints
@@ -78,10 +78,10 @@ export class ContentController {
 
   @Roles(Role.Instructor, Role.Admin)
   @UseGuards(authorizationGuard)
-  @Post("upload")
+  @Post("upload/module/:id")
   @UseInterceptors(FileInterceptor("file"))
-  uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File) {
-    return this.contentService.uploadContent(createContentDto, file);
+  uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File,@Param('id') module_id:string) {
+    return this.contentService.uploadContent(createContentDto, file,module_id);
   }
 
   @Roles(Role.Instructor, Role.Admin)
@@ -92,10 +92,13 @@ export class ContentController {
     return this.contentService.updateContent(contentId, updateContentDto, file);
   }
 
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.Instructor)
   @UseGuards(authorizationGuard)
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.contentService.deleteContent(id);
+  @Delete(":id/module/:module_id")
+  remove(
+    @Param("id") id: string,
+    @Param("module_id") moduleId: string
+  ) {
+    return this.contentService.deleteContent(id,moduleId);
   }
 }

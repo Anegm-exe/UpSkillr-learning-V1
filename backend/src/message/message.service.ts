@@ -2,8 +2,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Message, MessageDocument } from '../schemas/message.schema';
-import { CreateMessageDTO } from './dtos/message.dto';
+import { Message, MessageDocument } from './model/message.schema';
+import { CreateMessageDTO, UpdateMessageDTO } from './dtos/message.dto';
 
 @Injectable()
 export class MessageService {
@@ -27,20 +27,38 @@ export class MessageService {
         return message;
     }
 
-    async update(id: string, updateData: Partial<Message>): Promise<Message> {
+    async update(id: string, updateData: UpdateMessageDTO): Promise<Message> {
         const updatedMessage = await this.messageModel
             .findOneAndUpdate({ _id: id }, updateData, { new: true })
             .exec();
         if (!updatedMessage) {
             throw new NotFoundException(`Message with ID ${id} not found`);
         }
+        
         return updatedMessage;
     }
+
     async delete(id: string): Promise<void> {
         const result = await this.messageModel.deleteOne({ _id: id }).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException(`Message with ID ${id} not found`);
         }
+    }
+
+    // Delete message and their replies
+    async deleteAll(id: string) {
+        const message = await this.messageModel.findById({_id:id}).exec();
+        if (!message) {
+            throw new NotFoundException(`Message with ID ${id} not found`);
+        }
+        const replies = await this.messageModel.find({repliedTo_id:id})
+        await Promise.all(
+            replies.map(async (reply) => {
+                this.deleteAll(reply._id);
+                this.delete(reply._id);
+            })
+        );
+        await this.delete(id);
     }
 
     // Get message details

@@ -1,0 +1,62 @@
+.navbar {
+    position: relative;
+    display: flex;
+    flex-direction: row; /* Ensures the navbar items are in a row */
+    background-color: var(--background-color);
+    margin: 0;
+    height: 4rem;
+    border-bottom: 0.1rem solid var(--border-color);
+    align-items: center;
+    padding: 0 1.5rem;
+  }
+  
+  .navLinks {
+    display: flex; /* Align links horizontally */
+    flex-grow: 1; /* Let links take up available space */
+  }
+  
+  .button {
+    height: 1rem;
+    text-decoration: none;
+    color: #a2a2a2;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center; /* Vertically center the text inside the button */
+  }
+  
+  .button:hover {
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 0 25px white;
+  }
+  
+  .img {
+    width: 100px;
+    position: relative;
+    object-fit: contain;
+  }
+  
+  .profileSection {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align the profile section to the right */
+  }
+  
+  .profileInfo {
+    display: flex;
+    align-items: center;  /* Vertically center the profile image and name */
+  }
+  
+  .profileInfo img {
+    margin-left: 10px; /* Space between profile image and name */
+  }
+  
+  .profileInfo span {
+    margin-left: 10px;  /* Space between the name and log out button */
+  }
+  
+  .profileSection a {
+    cursor: pointer;
+  }
+  
