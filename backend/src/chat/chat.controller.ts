@@ -3,7 +3,9 @@ import { ChatService } from './chat.service';
 import { Chat } from './model/chat.schema'
 import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
 import { Request } from 'express';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) 

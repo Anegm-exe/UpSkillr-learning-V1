@@ -20,8 +20,4 @@ import { QuizModule } from "src/quiz/quiz.module";
   providers: [ResponseService],
   exports: [ResponseService]
 })
-export class ResponseModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthenticationMiddleware).forRoutes(ResponseController);
-  }
-}
+export class ResponseModule {}

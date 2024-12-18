@@ -5,8 +5,10 @@ import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
 import { Response } from 'express';
 import { CreateAuthenticationLogDto, UpdateAuthenticationLogDto } from './dtos/authenticationlog.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
 @Roles(Role.Admin)
+@UseGuards(AuthGuard)
 @UseGuards(authorizationGuard)
 @Controller('logs')
 export class AuthenticationLogController {

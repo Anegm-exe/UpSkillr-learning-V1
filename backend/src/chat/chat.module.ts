@@ -21,10 +21,4 @@ import { NotificationModule } from 'src/notification/notification.module'
 })
 
 
-export class ChatModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(ChatController);
-    }
-}
+export class ChatModule {}

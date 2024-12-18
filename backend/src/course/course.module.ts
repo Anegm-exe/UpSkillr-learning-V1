@@ -31,10 +31,4 @@ import { NotificationModule } from 'src/notification/notification.module'
 })
 
 
-export class CourseModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(CourseController);
-    }
-}
+export class CourseModule {}

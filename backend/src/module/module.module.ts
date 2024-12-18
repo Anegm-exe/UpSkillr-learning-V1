@@ -6,6 +6,7 @@ import { ModuleService } from './module.service'
 import { CourseModule } from 'src/course/course.module'
 import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.middleware'
 import { QuestionModule } from 'src/question/question.module'
+import { ProgressModule } from 'src/progress/progress.module'
 
 @Module({
     imports:[
@@ -14,6 +15,7 @@ import { QuestionModule } from 'src/question/question.module'
             schema: ModuleSchema
         }]),
         QuestionModule,
+        ProgressModule
     ],
     controllers:[ModuleController],
     providers:[ModuleService],
@@ -21,10 +23,4 @@ import { QuestionModule } from 'src/question/question.module'
 })
 
 
-export class ModuleModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(ModuleController);
-    }
-}
+export class ModuleModule {}

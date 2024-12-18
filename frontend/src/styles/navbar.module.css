@@ -37,26 +37,3 @@
     object-fit: contain;
   }
   
-  .profileSection {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Align the profile section to the right */
-  }
-  
-  .profileInfo {
-    display: flex;
-    align-items: center;  /* Vertically center the profile image and name */
-  }
-  
-  .profileInfo img {
-    margin-left: 10px; /* Space between profile image and name */
-  }
-  
-  .profileInfo span {
-    margin-left: 10px;  /* Space between the name and log out button */
-  }
-  
-  .profileSection a {
-    cursor: pointer;
-  }
-  

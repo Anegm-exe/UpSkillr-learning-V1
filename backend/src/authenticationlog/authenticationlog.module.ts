@@ -18,8 +18,4 @@ import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.mid
 })
 
 
-export class AuthenticationLogModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthenticationMiddleware).forRoutes(AuthenticationLogController);
-      }
-}
+export class AuthenticationLogModule {}

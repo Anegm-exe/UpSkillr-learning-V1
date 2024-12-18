@@ -21,10 +21,4 @@ import { NotificationModule } from 'src/notification/notification.module';
 })
 
 
-export class ForumModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(ForumController);
-    }
-}
+export class ForumModule {}

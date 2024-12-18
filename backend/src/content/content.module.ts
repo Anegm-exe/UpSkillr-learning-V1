@@ -17,8 +17,4 @@ import { ModuleModule } from "src/module/module.module";
   controllers: [ContentController],
   providers: [ContentService],
 })
-export class ContentModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthenticationMiddleware).forRoutes(ContentController);
-  }
-}
+export class ContentModule {}
