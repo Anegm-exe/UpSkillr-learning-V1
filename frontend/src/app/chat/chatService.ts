@@ -5,8 +5,14 @@ const BASE_URL = 'http://localhost:3000/chat';
 
 // Get all chats for a user
 export const getAllChats = async (userId: string) => {
-  const response = await axios.get(`${BASE_URL}/user/${userId}`);
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/user/${userId}`);
+    return response.data;
+  }
+  catch(error){
+    console.error('Error fetching your chat');
+    throw error; 
+  }
 };
 
 // Get chat details
@@ -40,21 +46,21 @@ export const removeUserFromChat = async (chatId: string, userId: string) => {
 };
 //reply to a message
 export const replyToMessage = async (
-    chatId: string,
-    messageId: string,
-    text: string,
-    getTokenDetails?: string
-  ) => {
-    try {
-      const headers = getTokenDetails ? { Authorization: `Bearer ${getTokenDetails}` } : {};
-      const response = await axios.post(
-        `${BASE_URL}/${chatId}/reply/${messageId}`,
-        { message: text },
-        { headers } // Include authorization headers if necessary
-      );
-      return response.data; // Return the updated chat object
-    } catch (error) {
-      console.error('Error replying to message:', error);
-      throw error;
-    }
-  };
+  chatId: string,
+  messageId: string,
+  text: string,
+  getTokenDetails?: string
+) => {
+  try {
+    const headers = getTokenDetails ? { Authorization: `Bearer ${getTokenDetails}` } : {};
+    const response = await axios.post(
+      `${BASE_URL}/${chatId}/reply/${messageId}`,
+      { message: text },
+      { headers } // Include authorization headers if necessary
+    );
+    return response.data; // Return the updated chat object
+  } catch (error) {
+    console.error('Error replying to message:', error);
+    throw error;
+  }
+};
