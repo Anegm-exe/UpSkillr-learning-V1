@@ -5,7 +5,10 @@ import { CreateModuleDto, UpdateModuleDto } from "./dtos/module.dto";
 import { Role, Roles } from "src/Auth/decorators/roles.decorator";
 import { authorizationGuard } from "src/Auth/guards/authorization.guard";
 import { CreateQuestionDto } from "src/question/dtos/question.dto";
+import { AuthGuard } from "src/Auth/guards/authentication.guard";
+import { Request } from "express";
 
+@UseGuards(AuthGuard)
 @Controller('module')
 export class ModuleController {
     constructor(private readonly moduleService: ModuleService) {}
@@ -51,8 +54,8 @@ export class ModuleController {
 
     // Get all modules by course
     @Get('course/:course_id')
-    async findAllByCourse(@Param('course_id') course_id:string): Promise<Modules[]> {
-        return await this.moduleService.findAllByCourse(course_id);
+    async findAllByCourse(@Param('course_id') course_id:string, @Req() req: Request): Promise<Modules[]> {
+        return await this.moduleService.findAllByCourse(course_id,req);
     }
 
     // Get all modules 

@@ -19,10 +19,4 @@ import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.mid
     exports: [QuestionService]
 })
 
-export class QuestionModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(QuestionController);
-    }
-}
+export class QuestionModule {}

@@ -20,8 +20,4 @@ import { CourseModule } from 'src/course/course.module'
 })
 
 
-export class UserModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(AuthenticationMiddleware).forRoutes(UserController);
-    }
-}
+export class UserModule {}

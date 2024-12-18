@@ -29,10 +29,6 @@ import { NotificationModule } from 'src/notification/notification.module'
     providers: [CourseService],
     exports: [CourseService]
 })
-export class CourseModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(CourseController);
-    }
-}
+
+
+export class CourseModule {}

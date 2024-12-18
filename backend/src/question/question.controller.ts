@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { QuestionService as QuestionService } from './question.service';
 import { Questions as Question } from './model/question.schema';
 import { CreateQuestionDto, UpdateQuestionDto } from './dtos/question.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('question')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) { }
 
-    @Post('module/:module_id')
+    @Post()
     async create(@Body() createQuestionDto: CreateQuestionDto): Promise<Question> {
         return this.questionService.create(createQuestionDto);
     }
@@ -33,6 +35,5 @@ export class QuestionController {
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<void> {
         return this.questionService.delete(id);
-    
     }
 }

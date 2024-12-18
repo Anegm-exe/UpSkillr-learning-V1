@@ -51,10 +51,4 @@ import { AuthenticationMiddleware } from "./Auth/middleware/authentication.middl
   ],
   controllers: [AppController],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-        .apply(AuthenticationMiddleware)
-        .forRoutes(AppController);
-  }
-}
+export class AppModule {}

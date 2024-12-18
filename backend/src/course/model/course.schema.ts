@@ -14,8 +14,8 @@ export class Course {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: false })
-  category: string;
+  @Prop({ default:[] })
+  category: string[];
 
   @Prop({ required: true, enum: ['Beginner', 'Intermediate', 'Advanced'] })
   difficulty_Level: string;

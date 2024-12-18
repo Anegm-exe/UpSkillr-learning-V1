@@ -18,10 +18,4 @@ import { AuthenticationMiddleware } from 'src/Auth/middleware/authentication.mid
 })
 
 
-export class ProgressModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(AuthenticationMiddleware)
-            .forRoutes(ProgressController);
-    }
-}
+export class ProgressModule {}
