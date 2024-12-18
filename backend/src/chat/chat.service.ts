@@ -144,15 +144,9 @@ export class ChatService {
           console.error(`Failed to delete message ${id}:`, err.message);
         }
       }
-<<<<<<< HEAD
-  ));
-    await this.chatModel.deleteOne({ chat_id });
-    return { success: true };
-=======
     ));
     await this.chatModel.deleteOne({ _id: chat_id }).exec();
   return { success: true };
->>>>>>> 156f1d198bb5a96a8cebd3b2f79a79674525ebc0
   }
 //works in thunder client
   async addUserToChat(chat_id: string, email: string, req: Request): Promise<Chat> {
