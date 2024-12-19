@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, HttpException, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/SignInDto';
-import { User } from 'src/schemas/user.schema';
+import { CreateUserDto } from 'src/user/dtos/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async signup(@Body() registerRequestDto: Partial<User>) {
+  async signup(@Body() registerRequestDto: CreateUserDto) {
     try {
       // Call the AuthService to handle registration
       const result = await this.authService.register(registerRequestDto);

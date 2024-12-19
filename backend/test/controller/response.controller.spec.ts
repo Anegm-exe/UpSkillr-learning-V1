@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResponseController } from '../../src/response/response.controller';
 
-describe('ResponceController', () => {
+describe('ResponseController', () => {
   let controller: ResponseController;
 
   beforeEach(async () => {

@@ -1,19 +1,22 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, Patch } from '@nestjs/common';
 import { ResponseService } from './response.service';
-import { Response } from '../schemas/response.schema';
+import { Response } from './model/response.schema';
 import { Role, Roles } from 'src/Auth/decorators/roles.decorator';
 import { authorizationGuard } from 'src/Auth/guards/authorization.guard';
+import { CreateResponseDto, UpdatedResponseDto } from './dtos/response.dto';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
 
+@UseGuards(AuthGuard)
 @Controller('response')
 export class ResponseController {
     constructor(
         private readonly responseService: ResponseService,
     ) { }
 
-    // @Roles(Role.Student)
-    // @UseGuards(authorizationGuard)
+    @Roles(Role.Student)
+    @UseGuards(authorizationGuard)
     @Post()
-    async create(@Body() createResponseDto: Partial<Response>): Promise<Response> {
+    async create(@Body() createResponseDto: CreateResponseDto): Promise<Response> {
         return this.responseService.create(createResponseDto)
     }
 
@@ -37,10 +40,10 @@ export class ResponseController {
         return this.responseService.findOne(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     async update(
         @Param('id') id: string,
-        @Body() updateResponseDto: Partial<Response>,
+        @Body() updateResponseDto: UpdatedResponseDto,
     ): Promise<Response> {
         return this.responseService.update(id,updateResponseDto);
     }

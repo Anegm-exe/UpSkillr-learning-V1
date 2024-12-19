@@ -1,52 +1,94 @@
-import { Controller, Post, Get, Body, Query, Put, Patch, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Put, Patch, Delete, Param, UseGuards, Res, Req, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChatDTO, CreateMessageDTO, GetAllChatsDTO, GetChatDetailsDTO, GetRecentChatDTO, DeleteMessageDTO, EditMessagesDTO } from './chat.dto';
-import { plainToInstance } from 'class-transformer';
+import { Chat } from './model/chat.schema'
+import { CreateChatDTO, GetChatDetailsDTO, UpdateChatDTO } from './dtos/chat.dto';
+import { Request } from 'express';
+import { AuthGuard } from 'src/Auth/guards/authentication.guard';
+
+@UseGuards(AuthGuard)
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) { }
 
+  //creating a chat
   @Post()
-  async createChat(@Param('User_Id') User_Id: string, @Body() createChatDTO: CreateChatDTO) {
-    return this.chatService.createChat(User_Id, createChatDTO); //creating 
+  async createChat(@Body('chat') createChatDTO: CreateChatDTO, @Body('emails') email: string[]) {
+    return await this.chatService.createChat(createChatDTO, email); //creating 
+  }
 
+  //getting all chats based on user_id
+  @Get('user/:user_id')
+  async getAllChats(@Param('user_id') user_id: string) {
+    return await this.chatService.findAllChats(user_id);
   }
-  @Post(':chat_id/messages')
-  async createMessage(@Body() createMessageDTO: CreateMessageDTO) {
-    return this.chatService.createMessage(createMessageDTO);
-  }
+
+  //check for chat details
+  /* a get method to get me a chat details by giving it the chat_id*/
   @Get(':chat_id')
-  async getAllChats(@Param('chat_id') chat_id: string, @Query() getAllChatsDTO: GetAllChatsDTO) {
-    return this.chatService.findAllChats(chat_id, getAllChatsDTO);
+  async getChatDetails(@Param('chat_id') chat_id: string) {
+    return await this.chatService.getChatDetails(chat_id);
   }
-  @Get(':chat_id/messages')
-  async getChatDetails(@Param('message_id') chat_id: string, @Query() getAllChatsDTO: GetAllChatsDTO) {
-    const getChatDetailsDto = plainToInstance(GetChatDetailsDTO, { chat_id }) //which, message or chat id??
-    return this.chatService.getChatDetails(chat_id, getChatDetailsDto); /* a get method to get me a chat details by giving it the chat_id*/
+
+  // send Message
+  @Post(':chat_id/send')
+  async sendMessage(@Param('chat_id') chat_id: string, @Body('message') message : string, @Req() req: Request) {
+    return await this.chatService.sendMessage(chat_id, message, req);
   }
-  @Get(':recent')
-  async getRecentChat(@Param('chat_id') chat_id: string, @Query() getRecentChatDto: GetRecentChatDTO) {
-    return this.chatService.getRecentChat(chat_id, getRecentChatDto); //i need to sort first descendingly (shaklo ghalat aslan)
+
+  // reply message
+  @Post(':chat_id/reply/:message_id')
+  async replyToMessage(@Param('chat_id') chat_id: string,@Param('message_id') message_id: string, @Body('message')
+  message : string, @Req() req: Request) {
+    return await this.chatService.replyToMessage(chat_id,message_id,message, req);
   }
+
+  // deleted a chat (only done by an admin)
+  //for when a user registers they should pass through the authorization guard
   @Delete(':chat_id')
-  async deleteChat(@Param('chat_id') chat_id: string) {
-    return this.chatService.deleteChat(chat_id);
+  async deleteChat(@Param('chat_id') chat_id: string, @Req() req: Request) {
+    return await this.chatService.delete(chat_id, req);
   }
-  @Delete(':chatId/messages/:messageId')
-  async deleteMessage(
-    @Param('chatId') chatId: string,
-    @Param('messageId') messageId: string,
-    @Body() deleteMessageDTO: DeleteMessageDTO) {
-    // pass `chatId`, `messageId`, and `deleteMessageDTO` to the service layer.
-    return this.chatService.deleteMessage(chatId, messageId, deleteMessageDTO);
+
+  @Post(':chat_id/user/:email')
+  async addUserToChat(
+    @Param('chat_id') chat_id: string,
+    @Param('email') email: string,
+    @Req() req: Request
+  ): Promise<Chat> {
+    return await this.chatService.addUserToChat(chat_id, email, req);
   }
-  @Patch(':chat_id/messages:/message_id')
-  async editMessage(@Param('chat_id') chat_id: string, @Param('message_id') message_id: string, @Body() text: string) {
-    return this.chatService.editMessage(chat_id, message_id, text);
-    /*a patch method to edit messages by taking chat_id and message_id as parameters */
+
+  @Delete(':chat_id/user/:user_id')
+  async removeUserFromChat(
+    @Param('chat_id') chat_id: string,
+    @Param('user_id') user_id: string,
+    @Req() req: Request
+    ): Promise<void> {
+      await this.chatService.removeUsersFromChat(chat_id, user_id, req);
+  }
+
+  // Delete message from chat
+  @Delete(':chat_id/message/:message_id')
+  async deleteMessageFromChat(
+    @Param('chat_id') chat_id: string,
+    @Param('message_id') message_id: string,
+    @Req() req: Request
+    ): Promise<void> {
+      await this.chatService.deleteMessageFromChat(chat_id, message_id, req);
+  }
+
+  // leave chat
+  @Delete(':chat_id/leave')
+  async leaveChat(@Param('chat_id') chat_id: string, @Req() req: Request): Promise<void> {
+    await this.chatService.leaveChat(chat_id, req);
+  }
+
+  // search by name
+  @Get('search/:name')
+  async searchByName(@Param('name') name: string, @Req() req: Request): Promise<Chat[]> {
+    return await this.chatService.searchByName(name, req);
   }
 }
-
 
 /* body decorator binds the request body to the DTO parameter
 in order to pass the data from the HTTP request directly to the method
