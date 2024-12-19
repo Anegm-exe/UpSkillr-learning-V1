@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 
 const ChatForm: React.FC = () => {
@@ -17,7 +18,8 @@ const ChatForm: React.FC = () => {
     // storing search results (chat names)
     const [searchLoading, setSearchLoading] = useState<boolean>(false);
     // tracking loading state during search
-
+    const [addUserEmail, setAddUserEmail] = useState<string>(''); //is it the same as the emails?
+    //storing emails of users
     // handling email input change, comma seperated
     const handleEmailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmails(e.target.value);
@@ -53,7 +55,7 @@ const ChatForm: React.FC = () => {
 
             const result = await response.json();
             alert('Chat created successfully!');
-            setChatId(result._id); 
+            setChatId(result._id);
         } catch (err: any) {
             setError('An error occurred: ' + err.message);
         } finally {
@@ -115,10 +117,67 @@ const ChatForm: React.FC = () => {
         fetchChats();
     }, [searchQuery]); // fetch chats when the searchQuery changes
 
+    const handleAddUserToChat = async () => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`/api/chat/user/${addUserEmail}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // ask about auth headers
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add user to the chat');
+            }
+
+            alert('User added to chat successfully!');
+            setAddUserEmail('');
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <h2>Create a New Chat</h2>
-            <form onSubmit={handleSubmit}>
+            <form
+                onSubmit={async (e) => {
+                    e.preventDefault();
+                    setLoading(true);
+                    setError('');
+
+                    try {
+                        const response = await fetch('/api/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                chat: { chatName },
+                                emails: emails.split(',').map((email) => email.trim()),
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to create chat');
+                        }
+
+                        const result = await response.json();
+                        alert('Chat created successfully!');
+                        setChatId(result._id); // Save the chat ID for further actions
+                    } catch (err: any) {
+                        setError(err.message);
+                    } finally {
+                        setLoading(false);
+                    }
+                }}
+            >
                 <div>
                     <label>Chat Name:</label>
                     <input
@@ -129,55 +188,37 @@ const ChatForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Email Addresses (comma separated):</label>
+                    <label>Emails (comma separated):</label>
                     <input
                         type="text"
                         value={emails}
-                        onChange={handleEmailsChange}
+                        onChange={(e) => setEmails(e.target.value)}
                         required
                     />
                 </div>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Creating Chat...' : 'Create Chat'}
-                    </button>
-                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Creating Chat...' : 'Create Chat'}
+                </button>
             </form>
 
-            {chatId && (
-                <div>
-                    <h3>Chat Management</h3>
-                    <button onClick={handleDelete} disabled={loading}>
-                        {loading ? 'Deleting Chat...' : 'Delete Chat'}
-                    </button>
-                </div>
-            )}
-
             <hr />
-            <h3>Search Chats</h3>
-            <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for a chat by name"
-            />
-            {searchLoading && <p>Loading search results...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
 
+            <h3>Manage Chat Members</h3>
             <div>
-                {chatResults.length > 0 ? (
-                    <ul>
-                        {chatResults.map((chat) => (
-                            <li key={chat._id}>
-                                <strong>{chat.name}</strong>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No chats found</p>
-                )}
+                <label>User Email:</label>
+                <input
+                    type="text"
+                    value={addUserEmail}
+                    onChange={(e) => setAddUserEmail(e.target.value)}
+                    placeholder="Enter user email"
+                />
             </div>
+            <button onClick={handleAddUserToChat} disabled={loading || !addUserEmail}>
+                {loading ? 'Adding User...' : 'Add User to Chat'}
+            </button>
+
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };
