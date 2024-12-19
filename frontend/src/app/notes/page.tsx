@@ -26,12 +26,11 @@ export default function NoteDetails({
     timestamp: new Date(),
     last_updated: new Date(),
   });
-  
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Use React.use to unwrap params
   const { noteId } = React.use(params);
 
   // Fetch note details by ID
@@ -51,6 +50,27 @@ export default function NoteDetails({
 
     fetchNote();
   }, [noteId]);
+
+  // Fetch all notes
+  const getAllNotes = async () => {
+    try {
+      const response = await axios.get("/note");
+      setAllNotes(response.data);
+    } catch (err) {
+      setError("Failed to fetch all notes");
+    }
+  };
+
+  // Delete note by ID
+  const deleteNote = async (id: string) => {
+    try {
+      await axios.delete(`/note/${id}`);
+      alert("Note deleted successfully");
+      router.push("/"); // Redirect to home or reload the list of notes
+    } catch (err) {
+      setError("Failed to delete the note");
+    }
+  };
 
   // Handle input changes for editing
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -93,17 +113,30 @@ export default function NoteDetails({
           <p>{note.content || 'No content available'}</p>
           <div>
             <button onClick={() => setIsEditing(true)}>Edit</button>
+            <button onClick={() => deleteNote(note._id)}>Delete</button>
             <button onClick={() => router.push("/")}>Back</button>
           </div>
         </div>
       )}
+      <div className="all-notes">
+        <button onClick={getAllNotes}>Fetch All Notes</button>
+        <ul>
+          {allNotes.map((note) => (
+            <li key={note._id}>
+              {note.content}{" "}
+              <button onClick={() => deleteNote(note._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <style jsx>{`
         .container {
           padding: 20px;
         }
         .note-details,
-        .edit-note {
+        .edit-note,
+        .all-notes {
           margin-bottom: 20px;
         }
         .edit-note textarea {
@@ -134,4 +167,3 @@ export default function NoteDetails({
     </div>
   );
 }
-
