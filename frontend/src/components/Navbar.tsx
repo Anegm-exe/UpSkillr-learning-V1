@@ -28,6 +28,7 @@ export default function Navbar() {
         <Link href="/courses" className={navbarcss.button}>Courses</Link>
         <Link href="/forums" className={navbarcss.button}>Forums</Link>
         <Link href="/chats" className={navbarcss.button}>Chats</Link>
+        <Link href="/notes" className={navbarcss.button}>Notes</Link>
       </div>
       <div className="flex items-center gap-3 justify-end">
         {tokenDetails ? (
