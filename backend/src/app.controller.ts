@@ -4,6 +4,7 @@ import { Role, Roles } from './Auth/decorators/roles.decorator';
 import { authorizationGuard } from './Auth/guards/authorization.guard';
 import { AuthGuard } from './Auth/guards/authentication.guard';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { Public } from './Auth/decorators/public.decorator';
 
 @Roles(Role.Admin)
 @UseGuards(authorizationGuard)
@@ -15,6 +16,7 @@ export class AppController {
   private readonly collectionsToBackup = ['users', 'progresses'];
 
   // Define the cron job for running every hour
+  @Public()
   @Cron(CronExpression.EVERY_HOUR)
   async backupCollections() {
     try {
