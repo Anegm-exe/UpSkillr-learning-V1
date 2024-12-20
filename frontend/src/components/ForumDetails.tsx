@@ -1,4 +1,4 @@
-import forumcss from '../styles/forumcss.module.css';
+import forumcss from '../styles/coursecss.module.css';
 
 interface ForumDetailsProps {
   forumData: {

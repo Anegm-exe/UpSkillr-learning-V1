@@ -17,6 +17,7 @@ export function useFetchForum(forumId: string) {
           console.error('Error fetching forum data:', error);
           setError('Failed to fetch forum data.');
         }
+        
       };
 
       fetchForumData();
