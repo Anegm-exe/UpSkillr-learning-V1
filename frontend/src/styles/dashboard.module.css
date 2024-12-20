@@ -1,0 +1,207 @@
+.maincontainer {
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding-top: 2rem;
+}
+
+.separatorline {
+    display: block;
+    position: relative;
+    height: 2px;
+    width: 50%;
+    margin: 0 auto; /* Center horizontally with some vertical margin */
+    background-color: var(--border-color);
+}
+
+/* Profile Container */
+.leftcontainer {
+    flex: 1;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    padding: 2rem 0;
+    margin: 0 2rem auto 2rem;
+    border-radius: 15px;
+    border: solid var(--border-color) 1.5px;
+}
+    .leftcontainer h1 {
+        font-size: 1.1rem;
+        padding: .75rem 0 .5rem 0;
+        margin: 0;
+        font-family: roboto-condensed;
+        text-align: center;
+        cursor: default;
+    }
+
+    .leftcontainer img {
+        width: 7.5rem;
+        height: 7.5rem;
+        position: relative;
+        object-fit: cover;
+        border-radius: 50%;
+        border: solid var(--border-color) 1.5px;
+    }
+
+.viewprofile {
+    display: block;
+    margin: 0;
+    padding: 0 0 .75rem 0;
+    font-size: 14px;
+    font-family: roboto-light;
+    color: var(--accent-color);
+    text-decoration: none; /* Remove underline */
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+    .viewprofile:hover {
+        filter: grayscale();
+    }
+
+/*enrolled courses list*/
+.list-container {
+    margin: 0 auto;
+    width: 75%; /* Adjust the width as needed */
+}
+
+/* Enrolled list styling */
+.vertical-list {
+    list-style-type: none;
+    padding: 0 0 1rem 0;
+    margin: 0;
+}
+
+    .vertical-list li {
+        background-color: var(--background-color);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        font-family: roboto-Condensed;
+    }
+
+        .vertical-list li:hover {
+           filter: invert();
+        }
+
+/* Notifications + Courses */
+.rightcontainer {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    color: white;
+    gap: 2rem;
+}
+
+/* Notifications in the right section */
+.toprightcontainer {
+    height: 25rem;
+    display: flex;
+    flex-direction: row;
+    padding: 0 2rem;
+    gap: 5%;
+}
+
+    .toprightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.LatestEnrolled {
+    flex: 1;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    align-items: center;
+}
+
+.notificationcenter {
+    flex: 2;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.notificationDiv {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 25%;
+    padding: 1rem 1rem;
+    width: calc(100% - 2rem);
+    height: 75%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+    .notificationDiv::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+    }
+
+.notificationtemplate {
+    width: 100%;
+    height: 1rem;
+}
+
+    .notificationtemplate p {
+        font-family: roboto-thin;
+        text-align: center;
+    }
+
+/* Courses in the right section */
+.bottomrightcontainer {
+    height: auto;
+    padding-bottom: 1rem;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    font-size: 20px;
+    color: white;
+    margin: auto 2rem;
+}
+
+    .bottomrightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.courseDiv {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    width: calc(100% - 8rem);
+    padding: 1rem 0 0 0;
+    margin: 0 auto;
+}
+
+
+.courseTemplate {
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+}
+
+    .courseTemplate h1 {
+        font-size: 1rem;
+        font-family: roboto-thin;
+        text-align: center;
+    }
+
+    .courseTemplate p {
+        font-size: 1rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
