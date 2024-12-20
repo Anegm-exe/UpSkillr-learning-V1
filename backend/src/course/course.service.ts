@@ -39,6 +39,11 @@ export class CourseService{
         return this.courseModel.find().exec();
     }
 
+    // New findAllActive function
+  async findAllActive(): Promise<Course[]> {
+    return this.courseModel.find({ isArchived: false }).exec();
+  }
+
     // find a course by id
     async findOne(id: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: id }).exec();
@@ -276,6 +281,7 @@ export class CourseService{
 
     // find enrolled courses for user
     async findEnrolledCourses(req: Request): Promise<Course[]> {
+        console.log(req['user'].userid)
         return this.courseModel.find({ students: req['user'].userid }).exec(); 
     }
 
@@ -573,6 +579,19 @@ export class CourseService{
             message: `A new module has been added to the ${course.title} course.`,
             user_ids: course.students
         });
+        return await course.save();
+    }
+
+    //change course status
+    async changeCourseStatus(course_id: string, req: Request): Promise<Course> {
+        const course = await this.courseModel.findOne({_id:course_id}).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${course_id} not found`)
+        }
+        if (!course.instructor_ids.includes(req['user'].userid) && req['user'].role !== 'admin')  {
+            throw new UnauthorizedException('You are not authorized to change status of this course.');
+        }
+        course.isArchived = !course.isArchived;
         return await course.save();
     }
 

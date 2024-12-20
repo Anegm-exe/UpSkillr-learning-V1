@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsMongoId, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsMongoId, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class UpdateCourseDto {
   @IsArray()
@@ -13,6 +13,9 @@ export class UpdateCourseDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsBoolean()
+  isArchived?: boolean;
 
   @IsString()
   @IsOptional()
@@ -44,4 +47,5 @@ export class UpdateCourseDto {
   @IsMongoId({ each: true })
   @IsOptional()
   quizzes?: string[]; // array of quiz IDs
+
 }

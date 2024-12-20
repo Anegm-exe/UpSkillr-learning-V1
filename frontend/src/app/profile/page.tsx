@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "../../styles/profile.module.css";
 import { useAuth } from "@/components/AuthContext";
+import Link from 'next/link';
 
 
 export default function Profile() {
@@ -21,6 +22,11 @@ export default function Profile() {
         <h1>{user.name}</h1>
         <p>Role: {user.role}</p>
         <p>User ID: {user._id}</p>
+        {(user.role === 'instructor') && (
+          <Link href={`/dashboard/instructor/${user._id}`}>
+            Go to Dashboard
+          </Link>
+        )}
       </div>
     </div>
   );

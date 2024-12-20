@@ -18,20 +18,28 @@ export class CourseController {
     //create a course
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    
     @Post()
     async create(@Body() createCourseDto: CreateCourseDto, @Req() req:Request): Promise<Course> {
         return this.courseService.create(createCourseDto,req);
     }
 
     //works
-    //get all courses
-    @Public()
+    //get all courses even archived ones--instructor/admin
+
+    @Roles(Role.Instructor,Role.Admin)
+    @UseGuards(authorizationGuard)
     @Get()
     async findAll(): Promise<Course[]> {
         return this.courseService.findAll();
     }
     
+    //get all courses-students
+    @Public()
+    @Get('active')
+  async findAllActive(): Promise<Course[]> {
+    return this.courseService.findAllActive();
+  }
+
     // find courses that user is enrolled in 
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
@@ -252,7 +260,7 @@ export class CourseController {
     }
 
     //find a course by id
-    
+    @Public()
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Course> {
         return this.courseService.findOne(id);
@@ -278,4 +286,13 @@ export class CourseController {
     async delete(@Param('id') id: string, @Req() req: Request): Promise<void> {
         this.courseService.changeArchiveStatus(id,req);
     }    
+
+    //change course status
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
+
+    @Patch(':id/status')
+    async changeCourseStatus(@Param('id') id: string, @Req() req: Request): Promise<Course> {
+        return this.courseService.changeCourseStatus(id, req);
+    }
 }

@@ -1,0 +1,32 @@
+.courses-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-box {
+  border: 1px solid #e6d00f;
+  padding: 16px;
+  margin: 8px 0;
+  transition: background-color 0.3s;
+}
+
+.course-box:hover {
+  background-color: #f75454;
+}
+
+.course-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.course-details {
+  margin-top: 8px;
+}
+
+.course-link {
+  display: block;
+  margin-top: 10px;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsMongoId, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import { IsArray,IsBoolean, IsEnum, IsMongoId, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 
 //ISmongoID makes sure the items are valid mongo ids
 
@@ -19,6 +19,9 @@ export class CreateCourseDto {
   @IsString()
   @IsNotEmpty()
   category: string;
+
+  @IsBoolean()
+  isArchived: boolean;
 
   @IsEnum(['Beginner', 'Intermediate', 'Advanced'])
   @IsNotEmpty()
