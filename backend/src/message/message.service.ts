@@ -18,9 +18,6 @@ export class MessageService {
     async findAll(): Promise<Message[]> {
         return this.messageModel.find().exec();
     }
-    async finAllByIds(ids: string[]): Promise<Message[]> {
-        return this.messageModel.find({ _id: { $in: ids } }).exec();
-    }
 
     async findOne(id: string): Promise<Message> {
         const message = await this.messageModel.findOne({ _id: id }).exec();
