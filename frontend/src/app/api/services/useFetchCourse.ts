@@ -5,7 +5,7 @@ import axios from '../../api/axios';
 
 export function useFetchCourse(courseId: string) {
   const [courseData, setCourseData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [errorC, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (courseId) {
@@ -23,5 +23,5 @@ export function useFetchCourse(courseId: string) {
     }
   }, [courseId]);
 
-  return { courseData, error };
+  return { courseData, errorC };
 }

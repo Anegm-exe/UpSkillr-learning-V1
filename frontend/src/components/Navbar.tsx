@@ -15,7 +15,7 @@ export default function Navbar() {
         <Link href="/"><Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={100} height={25}/></Link>
         <Link href="/" className={navbarcss.button}>Home</Link>
         <Link href="/about" className={navbarcss.button}>About</Link>
-        <Link href="/courses" className={navbarcss.button}>Courses</Link>
+        <Link href="/course" className={navbarcss.button}>Courses</Link>
         <Link href="/forums" className={navbarcss.button}>Forums</Link>
         <Link href="/chats" className={navbarcss.button}>Chats</Link>
         <Link href="/notes" className={navbarcss.button}>Notes</Link>

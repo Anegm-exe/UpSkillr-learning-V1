@@ -1,0 +1,33 @@
+.moduleContainer {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 20px 0;
+  }
+  
+  .moduleDetails {
+    margin-top: 10px;
+  }
+  
+  .moduleTitle {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .moduleInfo {
+    margin: 5px 0;
+  }
+  
+  .backButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .backButton:hover {
+    background-color: #005bb5;
+  }
