@@ -69,6 +69,9 @@ export class ProgressService {
         }
         return false;
     }
+    async findProgressesByCourse(courseId:string) : Promise<Progress[]> {
+        return this.progressModel.find({course_id:courseId}).exec();
+    }
 
     async getFinishedStudentsCount(course_id: string): Promise<number>
     {

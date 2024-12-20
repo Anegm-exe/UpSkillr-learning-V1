@@ -1,7 +1,4 @@
-import React from "react";
-
-const page = () => {
-  return <div>page to display all available courses</div>;
+export default function page() {
+  return <h1>page to display all available courses</h1>;
 };
 
-export default page;

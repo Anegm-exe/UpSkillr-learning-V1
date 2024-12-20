@@ -20,7 +20,7 @@ export class Course {
   @Prop({ required: true, enum: ['Beginner', 'Intermediate', 'Advanced'] })
   difficulty_Level: string;
 
-  @Prop({ min: 0, max: 5, default: 0 })
+  @Prop({ min: 0, max: 5, required:false })
   rating: number;
 
   @Prop({ default: Date.now })

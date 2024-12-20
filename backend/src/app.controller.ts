@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb';
 import { Role, Roles } from './Auth/decorators/roles.decorator';
 import { authorizationGuard } from './Auth/guards/authorization.guard';
 import { AuthGuard } from './Auth/guards/authentication.guard';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Roles(Role.Admin)
 @UseGuards(authorizationGuard)
@@ -13,7 +14,8 @@ export class AppController {
   private readonly backupDbUri = 'mongodb://localhost:27017/backup-db';
   private readonly collectionsToBackup = ['users', 'progresses'];
 
-  @Post('backup')
+  // Define the cron job for running every hour
+  @Cron(CronExpression.EVERY_HOUR)
   async backupCollections() {
     try {
       const mainClient = await MongoClient.connect(this.mainDbUri);
@@ -41,17 +43,15 @@ export class AppController {
       await mainClient.close();
       await backupClient.close();
 
-      return {
-        success: true,
-        message: 'Backup completed successfully',
-        backedUpCollections: this.collectionsToBackup,
-      };
+      console.log('Backup completed successfully');
     } catch (error) {
-      return {
-        success: false,
-        message: 'Backup failed',
-        error: error.message,
-      };
+      console.error('Backup failed', error.message);
     }
+  }
+
+  @Post('backup')
+  async manualBackup() {
+    await this.backupCollections();
+    return { success: true, message: 'Manual backup completed successfully' };
   }
 }
