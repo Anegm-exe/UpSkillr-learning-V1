@@ -8,7 +8,9 @@ import { Request } from 'express';
 import { CreateResponseDto } from 'src/response/dtos/response.dto';
 import { CreateModuleDto } from 'src/module/dtos/module.dto';
 import { AuthGuard } from 'src/Auth/guards/authentication.guard';
+import { Public } from 'src/Auth/decorators/public.decorator';
 
+@UseGuards(AuthGuard)
 @Controller('course')
 export class CourseController {
     
@@ -16,7 +18,7 @@ export class CourseController {
     //create a course
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post()
     async create(@Body() createCourseDto: CreateCourseDto, @Req() req:Request): Promise<Course> {
         return this.courseService.create(createCourseDto,req);
@@ -24,7 +26,7 @@ export class CourseController {
 
     //works
     //get all courses
-    
+    @Public()
     @Get()
     async findAll(): Promise<Course[]> {
         return this.courseService.findAll();
@@ -33,22 +35,16 @@ export class CourseController {
     // find courses that user is enrolled in 
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Get('enrolled')
     async findEnrolledCourses(@Req() req: Request): Promise<Course[]> {
         return this.courseService.findEnrolledCourses(req);
     }
 
-    //get course by name
-    @Get('name/:name')
-    async findByName(@Param('name') name: string): Promise<Course> {
-        return this.courseService.findByName(name);
-    }
-
     //add an instructor to a course
     @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':id/instructors/:instructorId')
     async addInstructor(
         @Param('id') courseId: string,
@@ -60,7 +56,7 @@ export class CourseController {
     //add a student to a course
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':id/apply')
     async apply(
         @Param('id') courseId: string,
@@ -72,7 +68,7 @@ export class CourseController {
     //remove a instructor from a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Delete(':id/instructors/:instructorId')
     async deleteInstructor(
         @Param('id') courseId: string,
@@ -81,10 +77,23 @@ export class CourseController {
         return this.courseService.removeInstructor(courseId, instructorId);
     }
 
+    // update course rating
+    @Roles(Role.Admin,Role.Instructor)
+    @UseGuards(authorizationGuard)
+    
+    @Patch(':id/update-rating')
+    async updateRating(
+        @Param('id') courseId: string,
+    ) : Promise<Course> {
+        return this.courseService.updateRating(courseId);
+    }
+
+
+
     //remove a student from a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Delete(':id/students/:studentId')
     async deleteStudent(
         @Param('id') courseId: string,
@@ -96,7 +105,7 @@ export class CourseController {
     //remove a module from a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Delete(':id/modules/:moduleId')
     async deleteModule(
         @Param('id') courseId: string,
@@ -106,6 +115,7 @@ export class CourseController {
     }
 
     //get course by category
+    @Public()
     @Get('find/categories')
     async getByCategorys(@Body() categorys: string[]): Promise<Course[]> {
         return this.courseService.getByCategorys(categorys);
@@ -121,6 +131,30 @@ export class CourseController {
         return this.courseService.findCompletedCourses(req);
     }
 
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Get(':course_id/complete')
+    async getCompletedStudents(
+    @Param('course_id') courseId: string
+    ): Promise<string[]> {
+        return this.courseService.findCompletedStudents(courseId);
+    }
+
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Get(':course_id/student-preformance')
+    async getStudentPreformance(
+        @Param('course_id') courseId: string,
+        @Req() req: Request
+     ) : Promise<{
+        Below_average:number,
+        Average:number,
+        Above_Average:number,
+        Excellent: number
+    }> {
+        return this.courseService.getStudentPerformance(req,courseId);
+    }
+
     // get unique categories
     @Get('categories')
     async getCategories(): Promise<string[]> {
@@ -128,12 +162,14 @@ export class CourseController {
     }
 
     //get course by difficulty level
+    @Public()
     @Get('difficulty/:difficulty')
     async getByDifficulty(@Param('difficulty') difficulty: string): Promise<Course[]> {
         return await this.courseService.getByDifficultyLevel(difficulty);
     }
 
     //get course by rating
+    @Public()
     @Get('rating/:rating')
     async getByRating(@Param('rating') rating: number): Promise<Course[]> {
         return this.courseService.getByRating(rating);
@@ -143,7 +179,7 @@ export class CourseController {
     // search
     @Roles(Role.Instructor,Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Get('searchCategory/:search')
     async searchByCategory(@Param('search') search: string): Promise<Course[]> {
         return this.courseService.searchByCategory(search);
@@ -152,13 +188,14 @@ export class CourseController {
     // search
     @Roles(Role.Instructor,Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Get('searchName/:search')
     async searchByName(@Param('search') search: string): Promise<Course[]> {
         return this.courseService.searchByName(search);
     }
 
     // Get course by instructor 
+    @Public()
     @Get('instructor/:instructorId')
     async getByInstructor(@Param('instructorId') instructorId: string): Promise<Course[]> {
         return await this.courseService.getByInstructor(instructorId);
@@ -166,7 +203,7 @@ export class CourseController {
 
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':id/module/:moduleId/solvequiz')
     async solveQuiz(
         @Param('id') courseId: string, 
@@ -180,7 +217,7 @@ export class CourseController {
     // retake quiz
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':id/module/:moduleId/retakequiz')
     async retakeQuiz(
         @Param('id') courseId: string, 
@@ -193,7 +230,7 @@ export class CourseController {
     // Create module in course
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':id/module')
     async addModule(
         @Param('id') courseId: string,
@@ -205,7 +242,7 @@ export class CourseController {
 
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Post(':course_id/module/:module_id/quizzes')
     async createQuizzes(
         @Param('course_id') courseId: string,
@@ -215,7 +252,7 @@ export class CourseController {
     }
 
     //find a course by id
-    @UseGuards(AuthGuard)
+    
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Course> {
         return this.courseService.findOne(id);
@@ -224,7 +261,7 @@ export class CourseController {
     //update a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Patch(':id')
     async update(
         @Param('id') id: string,
@@ -236,7 +273,7 @@ export class CourseController {
     //delete a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
+    
     @Delete(':id')
     async delete(@Param('id') id: string, @Req() req: Request): Promise<void> {
         this.courseService.changeArchiveStatus(id,req);

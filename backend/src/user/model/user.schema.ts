@@ -26,6 +26,8 @@ export class User  {
   @Prop({ default:[] })
   categories: string[];
 
+  @Prop({ type: [Number], default: [], min:0, max:5 })
+  ratings: number[];
 
   readonly _id?: string;
 }

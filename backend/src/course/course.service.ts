@@ -13,6 +13,7 @@ import { Questions } from 'src/question/model/question.schema';
 import { CreateResponseDto } from 'src/response/dtos/response.dto';
 import { NotificationService } from 'src/notification/notifications.service';
 import { CreateModuleDto } from 'src/module/dtos/module.dto';
+import { createObjectCsvStringifier } from 'csv-writer';
 
 @Injectable()
 export class CourseService{
@@ -108,8 +109,8 @@ export class CourseService{
     }
 
     // get by instrucotr_id
-    async getByInstructor(instructorId: string): Promise<Course[]> {
-        return this.courseModel.find({ instructor_ids:instructorId}).exec();
+    async getByInstructor(instructorId: string): Promise<any[]> {
+        return this.courseModel.find({ instructor_ids:instructorId}).populate([{ path: 'students', select: ['name']}]).exec();
     }
 
     // search course by title
@@ -133,6 +134,62 @@ export class CourseService{
         return completedCourses;
     }
 
+    // courses completed
+    async findCompletedStudents(courseId: string): Promise<string[]> {
+        const course = await this.courseModel.findById(courseId).populate('students').exec();
+        const students = await Promise.all(
+            course.students.map(async (student: any) => {
+                if (await this.progressService.isCourseCompletedByUser(courseId, student._id)) {
+                    return student.name;
+                }
+            })
+        );
+    
+        return students.filter((name) => name !== undefined && name !== null) as string[];
+    }
+    
+
+    // Get student preformance 
+    async getStudentPerformance(req:Request, courseId: string) : 
+        Promise<{
+            Below_average:number,
+            Average:number,
+            Above_Average:number,
+            Excellent: number
+        }> {
+        const course = await this.courseModel.findById(courseId).exec();
+        // check course
+        if (!course) {
+            throw new NotFoundException('Course not found');
+        }
+        // check if instructor gives the course
+        if(!course.instructor_ids.includes(req['user'].userid)) {
+            throw new UnauthorizedException('You are not authorized to access this course');
+        }
+        const progresses = await this.progressService.findProgressesByCourse(courseId);
+        const res = {
+            Below_average:0,
+            Average:0,
+            Above_Average:0,
+            Excellent: 0
+        }
+        Promise.all(progresses.map((progress)=>{
+            if(progress.average_quiz < 50) {
+                res.Below_average++;
+            }
+            else if(progress.average_quiz < 70) {
+                res.Average++;
+            }
+            else if(progress.average_quiz < 90) {
+                res.Above_Average++;
+            }
+            else {
+                res.Excellent++;    
+            }
+        }))
+        return res;
+    }
+
     // add a student to a course
     async apply(courseId: string, req: Request): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
@@ -147,6 +204,74 @@ export class CourseService{
         // send a notification
         await this.notificationService.create({user_ids:[req['user'].userid],message:`You successfuly enrolled in ${course.title} course!`});
         return course.save();
+    }
+        
+
+    async exportAnalytics(req: Request, rating:number): Promise<string> {
+        const instructorId = req['user'].userid || '6755e5161cccf04a9ee865d6';
+    
+        // Fetch courses by instructor
+        const courses = await this.getByInstructor(instructorId);
+        if (!courses || courses.length === 0) {
+            throw new NotFoundException('No courses found for the instructor');
+        }
+    
+        // Prepare analytics data
+        const analytics = [];
+    
+        for (const course of courses) {
+            const modules = await this.moduleService.findAllByCourseIntructor(course._id,); // Fetch modules
+            const ratings = modules.map((module) => {
+                if(module.ratings.length===0)
+                    return 0;
+                return module.ratings.reduce((a, b) => a + b, 0)/module.ratings.length;
+            });
+            const courseRating = (await this.updateRating(course._id)).rating;
+            const instructorRating = rating;
+            console.log(course)
+            const enrolledStudents = course.students.map(student => student.name);
+            const completedStudents = await this.findCompletedStudents(course._id);
+    
+            const studentPerformanceMetrics = await this.getStudentPerformance(req,course._id);
+    
+            analytics.push({
+                courseId: course._id,
+                courseName: course.title,
+                moduleRatings: ratings,
+                courseRating,
+                instructorRating,
+                enrolledStudents,
+                completedStudents,
+                belowAverage: studentPerformanceMetrics.Below_average,
+                average: studentPerformanceMetrics.Average,
+                aboveAverage: studentPerformanceMetrics.Above_Average,
+                excellent: studentPerformanceMetrics.Excellent,
+            });
+        }
+    
+        // Define the CSV writer
+        const csvStringifier = createObjectCsvStringifier({
+            header: [
+                { id: 'courseId', title: 'Course ID' },
+                { id: 'courseName', title: 'Course Name' },
+                { id: 'moduleRatings', title: 'Module Ratings' },
+                { id: 'courseRating', title: 'Course Rating' },
+                { id: 'instructorRating', title: 'Instructor Rating' },
+                { id: 'enrolledStudents', title: 'Enrolled Students' },
+                { id: 'completedStudents', title: 'Completed Students' },
+                { id: 'belowAverage', title: 'Below Average Students' },
+                { id: 'average', title: 'Average Students' },
+                { id: 'aboveAverage', title: 'Above Average Students' },
+                { id: 'excellent', title: 'Excellent Students' },
+            ],
+        });
+    
+        // Generate the CSV content
+        const csvHeader = csvStringifier.getHeaderString();
+        const csvBody = csvStringifier.stringifyRecords(analytics);
+    
+        // Return the complete CSV string
+        return csvHeader + csvBody;
     }
 
     // find enrolled courses for user
@@ -203,7 +328,31 @@ export class CourseService{
     // get course by rating
     async getByRating(rating: number): Promise<Course[]> {
         return this.courseModel.find({ rating: rating }).exec();
-    }    
+    }  
+    
+    // calculate course rating
+    async updateRating(courseId: string): Promise<Course> {
+        const course = await this.courseModel.findOne({ _id: courseId }).exec();
+        if (!course) {
+            throw new NotFoundException(`Course with ID ${courseId} not found`);
+        }
+        let totalratings = 0;
+        let count = 0;
+        // add all module ratings
+        await Promise.all(course.modules.map(async (moduleId) => {
+            const module = await this.moduleService.findOne(moduleId);
+            if(module.ratings.length > 0) {
+                totalratings += module.ratings.reduce((rating,sum) => rating+sum,0);
+                count+=module.ratings.length;
+            }
+        }))
+        if(count === 0)
+            return course;
+        // calculate average rating
+        const averageRating = totalratings / count;
+        const updatedCourse = await this.courseModel.findByIdAndUpdate({_id:courseId},{rating:averageRating},{new:true});
+        return updatedCourse;
+    }
 
     // generate Quiz
     async generateQuiz(course_id:string, moduleId: string, user_id:string): Promise<string> {
@@ -426,4 +575,5 @@ export class CourseService{
         });
         return await course.save();
     }
+
 }

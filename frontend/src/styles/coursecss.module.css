@@ -1,0 +1,46 @@
+.moduleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 2rem;
+    color: white;
+    background-color: #1a1a1a; /* Optional: Set a background color for the module page */
+}
+
+.moduleDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Space between module details */
+    width: 100%;
+    max-width: 600px; /* Adjust max width as needed */
+}
+
+.moduleTitle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #f0f0f0; /* Light color for better visibility */
+    font-family: 'Roboto-Bold';
+}
+
+.moduleInfo {
+    font-size: 1rem;
+    color: #ccc; /* Slightly lighter color for module info */
+}
+
+.backButton {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+    background-color: #0056b3;
+}
