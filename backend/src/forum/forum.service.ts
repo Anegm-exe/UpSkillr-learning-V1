@@ -6,6 +6,7 @@ import { MessageService } from 'src/message/message.service';
 import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';
 import { Request } from 'express';
 import { NotificationService } from 'src/notification/notifications.service';
+import { Message } from 'src/message/model/message.schema';
 @Injectable()
 export class ForumService {
     constructor(@InjectModel(Forum.name) 
@@ -25,6 +26,13 @@ export class ForumService {
             { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
             { path: 'user_id', select: ['name','profile_picture_url'] } 
         ]).exec();
+    }
+    async getForumMessages(forumId: string): Promise<Message[]> {
+        const forum = await this.forumModel.findById(forumId);
+        if (!forum) {
+            throw new NotFoundException('Forum not found');
+        }
+        return this.messageService.finAllByIds(forum.messages);
     }
 
     async findOne(id: string): Promise<Forum> {

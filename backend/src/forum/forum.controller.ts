@@ -4,6 +4,8 @@ import { Forum } from './model/forum.schema';
 import { CreateForumDto, UpdateForumDto } from './dtos/forum.dto';
 import { Request } from 'express';
 import { AuthGuard } from 'src/Auth/guards/authentication.guard';
+import { Message } from 'src/message/model/message.schema';
+
 
 
 @Controller('forum')
@@ -37,6 +39,10 @@ export class ForumController {
     @Get('user/:_id')
     async getByUser(@Param('_id') _id: string): Promise<Forum[]> {
         return this.forumService.getByUser(_id);
+    }
+    @Get('forumMsgs/:_id')
+    async getMessages(@Param('_id') _id: string): Promise<Message[]> {
+        return this.forumService.getForumMessages(_id);
     }
 
     @UseGuards(AuthGuard)
