@@ -41,7 +41,7 @@ export class NoteController {
     @Param('id') id: string, 
     @Body() body: UpdateNoteDto
   ): Promise<Note> {
-    return this.noteService.update((id), body);
+    return this.noteService.update(id, body);
   }
 
   // Delete a note by ID

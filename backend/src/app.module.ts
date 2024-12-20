@@ -20,6 +20,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { UnauthorizedExceptionFilter } from "./Auth/middleware/UnauthorizedExceptionFilter";
 import { AppController } from "./app.controller";
 import { AuthenticationMiddleware } from "./Auth/middleware/authentication.middleware";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AuthenticationMiddleware } from "./Auth/middleware/authentication.middl
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(), 
   ],
   providers: [
     {

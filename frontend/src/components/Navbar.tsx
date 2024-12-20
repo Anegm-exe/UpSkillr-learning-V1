@@ -9,16 +9,6 @@ import { useAuth } from "./AuthContext";
 export default function Navbar() {
   const { tokenDetails, isLoading, logout } = useAuth();
 
-  // Show nothing or a loading indicator while authentication is being verified
-  if (isLoading) {
-    return (
-      <nav className={navbarcss.navbar}>
-          <Link href="/"><Image src="/images/Logo_Simple.png" alt="Logo" className={navbarcss.img} width={100} height={25}/></Link>
-          <div style={{ color: "#a2a2a2" }}>Loading...</div>
-      </nav>
-    );
-  }
-
   return (
     <nav className={navbarcss.navbar}>
       <div className={navbarcss.navLinks}>
@@ -30,6 +20,7 @@ export default function Navbar() {
         <Link href="/chats" className={navbarcss.button}>Chats</Link>
         <Link href="/notes" className={navbarcss.button}>Notes</Link>
       </div>
+      {!isLoading&& 
       <div className="flex items-center gap-3 justify-end">
         {tokenDetails ? (
           <div className={navbarcss.navLinks}>
@@ -51,7 +42,7 @@ export default function Navbar() {
         ) : (
           <Link href="/login" className={navbarcss.button}>Login</Link>
         )}
-      </div>
+      </div>}
     </nav>
   );
 }
