@@ -15,6 +15,6 @@ export default function CoursePage({ params }: { params: { courseid: string } })
     if (!courseData) return <div>Loading...</div>;
 
     return (
-        <CourseDetails courseData={courseData}/>
+        <CourseDetails courseData={courseData} onBack={() => router.push('/course')}/>
     );
 }
