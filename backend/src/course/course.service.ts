@@ -281,8 +281,12 @@ export class CourseService{
 
     // find enrolled courses for user
     async findEnrolledCourses(req: Request): Promise<Course[]> {
-        console.log(req['user'].userid)
         return this.courseModel.find({ students: req['user'].userid }).exec(); 
+    }
+
+    // get enrolled course by student id
+    async getEnrolledCourses(studentId: string): Promise<Course[]> {
+        return this.courseModel.find({ students: studentId }).exec();
     }
 
     // remove an instructor from a course
@@ -594,5 +598,34 @@ export class CourseService{
         course.isArchived = !course.isArchived;
         return await course.save();
     }
+
+    //students who completed course taught by instructor
+
+    async CompletedInstructorStudents(req: Request): Promise<string[]> {
+        console.log('CompletedInstructorStudents method called');
+    
+        // Extract instructor ID from the request user object
+        const instructorId = req['user'].userid;
+        console.log('Instructor ID:', instructorId);
+    
+        // Find all courses taught by the instructor
+        const courses = await this.getByInstructor(instructorId);
+        console.log('Courses taught by instructor:', courses);
+    
+        // Find all students who completed each course
+        const students = await Promise.all(
+          courses.map(async (course) => {
+            const completedStudents = await this.findCompletedStudents(course._id);
+            console.log(`Completed students for course ${course._id}:`, completedStudents);
+            return completedStudents;
+          })
+        );
+    
+        // Flatten the array of arrays and return the student IDs
+        const flattenedStudents = students.flat();
+        console.log('All completed students:', flattenedStudents);
+        return flattenedStudents;
+      }
+    
 
 }

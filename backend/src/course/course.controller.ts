@@ -30,6 +30,7 @@ export class CourseController {
     @UseGuards(authorizationGuard)
     @Get()
     async findAll(): Promise<Course[]> {
+        console.log("test")
         return this.courseService.findAll();
     }
     
@@ -295,4 +296,30 @@ export class CourseController {
     async changeCourseStatus(@Param('id') id: string, @Req() req: Request): Promise<Course> {
         return this.courseService.changeCourseStatus(id, req);
     }
+
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Get('/student/:id/course')
+    async getEnrolledCourses(@Param('id') studentId: string): Promise<Course[]> {
+        return this.courseService.getEnrolledCourses(studentId);
+    }
+
+    //export instructor analytics
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Get('exportanalytics/:rating')
+    async exportAnalytics(@Req() req: Request, @Param('rating') rating: number): Promise<string> {
+        return this.courseService.exportAnalytics(req, rating);
+    }
+
+    @Roles(Role.Instructor)
+  @UseGuards(authorizationGuard)
+  @Get('instructor/test/CompleteInstructorStudents')
+  async getCompleteInstructorStudents(@Req() req: Request): Promise<string[]> {
+    return this.courseService.CompletedInstructorStudents(req);
+  }
+    
+
+
+
 }
