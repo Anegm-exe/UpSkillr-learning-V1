@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
-
-type MessageSendProps = {
-  chatId: string;
-  onMessageSent: () => void;
-};
-
-const MessageSend: React.FC<MessageSendProps> = ({ chatId, onMessageSent }) => {
+'use client'
+import React, { useState } from 'react';
+import axios from '../../api/axios'
+export default function MessageSend({ chatId, onMessageSent }: { chatId: string, onMessageSent: () => void }) {
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -13,28 +9,21 @@ const MessageSend: React.FC<MessageSendProps> = ({ chatId, onMessageSent }) => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError(''); // Clear any previous error
 
     try {
-      const response = await fetch(`/api/chat/${chatId}/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      if (!response.ok) {
+      const response = await axios.post(`/chat/${chatId}/send`);
+      if (!response.data) {
         throw new Error('Failed to send message');
       }
 
-      setMessage(''); //  the message field cleared after successful submission
-      onMessageSent(); // Notify the parent component
+      setMessage(''); // clear the message field after successful submission
+      onMessageSent(); //notify parent component of message
     } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+      setError(err.message); 
+    } 
+    setLoading(false); 
+    
   };
 
   return (
@@ -54,6 +43,4 @@ const MessageSend: React.FC<MessageSendProps> = ({ chatId, onMessageSent }) => {
       </button>
     </form>
   );
-};
-
-export default MessageSend;
+}

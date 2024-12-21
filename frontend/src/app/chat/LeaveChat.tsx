@@ -1,31 +1,28 @@
+'use client'
 import React, { useState } from 'react';
+import axios from '../api/axios';
 
-const LeaveChat: React.FC<{
-  chatId: string;
-  onLeaveSuccess: () => void; //to redirect back for example
-}> = ({ chatId, onLeaveSuccess }) => {
+export default function LeaveChat({ chatId, onLeaveSuccess }: { chatId: string, onLeaveSuccess: () => void }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  // Handle leaving the chat
   const handleLeaveChat = async () => {
     setLoading(true);
-    setError('');
+    setError(''); // Clear any previous error
 
     try {
-      const response = await fetch(`/api/chat/${chatId}/leave`, {
-        method: 'DELETE',
-      });
+      const response = await axios.delete(`/chat/${chatId}/leave`);
 
-      if (!response.ok) {
+      if (response.data) {
+        onLeaveSuccess();
+        alert('You have left the chat successfully!');
+      } else {
         throw new Error('Failed to leave the chat');
       }
-
-      onLeaveSuccess(); // Call the callback after successful leave
-      alert('You have left the chat successfully!');
     } catch (err: any) {
-      setError('An error occurred: ' + err.message);
-    } finally {
-      setLoading(false);
+      setError('An error occurred: ' + err.message); 
+      setLoading(false); 
     }
   };
 
@@ -38,6 +35,4 @@ const LeaveChat: React.FC<{
       </button>
     </div>
   );
-};
-
-export default LeaveChat;
+}

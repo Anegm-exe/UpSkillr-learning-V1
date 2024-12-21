@@ -21,7 +21,7 @@ export default function Dashboard() {
     }
 
     if (tokenDetails.role === 'student') {
-        return <StudentDashboard tokenDetails={tokenDetails} />;
+        return <StudentDashboard/>;
     }
 
     if (tokenDetails.role === 'instructor') {
@@ -32,7 +32,8 @@ export default function Dashboard() {
 }
 
 
-function StudentDashboard({ tokenDetails }) {
+function StudentDashboard() {
+    const { tokenDetails } = useAuth()
     const { enrolledCourseData, completedCourseData } = useFetchUserCourses();
     const { notificationsData } = useFetchNotifications(tokenDetails?._id);
 
