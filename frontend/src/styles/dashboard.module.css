@@ -52,12 +52,13 @@
     font-size: 14px;
     font-family: roboto-light;
     color: var(--accent-color);
-    text-decoration: none; /* Remove underline */
-    transition: all 0.3s ease; /* Smooth hover effect */
+    text-decoration: none;
+    transition: all 0.1s ease;
 }
 
     .viewprofile:hover {
         filter: grayscale();
+        transform: scale(1.05);
     }
 
 /*enrolled courses list*/
@@ -83,11 +84,46 @@
         cursor: pointer;
         text-align: center;
         font-family: roboto-Condensed;
+        transition: all 0.1s ease;
     }
 
         .vertical-list li:hover {
-           filter: invert();
+            filter: invert();
+            transform: scale(1.05);
         }
+
+.progress {
+    margin: 0.75rem 1rem .25rem 1rem;
+    background: rgba(255,255,255,0.1);
+    justify-content: flex-start;
+    border-radius: 100px;
+    align-items: center;
+    position: relative;
+    padding: 1px 2px;
+    display: flex;
+    height: 10px;
+    width: calc(100% - 2rem - 10px);
+}
+
+.progressv {
+    animation: load 3s normal forwards;
+    box-shadow: 0 10px 40px -10px #fff;
+    border-radius: 100px;
+    background: #fff;
+    height: 7.5px;
+    width: 0%;
+    --target-width: 100%;
+}
+
+@keyframes load {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: var(--target-width);
+    }
+}
 
 /* Notifications + Courses */
 .rightcontainer {
@@ -167,7 +203,7 @@
     border-radius: 15px;
     font-size: 20px;
     color: white;
-    margin: auto 2rem;
+    margin: 0 2rem 2rem 2rem;
 }
 
     .bottomrightcontainer h1 {
@@ -178,30 +214,105 @@
 
 .courseDiv {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
-    width: calc(100% - 8rem);
-    padding: 1rem 0 0 0;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    width: calc(100% - 4rem);
+    padding: 1rem 0 1rem 0;
     margin: 0 auto;
 }
 
 
 .courseTemplate {
+    cursor: pointer;
+    margin: 0;
+    display: flex;
     width: calc(100% - 2rem);
-    height: calc(100% - 2rem);
+    height: 12rem;
     padding: 1rem;
     border: 2px solid var(--border-color);
     border-radius: 15px;
+    transition: all 0.1s ease;
 }
 
-    .courseTemplate h1 {
-        font-size: 1rem;
+    .courseTemplate:hover {
+        transform: scale(1.02);
+    }
+
+.courseTemplateStates {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+    .courseTemplateStates h1 {
+        font-size: .75rem;
         font-family: roboto-thin;
+        text-align: center;
+        padding: .75rem 0 0 0;
+        margin: 0;
+    }
+
+.progresscircle {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    -webkit-mask: linear-gradient(0deg,#000 55%,#0000 0) bottom/100% 18.18%;
+    background: linear-gradient(white 0 0) bottom/100% 0% no-repeat var(--border-color);
+    animation: p8 3s forwards steps(7);
+    --target-BG: 100% 100%;
+}
+
+@keyframes p8 {
+    100% {
+        background-size: var(--target-BG);
+    }
+}
+
+.progressradial {
+    position: absolute;
+    transform: rotate(-135deg) translateX(20px) translateY(18px); /* Moves the element up */
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent-color) 0% 0%, transparent 75% 100%);
+}
+
+    .progressradial:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 95%;
+        height: 95%;
+        border-radius: 50%;
+        background-color: var(--background-color); /* This hides the inner part of the circle */
+        transform: translate(-50%, -50%);
+    }
+
+
+.courseTemplatecontnet {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;
+    height: calc(100% - 2rem);
+}
+
+    .courseTemplatecontnet h1 {
+        font-size: 1rem;
+        font-family: roboto-light;
         text-align: center;
     }
 
-    .courseTemplate p {
+    .courseTemplatecontnet p {
+        padding: 0.25rem 0;
+        margin: 0;
         font-size: 1rem;
-        font-family: roboto-condensed;
+        font-family: roboto-thin;
         text-align: center;
     }
