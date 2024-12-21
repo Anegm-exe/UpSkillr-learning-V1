@@ -86,8 +86,6 @@ export class CourseController {
         return this.courseService.updateRating(courseId);
     }
 
-
-
     //remove a student from a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
