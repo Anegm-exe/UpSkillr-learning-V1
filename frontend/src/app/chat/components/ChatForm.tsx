@@ -10,7 +10,7 @@ const ChatForm: React.FC = () => {
     //  storing any error messages
     const [loading, setLoading] = useState<boolean>(false);
     //  tracking loading state during creation and deletion
-    const [chatId, setChatId] = useState<string | null>(null);
+    const [chatId, setChatId] = useState<string |null>('');
     // storing the chat ID (for deletion)
     const [searchQuery, setSearchQuery] = useState<string>('');
     // storing search query
@@ -18,10 +18,14 @@ const ChatForm: React.FC = () => {
     // storing search results (chat names)
     const [searchLoading, setSearchLoading] = useState<boolean>(false);
     // tracking loading state during search
-    const [addUserChatId, setAddUserChatId] = useState<string>(''); //hal hwa hwa nafs el email
     // storing chatID for adding user
     const [addUserEmail, setAddUserEmail] = useState<string>('');
     //storing emails of users
+    const [messageId, setMessageId]=useState<string|null>(''); //let me check the default ID
+    //storing message id
+    const [success, setSuccess] = useState('');
+
+
     // handling email input change, comma seperated
     const handleEmailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmails(e.target.value);
@@ -134,8 +138,33 @@ const ChatForm: React.FC = () => {
             }
 
             alert('User added to chat successfully!');
-            setAddUserChatId('');
             setAddUserEmail('');
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleDeleteMessage = async () => {
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const response = await fetch(`/api/chat/${chatId}/message/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete message from the chat');
+            }
+
+            setSuccess('Message deleted successfully.');
+            setChatId('');
+            setMessageId('');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -170,7 +199,7 @@ const ChatForm: React.FC = () => {
                     {loading ? 'Creating Chat...' : 'Create Chat'}
                 </button>
             </form>
-
+    
             {chatId && (
                 <div>
                     <h3>Chat Settings</h3>
@@ -179,9 +208,9 @@ const ChatForm: React.FC = () => {
                     </button>
                 </div>
             )}
-
+    
             <hr />
-
+    
             <h3>Search Chats</h3>
             <input
                 type="text"
@@ -204,7 +233,9 @@ const ChatForm: React.FC = () => {
                     <p>No chats found</p>
                 )}
             </div>
+    
             <hr />
+    
             <h3>Manage Chat Members</h3>
             <div>
                 <label>User Email:</label>
@@ -218,8 +249,36 @@ const ChatForm: React.FC = () => {
             <button onClick={handleAddUserToChat} disabled={loading || !addUserEmail}>
                 {loading ? 'Adding User...' : 'Add User to Chat'}
             </button>
+    
+            <hr />
+    
+            <h3>Delete Message from Chat</h3>
+            <div>
+                <label>Chat ID:</label>
+                <input
+                    type="text"
+                    value={chatId}
+                    onChange={(e) => setChatId(e.target.value)}
+                    placeholder="Enter chat ID"
+                />
+            </div>
+            <div>
+                <label>Message ID:</label>
+                <input
+                    type="text"
+                    value={messageId}
+                    onChange={(e) => setMessageId(e.target.value)}
+                    placeholder="Enter message ID"
+                />
+            </div>
+            <button onClick={handleDeleteMessage} disabled={loading || !chatId || !messageId}>
+                {loading ? 'Deleting...' : 'Delete Message'}
+            </button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {success && <p style={{ color: 'green' }}>{success}</p>}
         </div>
     );
+    
 };
 // what i've done so far
 // 1. create a chat
@@ -229,5 +288,8 @@ const ChatForm: React.FC = () => {
 // 5. getting a chat's details (in a page on its own)
 // 6. fetching all chats of a single user
 // 7. leave a chat (in a page on its own bas ask if i can put it inside my chat form)
-// 
+// 8. send message
+// 9. reply to a message
+// 10. removing a user 
+// 11. deleting a message
 export default ChatForm;
