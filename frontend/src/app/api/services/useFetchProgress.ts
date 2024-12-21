@@ -9,36 +9,40 @@ export function useFetchUserProgresses(userId:string) {
     const [progressesData, setProgressData] = useState<any>([]);
 
     useEffect(() => {
-        const fetchProgressData = async () => {
-            try {
-                const response = await axios.get(`/progress/user/${userId}`);
-                setProgressData(response.data);
-            } catch {
-                console.error('Error fetching progresses data');
-            }
-        };
+        if(userId) {
+            const fetchProgressData = async () => {
+                try {
+                    const response = await axios.get(`/progress/user/${userId}`);
+                    setProgressData(response.data);
+                } catch {
+                    console.error('Error fetching progresses data');
+                }
+            };
 
-        fetchProgressData();
+            fetchProgressData();
+        }
     }, [userId]);
 
     return { progressesData };
 }
 
-export function useFetchCourseProgresses(courseId:string,userId:string) {
+export function useFetchCourseProgress(courseId:string,userId:string) {
     const [progressData, setProgressData] = useState<any>([]);
 
     useEffect(() => {
-        const fetchProgressData = async () => {
-            try {
-                const response = await axios.get(`progress/course/${courseId}/user/${userId}`);
-                setProgressData(response.data);
-                console.log(response.data.completion_percentage);
-            } catch {
-                console.error('Error fetching progresses data');
-            }
-        };
+        if(userId && courseId) {
+            const fetchProgressData = async () => {
+                try {
+                    const response = await axios.get(`progress/course/${courseId}/user/${userId}`);
+                    setProgressData(response.data);
+                    console.log(response.data.completion_percentage);
+                } catch {
+                    console.error('Error fetching progresses data');
+                }
+            };
 
-        fetchProgressData();
+            fetchProgressData();
+        }
     }, [courseId ,userId]);
 
     return { progressData };

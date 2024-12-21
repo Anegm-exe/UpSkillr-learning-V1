@@ -1,7 +1,7 @@
 "use client";
 import dashboardcss from '../styles/dashboard.module.css';
 import { useRouter } from 'next/navigation';
-import { useFetchCourseProgresses } from "../app/api/services/useFetchProgress";
+import { useFetchCourseProgress } from "../app/api/services/useFetchProgress";
 import { useFetchCourseCompletedStudents } from "../app/api/services/useFetchCourse";
 import axios from "../app/api/axios";
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
     const router = useRouter(); // Initialize the navigate function
 
     const { tokenDetails } = useAuth();
-    const { progressData } = useFetchCourseProgresses(courseData._id, tokenDetails?._id);
+    const { progressData } = useFetchCourseProgress(courseData._id, tokenDetails?._id);
 
 
     const handleCourseClick = () => {
@@ -67,7 +67,7 @@ export function EnrolledCourses({ courseData }: CourseDetailsProps) {
     const router = useRouter(); // Initialize the navigate function
 
     const { tokenDetails } = useAuth();
-    const { progressData } = useFetchCourseProgresses(courseData._id, tokenDetails?._id);
+    const { progressData } = useFetchCourseProgress(courseData._id, tokenDetails?._id);
 
 
     const handleCourseClick = () => {
