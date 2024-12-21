@@ -7,11 +7,13 @@ import CourseDetails from '../../../components/CourseDetails';
 import ModuleDetails from '../../../components/ModuleDetails';
 import CreateModule from '../../../components/CreateModule';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from "../../../components/AuthContext";
 
 export default function CoursePage({ params }: { params: Promise<{ courseid: string }> }) {
     const router = useRouter();
     const [courseId, setCourseId] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { tokenDetails } = useAuth();
 
     useEffect(() => {
         params.then((unwrappedParams) => {
@@ -38,9 +40,13 @@ export default function CoursePage({ params }: { params: Promise<{ courseid: str
     return (
         <div>
             <CourseDetails courseData={courseData} onBack={() => router.push('/course')} />
-            <button onClick={handleOpenModal} className="addButton">+</button>
-            {isModalOpen && (
-                <CreateModule courseId={courseId} onClose={handleCloseModal} createModule={createModule} />
+            {(!tokenDetails || (tokenDetails.role !== 'admin' && tokenDetails.role !== 'instructor')) && (
+                <>
+                    <button onClick={handleOpenModal} className="addButton">+</button>
+                    {isModalOpen && (
+                        <CreateModule courseId={courseId} onClose={handleCloseModal} createModule={createModule} />
+                    )}
+                </>
             )}
             <ModuleDetails moduleData={moduleData} />
         </div>
