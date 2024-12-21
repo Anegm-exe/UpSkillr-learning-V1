@@ -52,7 +52,7 @@ export default function ModuleDetails({ moduleData }: ModuleDetailsProps) {
           {module.ratings && (
             <p className={modulecss.moduleInfo}>
               Ratings: {module.ratings.join(', ')}
-            </p>
+            </p>  
           )}
         </div>
       ))}
