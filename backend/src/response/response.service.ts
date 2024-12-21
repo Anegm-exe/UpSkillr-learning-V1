@@ -34,8 +34,8 @@ export class ResponseService {
     return this.responseModel.find().exec();
   }
 
-  async findAllByQuizId(id: string): Promise<Response[]> {
-    const response = await this.responseModel.find({ quiz_id: id }).exec();
+  async findByQuizId(id: string): Promise<Response> {
+    const response = await this.responseModel.findOne({ quiz_id: id }).exec();
     if (!response) {
       throw new NotFoundException(`Responses with quiz_id ${id} not found`);
     }

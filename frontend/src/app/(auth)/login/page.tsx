@@ -30,7 +30,7 @@ export default function Login() {
       const response = await axios.post("/auth/login",formData);
       login(response.data.user)
       console.log("Login successful:", response.data);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       alert("login failed");
       console.log(error);

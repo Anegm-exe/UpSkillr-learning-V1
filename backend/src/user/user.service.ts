@@ -8,7 +8,9 @@ import { Request } from "express";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private readonly courseService: CourseService) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, 
+  private readonly courseService: CourseService
+) {}
 
   // Create A User With The Data Provided
   async create(user: CreateUserDto): Promise<User> {
@@ -110,4 +112,33 @@ export class UserService {
     const user = await this.userModel.findById({ _id: userId }).exec();
     return new UserDto(user);
   }
+
+  // rate instructor
+  async rateInstructor(indtructor_id:string,rating: number): Promise<void> {
+    const instructor = await this.userModel.findById({ _id: indtructor_id }).exec();
+    if(!instructor) {
+      throw new NotFoundException(`Instructor with ID ${indtructor_id} not found`);
+    }
+    await this.userModel.findByIdAndUpdate({_id:indtructor_id},{$push:{ratings:rating}},{new:true});
+  }
+  
+  // get rating average
+  async getRatingAverage(indtructor_id:string): Promise<number> {
+    const instructor = await this.userModel.findById({ _id: indtructor_id }).exec();
+    if(!instructor) {
+      throw new NotFoundException(`Instructor with ID ${indtructor_id} not found`);
+    }
+    if(instructor.ratings.length === 0) {
+      return 0;
+    }
+    const ratings = instructor.ratings;
+    const sum = ratings.reduce((a, b) => a + b, 0);
+    return sum / ratings.length;
+  }
+
+  // export instructor analytics
+  async exportInstructorAnalytics(req:Request): Promise<string> {
+    return this.courseService.exportAnalytics(req,await this.getRatingAverage(req['user'].userid));
+  }
+    
 }

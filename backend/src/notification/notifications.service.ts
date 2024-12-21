@@ -61,6 +61,6 @@ async deleteExpiredNotifications(): Promise<number> {
 
   // find by user_id
   async findByUserId(userId: string): Promise<Notification[]> {
-    return this.notificationModel.find({user_ids:userId }).exec();
+      return this.notificationModel.find({ user_ids: userId }).populate('sender_id').exec();
   }
 }

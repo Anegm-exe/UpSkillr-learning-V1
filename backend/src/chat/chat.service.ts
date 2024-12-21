@@ -186,7 +186,6 @@ export class ChatService {
       throw new NotFoundException('Chat not found');
     }
   
-    console.log(req['user'] + " " + chat.admin_id)
     // Check if the requester is the chat admin
     if (chat.admin_id !== req['user'].userid) {
       throw new UnauthorizedException('You are not the admin of this chat');

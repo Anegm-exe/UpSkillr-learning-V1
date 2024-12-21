@@ -26,8 +26,8 @@ export class ResponseController {
     }
 
     @Get('quiz/:id')
-    async findAllByQuizId(@Param('id') id: string): Promise<Response[]> {
-        return this.responseService.findAllByQuizId(id);
+    async findByQuizId(@Param('id') id: string): Promise<Response> {
+        return this.responseService.findByQuizId(id);
     } 
 
     @Get('user/:id')
