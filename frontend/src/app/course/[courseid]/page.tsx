@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 
 import { useRouter } from 'next/navigation';
@@ -14,12 +13,12 @@ export default function CoursePage({ params }: { params: { courseid: string } })
     // @ts-ignore
     const {courseid} = React.use(params);
     const { moduleData, error, createModule, deleteModule } = useModuleService(courseid);
-    const { courseData, errorC } = useFetchCourse(courseid);
+    const { courseData, errorM } = useFetchCourse(courseid);
     //const { moduleData, errorM } = useFetchModules(courseid);
 
     if (error) return <div>Error: {error}</div>;
 
-    if (errorC) return <div>Error: {errorC}</div>;
+    if (errorM) return <div>Error: {errorM}</div>;
     if (!courseData) return <div>Loading...</div>;
 
     if (error) return <div>Error: {error}</div>;
