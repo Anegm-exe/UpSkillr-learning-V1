@@ -123,15 +123,16 @@ export class CourseService{
     }
 
     // courses completed
-    async findCompletedCourses(req:Request) : Promise<Course[]> {
-        const courses = await this.findEnrolledCourses(req);
-        const completedCourses = await Promise.all(
+    async findCompletedCourses(req: Request): Promise<Course[]> {
+        const courses = await this.courseModel.find({ students: req['user'].userid }).exec();
+        const filteredCourses = await Promise.all(
             courses.map(async (course) => {
-                if(await this.progressService.isCourseCompletedByUser(course._id,req['user'].userid))
-                    return course;
+                const isCompleted = await this.progressService.isCourseCompletedByUser(course._id, req['user'].userid);
+                return isCompleted ? course : null; // Return `null` for incomplete courses
             })
         );
-        return completedCourses;
+        // Filter null or undefined courses after resolving the promises
+        return filteredCourses.filter(course => course !== null && course !== undefined);
     }
 
     // courses completed
@@ -276,7 +277,17 @@ export class CourseService{
 
     // find enrolled courses for user
     async findEnrolledCourses(req: Request): Promise<Course[]> {
-        return this.courseModel.find({ students: req['user'].userid }).exec(); 
+        const courses = await this.courseModel.find({ students: req['user'].userid }).exec();
+        const filteredCourses = await Promise.all(
+            courses.map(async (course) => {
+                const isCompleted = await this.progressService.isCourseCompletedByUser(course._id, req['user'].userid);
+                return isCompleted ? null : course; // Return `null` for completed courses
+            })
+        );
+
+        // Filter null or undefined courses after resolving the promises
+        return filteredCourses.filter(course => course !== null && course !== undefined);
+
     }
 
     // remove an instructor from a course
@@ -544,8 +555,8 @@ export class CourseService{
     }
 
     // chaneg Archive status of course
-    async changeArchiveStatus(course_id:string, req: Request): Promise<Course> {
-        const course = await this.courseModel.findOne({_id:course_id}).exec();
+    async changeArchiveStatus(course_id: string, req: Request): Promise<Course> {
+        const course = await this.courseModel.findOne({ _id: course_id }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${course_id} not found`)
         }

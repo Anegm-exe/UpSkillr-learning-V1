@@ -24,7 +24,6 @@ export class ProgressController {
     // count of students who finished a course
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
     @Get('finished-students/:courseId')
     async getFinishedStudentsCount(@Param('courseId') course_id: string): Promise<number>
     {
@@ -34,7 +33,6 @@ export class ProgressController {
     //average quiz for course
     @Roles(Role.Instructor)
     @UseGuards(authorizationGuard)
-    @UseGuards(AuthGuard)
     @Get('average-quiz/:courseId')
     async getAverageQuiz(@Param('courseId') course_id: string): Promise<number>
     {
@@ -42,12 +40,14 @@ export class ProgressController {
     }
 
     // find progress by user
+    @Roles(Role.Student)
+    @UseGuards(authorizationGuard)
     @Get('user/:id')
     async findProgressByUser(@Param('id') id: string): Promise<Progress[]> {
         return this.progressService.findProgressByUser(id);
     }
 
-    @Get('course/:courseId/user/:userId/')
+    @Get('course/:courseId/user/:userId')
     async findProgressByUserAndCourse(@Param('courseId') courseId: string, @Param('userId') userId: string): Promise<Progress> {
         return this.progressService.findByUserAndCourse(userId,courseId);
     }
@@ -65,6 +65,8 @@ export class ProgressController {
         return this.progressService.findOne(id);
     }
 
+    @Roles(Role.Admin)
+    @UseGuards(authorizationGuard)
     @Put(':id')
     async update(
         @Param('id') id: string,
@@ -73,6 +75,8 @@ export class ProgressController {
         return this.progressService.update(id,updateProgressDto);
     }
 
+    @Roles(Role.Admin)
+    @UseGuards(authorizationGuard)
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<void> {
         return this.progressService.delete(id);

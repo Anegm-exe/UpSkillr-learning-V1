@@ -1,0 +1,318 @@
+.maincontainer {
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding-top: 2rem;
+}
+
+.separatorline {
+    display: block;
+    position: relative;
+    height: 2px;
+    width: 50%;
+    margin: 0 auto; /* Center horizontally with some vertical margin */
+    background-color: var(--border-color);
+}
+
+/* Profile Container */
+.leftcontainer {
+    flex: 1;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    padding: 2rem 0;
+    margin: 0 2rem auto 2rem;
+    border-radius: 15px;
+    border: solid var(--border-color) 1.5px;
+}
+    .leftcontainer h1 {
+        font-size: 1.1rem;
+        padding: .75rem 0 .5rem 0;
+        margin: 0;
+        font-family: roboto-condensed;
+        text-align: center;
+        cursor: default;
+    }
+
+    .leftcontainer img {
+        width: 7.5rem;
+        height: 7.5rem;
+        position: relative;
+        object-fit: cover;
+        border-radius: 50%;
+        border: solid var(--border-color) 1.5px;
+    }
+
+.viewprofile {
+    display: block;
+    margin: 0;
+    padding: 0 0 .75rem 0;
+    font-size: 14px;
+    font-family: roboto-light;
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all 0.1s ease;
+}
+
+    .viewprofile:hover {
+        filter: grayscale();
+        transform: scale(1.05);
+    }
+
+/*enrolled courses list*/
+.list-container {
+    margin: 0 auto;
+    width: 75%; /* Adjust the width as needed */
+}
+
+/* Enrolled list styling */
+.vertical-list {
+    list-style-type: none;
+    padding: 0 0 1rem 0;
+    margin: 0;
+}
+
+    .vertical-list li {
+        background-color: var(--background-color);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        font-family: roboto-Condensed;
+        transition: all 0.1s ease;
+    }
+
+        .vertical-list li:hover {
+            filter: invert();
+            transform: scale(1.05);
+        }
+
+.progress {
+    margin: 0.75rem 1rem .25rem 1rem;
+    background: rgba(255,255,255,0.1);
+    justify-content: flex-start;
+    border-radius: 100px;
+    align-items: center;
+    position: relative;
+    padding: 1px 2px;
+    display: flex;
+    height: 10px;
+    width: calc(100% - 2rem - 10px);
+}
+
+.progressv {
+    animation: load 3s normal forwards;
+    box-shadow: 0 10px 40px -10px #fff;
+    border-radius: 100px;
+    background: #fff;
+    height: 7.5px;
+    width: 0%;
+    --target-width: 100%;
+}
+
+@keyframes load {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: var(--target-width);
+    }
+}
+
+/* Notifications + Courses */
+.rightcontainer {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    color: white;
+    gap: 2rem;
+}
+
+/* Notifications in the right section */
+.toprightcontainer {
+    height: 25rem;
+    display: flex;
+    flex-direction: row;
+    padding: 0 2rem;
+    gap: 5%;
+}
+
+    .toprightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.LatestEnrolled {
+    flex: 1;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    align-items: center;
+}
+
+.notificationcenter {
+    flex: 2;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.notificationDiv {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 25%;
+    padding: 1rem 1rem;
+    width: calc(100% - 2rem);
+    height: 75%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+    .notificationDiv::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+    }
+
+.notificationtemplate {
+    width: 100%;
+    height: 1rem;
+}
+
+    .notificationtemplate p {
+        font-family: roboto-thin;
+        text-align: center;
+    }
+
+/* Courses in the right section */
+.bottomrightcontainer {
+    height: auto;
+    padding-bottom: 1rem;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    font-size: 20px;
+    color: white;
+    margin: 0 2rem 2rem 2rem;
+}
+
+    .bottomrightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.courseDiv {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    width: calc(100% - 4rem);
+    padding: 1rem 0 1rem 0;
+    margin: 0 auto;
+}
+
+
+.courseTemplate {
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    width: calc(100% - 2rem);
+    height: 12rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    transition: all 0.1s ease;
+}
+
+    .courseTemplate:hover {
+        transform: scale(1.02);
+    }
+
+.courseTemplateStates {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+    .courseTemplateStates h1 {
+        font-size: .75rem;
+        font-family: roboto-thin;
+        text-align: center;
+        padding: .75rem 0 0 0;
+        margin: 0;
+    }
+
+.progresscircle {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    -webkit-mask: linear-gradient(0deg,#000 55%,#0000 0) bottom/100% 18.18%;
+    background: linear-gradient(white 0 0) bottom/100% 0% no-repeat var(--border-color);
+    animation: p8 3s forwards steps(7);
+    --target-BG: 100% 100%;
+}
+
+@keyframes p8 {
+    100% {
+        background-size: var(--target-BG);
+    }
+}
+
+.progressradial {
+    position: absolute;
+    transform: rotate(-135deg) translateX(20px) translateY(18px); /* Moves the element up */
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent-color) 0% 0%, transparent 75% 100%);
+}
+
+    .progressradial:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 95%;
+        height: 95%;
+        border-radius: 50%;
+        background-color: var(--background-color); /* This hides the inner part of the circle */
+        transform: translate(-50%, -50%);
+    }
+
+
+.courseTemplatecontnet {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;
+    height: calc(100% - 2rem);
+}
+
+    .courseTemplatecontnet h1 {
+        font-size: 1rem;
+        font-family: roboto-light;
+        text-align: center;
+    }
+
+    .courseTemplatecontnet p {
+        padding: 0.25rem 0;
+        margin: 0;
+        font-size: 1rem;
+        font-family: roboto-thin;
+        text-align: center;
+    }

@@ -30,7 +30,7 @@ export class ProgressService {
 
     // find progress by user
     async findProgressByUser(userId: string): Promise<Progress[]> {
-        return this.progressModel.find({ user_id:userId }).exec();
+        return this.progressModel.find({ user_id:userId }).populate([{ path: 'course_id', select:['title']}]).exec();
     }
 
     // Update A Progress Based On New-Data
@@ -54,7 +54,11 @@ export class ProgressService {
 
     // Find by user and course
     async findByUserAndCourse(userId: string, courseId: string): Promise<Progress> {
-        return this.progressModel.findOne({ user_id:userId, course_id:courseId }).exec();
+        return this.progressModel.findOne({ user_id:userId, course_id:courseId })
+        .populate([
+            { path: 'course_id', select:['title']},
+            { path: 'user_id', select:['name']}
+        ]).exec();
     }
 
     // find by course
