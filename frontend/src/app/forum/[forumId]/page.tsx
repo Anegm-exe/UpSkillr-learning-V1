@@ -52,8 +52,6 @@ export default function Forum({ params }: { params: { forumId: string } }) {
 
             <ForumDetails forumData={forumData} onBack={() => router.push('/forum')} />
 
-
-
         </div>
     );
 
