@@ -2,33 +2,47 @@
 
 import { useRouter } from 'next/navigation';
 import { useFetchCourse } from '../../api/services/useFetchCourse';
-//import { useFetchModules } from '@/app/api/services/useFetchModules';
 import { useModuleService } from '@/app/api/services/useModuleService';
 import CourseDetails from '../../../components/CourseDetails';
 import ModuleDetails from '../../../components/ModuleDetails';
-import React from 'react';
+import CreateModule from '../../../components/CreateModule';
+import React, { useState, useEffect } from 'react';
 
-export default function CoursePage({ params }: { params: { courseid: string } }) {
+export default function CoursePage({ params }: { params: Promise<{ courseid: string }> }) {
     const router = useRouter();
-    // @ts-ignore
-    const {courseid} = React.use(params);
-    const { moduleData, error, createModule, deleteModule } = useModuleService(courseid);
-    const { courseData, errorM } = useFetchCourse(courseid);
-    //const { moduleData, errorM } = useFetchModules(courseid);
+    const [courseId, setCourseId] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        params.then((unwrappedParams) => {
+            setCourseId(unwrappedParams.courseid);
+        });
+    }, [params]);
+
+    const { moduleData, error, createModule, deleteModule } = useModuleService(courseId || '');
+    const { courseData, errorM } = useFetchCourse(courseId || '');
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     if (error) return <div>Error: {error}</div>;
-
     if (errorM) return <div>Error: {errorM}</div>;
-    if (!courseData) return <div>Loading...</div>;
-
-    if (error) return <div>Error: {error}</div>;
+    if (!courseData || !courseId) return <div>Loading...</div>;
     if (!moduleData) return <div>Loading...</div>;
-    
+
     return (
-      <div>
-        <CourseDetails courseData={courseData} onBack={() => router.push('/course')} />
-        <ModuleDetails moduleData={moduleData} />
-      </div>
+        <div>
+            <CourseDetails courseData={courseData} onBack={() => router.push('/course')} />
+            <button onClick={handleOpenModal} className="addButton">+</button>
+            {isModalOpen && (
+                <CreateModule courseId={courseId} onClose={handleCloseModal} createModule={createModule} />
+            )}
+            <ModuleDetails moduleData={moduleData} />
+        </div>
     );
-    
 }
