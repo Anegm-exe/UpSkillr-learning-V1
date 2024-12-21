@@ -8,8 +8,10 @@ import { useFetchNotifications } from "../api/services/useFetchNotifications";
 import { useFetchUserCourses } from "../api/services/useFetchCourse";
 import NotificationDetails from "../../components/NotificationDetails";
 import { AllCoursesDetails, EnrolledCourses, CompletedCourses } from "../../components/StudentDashboardcourse";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+    const router = useRouter();
     const { tokenDetails , isloading} = useAuth();
     const { notificationsData } = useFetchNotifications(tokenDetails?._id);
     const { enrolledCourseData, completedCourseData } = useFetchUserCourses();
@@ -47,6 +49,13 @@ export default function Dashboard() {
                         ) : (
                                 <li style={{ pointerEvents: "none" }}>No Completed Courses Yet</li>
                         )}
+                    </ul>
+                </div>
+                <div className={DashboardCss.separatorline}></div>  {/* Separator */}
+                <h1>Course Progress</h1>
+                <div className={DashboardCss["list-container"]}>
+                    <ul className={DashboardCss["vertical-list"]}>
+                        <li onClick={()=>router.push('/progress')}>Progress</li>
                     </ul>
                 </div>
             </div>
