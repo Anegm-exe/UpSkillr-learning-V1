@@ -21,7 +21,7 @@ export default function CoursePage({ params }: { params: Promise<{ courseid: str
         });
     }, [params]);
 
-    const { moduleData, error, createModule, deleteModule } = useModuleService(courseId || '');
+    const { moduleData, error, createModule, deleteModule, addRating, addQuestion, removeQuestion, updateModule, findModuleById } = useModuleService(courseId || '');
     const { courseData, errorM } = useFetchCourse(courseId || '');
 
     const handleOpenModal = () => {
