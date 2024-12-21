@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "../api/axios";
@@ -6,7 +7,7 @@ import axios from "../api/axios";
 interface Note {
   _id: string;
   user_id: string;
-  course_id?: string;   
+  course_id?: string;
   content: string;
   timestamp: Date;
   last_updated: Date;
@@ -15,9 +16,10 @@ interface Note {
 export default function NoteDetails({
   params,
 }: {
-  params: Promise<{ noteId: string }>;
+  params: { noteId: string };
 }) {
   const router = useRouter();
+
   const [note, setNote] = useState<Note>({
     _id: "",
     user_id: "",
@@ -26,108 +28,48 @@ export default function NoteDetails({
     timestamp: new Date(),
     last_updated: new Date(),
   });
+
   const [allNotes, setAllNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-
-  const { noteId } = React.use(params);
-
-  // Fetch note details by ID
-  useEffect(() => {
-    if (!noteId) return;
-
-    const fetchNote = async () => {
-      try {
-        const response = await axios.get(`/note/${noteId}`);
-        setNote(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to fetch the note");
-        setLoading(false);
-      }
-    };
-
-    fetchNote();
-  }, [noteId]);
 
   // Fetch all notes
   const getAllNotes = async () => {
     try {
       const response = await axios.get("/note");
       setAllNotes(response.data);
+     
     } catch (err) {
       setError("Failed to fetch all notes");
+     
     }
   };
 
-  // Delete note by ID
-  const deleteNote = async (id: string) => {
-    try {
-      await axios.delete(`/note/${id}`);
-      alert("Note deleted successfully");
-      router.push("/"); // Redirect to home or reload the list of notes
-    } catch (err) {
-      setError("Failed to delete the note");
-    }
-  };
+  useEffect(() => {
+    getAllNotes();
+  }, []);
 
-  // Handle input changes for editing
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNote({ ...note, content: e.target.value });
-  };
-
-  // Save updates to the note
-  const handleSave = async () => {
-    try {
-      await axios.patch(`/note/${note._id}`, {
-        content: note.content,
-      });
-      setIsEditing(false);
-      alert("Note updated successfully");
-    } catch (err) {
-      setError("Failed to update the note");
-    }
-  };
-
-  if (loading) return <div>Loading...</div>;
+  //if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="container">
-      <h1>Note Details</h1>
-      {isEditing ? (
-        <div className="edit-note">
-          <textarea
-            name="content"
-            value={note.content}
-            onChange={handleChange}
-          />
-          <div>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
-          </div>
-        </div>
-      ) : (
-        <div className="note-details">
-          <p>{note.content || 'No content available'}</p>
-          <div>
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={() => deleteNote(note._id)}>Delete</button>
-            <button onClick={() => router.push("/")}>Back</button>
-          </div>
-        </div>
-      )}
-      <div className="all-notes">
-        <button onClick={getAllNotes}>Fetch All Notes</button>
-        <ul>
+      <div className="note-details">
+        <div className="notes-grid">
           {allNotes.map((note) => (
-            <li key={note._id}>
-              {note.content}{" "}
-              <button onClick={() => deleteNote(note._id)}>Delete</button>
-            </li>
+            <div key={note._id} className="note-card">
+              <p>{note.content}</p>
+              <button onClick={() => router.push(`/notes/${note._id}`)}>
+                View
+              </button>
+            </div>
           ))}
-        </ul>
+        </div>
+        <button
+    onClick={() => router.push("/")}
+    style={{ marginTop: "20px" }} // Adds space above the Back button
+  >
+    Back
+  </button>
       </div>
 
       <style jsx>{`
@@ -160,7 +102,7 @@ export default function NoteDetails({
           color: white;
         }
         button:last-of-type {
-          background-color: #f44336;
+          background-color: rgb(244, 54, 165);
           color: white;
         }
       `}</style>
