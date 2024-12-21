@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 .maincontainer {
     display: flex;
     width: 100%;
@@ -91,6 +93,15 @@
             filter: invert();
             transform: scale(1.05);
         }
+
+    .vertical-list p {
+        font-size: .75rem;
+        padding: .5rem 0 .25rem 0;
+        margin: 0;
+        font-family: roboto-light;
+        text-align: center;
+        cursor: default;
+    }
 
 .progress {
     margin: 0.75rem 1rem .25rem 1rem;
@@ -221,7 +232,6 @@
     margin: 0 auto;
 }
 
-
 .courseTemplate {
     cursor: pointer;
     margin: 0;
@@ -315,4 +325,81 @@
         font-size: 1rem;
         font-family: roboto-thin;
         text-align: center;
+    }
+
+/* Instructor Courses Looks */
+.IcourseTemplate{
+    width: 85%;
+}
+
+    .IcourseTemplate h1 {
+        font-size: 1.25rem;
+        font-family: roboto-light;
+        text-align: left;
+    }
+
+    .IcourseTemplate p {
+        font-size: .8rem;
+        font-family: roboto-thin;
+        text-align: left;
+    }
+
+.coursestatetext {
+    width: 5%;
+    align-content: center;
+    justify-content: center;
+    transform-origin: center;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    transform: rotate(-90deg);
+    height: 95%;
+}
+
+/* Container for the toggle */
+.toggle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.25rem;
+    transform: rotate(180deg);
+    z-index: 1;
+}
+
+/* Invisible checkbox input */
+.toggleinput {
+    display: none;
+}
+
+/* Label styles for the toggle button */
+.togglelabel {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    background: black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* The slider inside the toggle */
+.toggleslider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* Change background and move the slider when checked */
+.toggleinput:checked + .togglelabel {
+    background: var(--accent-color);
+}
+
+    .toggleinput:checked + .togglelabel .toggleslider {
+        top: 3.5rem;
     }
