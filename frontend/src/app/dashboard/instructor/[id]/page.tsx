@@ -14,12 +14,22 @@ const CreateCoursePage = () => {
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [analyticsData, setAnalyticsData] = useState<{ [key: string]: string }[]>([]);
   const [completedStudents, setCompletedStudents] = useState<string[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
 
+  interface SearchResult {
+    _id: string;
+    name: string;
+  }
+
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchType, setSearchType] = useState('id');
 
   interface Course {
     _id: string;
     title: string;
   }
+
+
 
   useEffect(() => {
     const fetchCompletedStudents = async () => {
@@ -35,6 +45,18 @@ const CreateCoursePage = () => {
         console.error('Error fetching completed students:', error);
       }
     };
+
+    const fetchInstructorCourses = async () => {
+        try {
+          const response = await axios.get(`/course/instructor/${tokenDetails.userid}`);
+          setCourses(response.data);
+        } catch (error) {
+          console.error('Error fetching instructor courses:', error);
+          alert('Failed to fetch instructor courses.');
+        }
+    };
+
+    fetchInstructorCourses();
 
     fetchCompletedStudents();
   }, [tokenDetails]);
@@ -97,13 +119,18 @@ const CreateCoursePage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`/course/student/${searchInput}/course`);
-      setEnrolledCourses(response.data);
+      let response;
+      if (searchType === 'id') {
+        response = await axios.get(`/course/student/${searchInput}/course`);
+      } else {
+        response = await axios.get(`/user/search-student/${searchInput}`);
+      }
+      setSearchResults(response.data);
     } catch (error) {
-      console.error('Error fetching enrolled courses:', error);
+      console.error('Error searching for student courses:', error);
     }
   };
-
+  
 
   return (
     <div>
@@ -131,17 +158,28 @@ const CreateCoursePage = () => {
         </div>
         <button type="submit">Create Course</button>
       </form>
-       <div>
-      <h2>Search Student Courses</h2>
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder="Enter student ID"
-      />
-      <button onClick={handleSearch}>Search</button>
+      <div>
+        <h2>Search Student Courses</h2>
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Enter student ID or name"
+        />
+        <div>
+          <button onClick={() => { setSearchType('id'); handleSearch(); }}>Search by ID</button>
+          <button onClick={() => { setSearchType('name'); handleSearch(); }}>Search by Name</button>
+        </div>
+        <ul>
+          {searchResults.map((result) => (
+            <li key={result._id}>{result.name}</li>
+          ))}
+        </ul>
+      </div>
+    <div>
+      <h1>Instructor Courses</h1>
       <ul>
-        {enrolledCourses.map((course) => (
+        {courses.map((course) => (
           <li key={course._id}>{course.title}</li>
         ))}
       </ul>
