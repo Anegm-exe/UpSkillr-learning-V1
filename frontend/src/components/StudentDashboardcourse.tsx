@@ -36,7 +36,7 @@ interface ProgressDetailsProps {
 export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
   const router = useRouter(); // Initialize the navigate function
 
-  const { tokenDetails } = useAuth();
+  const { tokenDetails, isLoading } = useAuth();
   const { progressData } = useFetchCourseProgress(courseData._id, tokenDetails?._id);
 
   if (isLoading) {

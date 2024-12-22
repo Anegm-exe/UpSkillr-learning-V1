@@ -4,9 +4,6 @@
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
 
-import { useState, useEffect } from "react";
-import axios from "../../api/axios";
-
 interface CourseDetailsProps {
   courseData: {
     _id: string;
@@ -38,20 +35,6 @@ type courseModuleProps = {
   ratings: number;
 };
 
-export function useFetchModulesForCourse(courseId: string) {
-  const [moduleDetails, setModuleDetails] = useState<courseModuleProps[]>([]);
-  const [instructor, setInstructor] = useState<any>([]);
-  useEffect(() => {
-    const fetchModuleData = async () => {
-      const response = await axios.get(`module/course/${courseId}`);
-      setModuleDetails(response?.data);
-    };
-
-    fetchModuleData();
-  }, [courseId]);
-  return moduleDetails;
-}
-
 interface CourseDetailsProps {
   courseData: {
     _id: string;
@@ -66,22 +49,6 @@ interface CourseDetailsProps {
     difficulty_level: string;
   };
 }
-
-type courseModuleProps = {
-  _id: string;
-  course_id: string;
-  title: string;
-  difficulty: string;
-  resources: string[];
-  content_ids: string[];
-  no_question: number;
-  type: string;
-  question_bank: string[];
-  quizzes: string[];
-  timestamp: string;
-  __v: number;
-  ratings: number;
-};
 
 export function useFetchModulesForCourse(courseId: string) {
   const [moduleDetails, setModuleDetails] = useState<courseModuleProps[]>([]);
