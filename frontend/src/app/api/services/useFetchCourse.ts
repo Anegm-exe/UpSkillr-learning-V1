@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
 
-// Grap Course Using Its ID
+// Grab Course Using Its ID
 export function useFetchCourse(courseId: string) {
   const [courseDetails, setCourseDetails] = useState<CourseDetailsProps>({
     courseData: {
@@ -126,53 +126,53 @@ export function useFetchCourseCompletedStudents(courseId: string) {
     fetchCourseData();
   }, [courseId]);
 
-    return { ccStudents, averagecoursescore, error };
+  return { ccStudents, averagecoursescore, error };
 }
 
 // all courses in general
 export function useFetchAllCourses() {
-    const [AllCoursesdata, setAllCoursesdata] = useState<any>([]);
-    const [error, setError] = useState<string | null>(null);
+  const [AllCoursesdata, setAllCoursesdata] = useState<any>([]);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchCourseData = async () => {
-            try {
-                const response = await axios.get(`/course`);
-                setAllCoursesdata(response.data);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching course data:', error);
-                setError('Failed to fetch course data.');
-            }
-        };
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const response = await axios.get(`/course`);
+        setAllCoursesdata(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+        setError("Failed to fetch course data.");
+      }
+    };
 
-        fetchCourseData();
-    }, );
+    fetchCourseData();
+  }, []);
 
-    return { AllCoursesdata, error };
+  return { AllCoursesdata, error };
 }
 
 // all Users Data in general
 export function useFetchAllUsers() {
-    const [UsersData, setUsersData] = useState<any>([]);
-    const [error, setError] = useState<string | null>(null);
+  const [UsersData, setUsersData] = useState<any>([]);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchCourseData = async () => {
-            try {
-                const response = await axios.get(`/user`);
-                setUsersData(response.data);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching course data:', error);
-                setError('Failed to fetch course data.');
-            }
-        };
+  useEffect(() => {
+    const fetchCourseData = async () => {
+      try {
+        const response = await axios.get(`/user`);
+        setUsersData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+        setError("Failed to fetch course data.");
+      }
+    };
 
-        fetchCourseData();
-    },);
+    fetchCourseData();
+  }, []);
 
-    return { UsersData, error };
+  return { UsersData, error };
 }
 
 // /* eslint-disable @typescript-eslint/no-explicit-any */
