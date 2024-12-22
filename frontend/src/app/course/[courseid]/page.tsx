@@ -37,6 +37,8 @@ export default function CoursePage({ params }: { params: Promise<{ courseid: str
     if (!courseData || !courseId) return <div>Loading...</div>;
     if (!moduleData) return <div>Loading...</div>;
 
+    //const courseIdFromData = moduleData._id;
+
     return (
         <div>
             <CourseDetails courseData={courseData} onBack={() => router.push('/course')} />
@@ -48,7 +50,13 @@ export default function CoursePage({ params }: { params: Promise<{ courseid: str
                     )}
                 </>
             )}
-            <ModuleDetails moduleData={moduleData} />
+            <ModuleDetails
+                moduleData={moduleData}
+                addRating={addRating}
+                addQuestion={addQuestion}
+                removeQuestion={removeQuestion}
+                updateModule={updateModule} onClose={handleCloseModal}
+            />
         </div>
     );
 }
