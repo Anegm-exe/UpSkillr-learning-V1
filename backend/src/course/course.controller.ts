@@ -252,7 +252,7 @@ export class CourseController {
     }
 
     //find a course by id
-
+    @Roles(Role.Instructor, Role.Admin, Role.Student)
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Course> {
         return this.courseService.findOne(id);
