@@ -23,12 +23,12 @@ type courseModuleProps = {
 export default function CoursePage({ params }: { params: { courseid: string } }) {
   //@ts-expect-error
   const { courseid } = React.use(params);
-  const { courseDetails } = useFetchCourse(courseid);
+  const { courseDetails, instructors } = useFetchCourse(courseid);
   const modules = useFetchModulesForCourse(courseid);
   console.log(modules);
   return (
     <div>
-      <CourseDetails courseData={courseDetails} />
+      <CourseDetails courseData={courseDetails} instructors={instructors} />
       {modules.map((module) => {
         return <CourseModule module={module} key={module._id} />;
       })}

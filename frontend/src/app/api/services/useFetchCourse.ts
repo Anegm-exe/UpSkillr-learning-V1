@@ -3,8 +3,43 @@
 
 import { useState, useEffect } from "react";
 import axios from "../../api/axios";
+import { CourseModuleProps } from "@/components/CourseModule";
 
-// Grab Course Using Its ID
+type courseModuleProps = {
+  _id: string;
+  course_id: string;
+  title: string;
+  difficulty: string;
+  resources: string[];
+  content_ids: string[];
+  no_question: number;
+  type: string;
+  question_bank: string[];
+  quizzes: string[];
+  timestamp: string;
+  __v: number;
+  ratings: number;
+};
+
+export function useFetchModulesForCourse(courseId: string) {
+  const [moduleDetails, setModuleDetails] = useState<CourseModuleProps[]>([]);
+  useEffect(() => {
+    const fetchModuleData = async () => {
+      console.log(courseId);
+      const response = await axios.get(`module/course/${courseId}`, {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJpZCI6IjY3NTVlMzFkMWNjY2YwNGE5ZWU4NjVjNCIsInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFiZGVscmFobWFuIHRoZSAxc3QiLCJwcm9maWxlX3BpY3R1cmVfdXJsIjoiaHR0cHM6Ly9pLnBpbmltZy5jb20vNzM2eC9jMy85YS9jNS9jMzlhYzVlYmYyNzk5Njk1ODRlOGUxMmI3NjIyYzU1Ni5qcGcifSwiaWF0IjoxNzM0OTA1Nzg1LCJleHAiOjE3MzQ5MDkzODV9.Dq6B3ZuV2UBF2NBBl_-MNOCPKJPMIPDHZXEg-OAph50`, // Replace `token` with the actual token
+        },
+      });
+      console.log(response);
+      setModuleDetails(response?.data);
+    };
+
+    fetchModuleData();
+  }, [courseId]);
+  return moduleDetails;
+}
+
 export function useFetchCourse(courseId: string) {
   const [courseDetails, setCourseDetails] = useState<CourseDetailsProps>({
     courseData: {
@@ -196,22 +231,6 @@ export function useFetchAllUsers() {
 //   };
 // }
 
-// type courseModuleProps = {
-//   _id: string;
-//   course_id: string;
-//   title: string;
-//   difficulty: string;
-//   resources: string[];
-//   content_ids: string[];
-//   no_question: number;
-//   type: string;
-//   question_bank: string[];
-//   quizzes: string[];
-//   timestamp: string;
-//   __v: number;
-//   ratings: number;
-// };
-
 // interface CourseDetailsProps {
 //   courseData: {
 //     _id: string;
@@ -227,72 +246,7 @@ export function useFetchAllUsers() {
 //   };
 // }
 
-// export function useFetchModulesForCourse(courseId: string) {
-//   const [moduleDetails, setModuleDetails] = useState<courseModuleProps[]>([]);
-//   const [instructor, setInstructor] = useState<any>([]);
-//   useEffect(() => {
-//     const fetchModuleData = async () => {
-//       const response = await axios.get(`module/course/${courseId}`);
-//       setModuleDetails(response?.data);
-//     };
-
-//     fetchModuleData();
-//   }, [courseId]);
-//   return moduleDetails;
-// }
-
-// // Grap Course Using Its ID
-// export function useFetchCourse(courseId: string) {
-// <<<<<<< HEAD
-//     const [courseData, setCourseData] = useState<any>(null);
-//     const [errorM, setError] = useState<string | null>(null);
-
-//     useEffect(() => {
-//     if (courseId) {
-//         const fetchCourseData = async () => {
-//         try {
-//             const response = await axios.get(`/course/${courseId}`);
-//             setCourseData(response.data);
-//         } catch (errorM) {
-//             console.error('Error fetching course data:', errorM);
-//             setError('Failed to fetch course data.');
-//         }
-//         };
-
-//         fetchCourseData();
-//     }
-//     }, [courseId]);
-
-//     return { courseData, errorM };
-// =======
-//   const [courseDetails, setCourseDetails] = useState<CourseDetailsProps>({
-//     courseData: {
-//       _id: "",
-//       title: "",
-//       description: "",
-//       instructor_ids: [],
-//       category: [],
-//       students: [],
-//       rating: 0,
-//       isArchived: false,
-//       difficulty_level: "",
-//       modules: [],
-//     },
-//   });
-//   const [instructor, setInstructor] = useState<any>([]);
-//   useEffect(() => {
-//     const fetchCourseData = async () => {
-//       const response = await axios.get(`/course/${courseId}`);
-//       const instructorResponse = await axios.get(`user/instructor/course/${courseId}`);
-//       setCourseDetails(response?.data);
-//       setInstructor(instructorResponse?.data);
-//     };
-
-//     fetchCourseData();
-//   }, [courseId]);
-//   return { courseDetails, instructor };
-// >>>>>>> origin/master
-// }
+// Grap Course Using Its ID
 
 // // all coursses for a student
 // export function useFetchUserCourses() {
