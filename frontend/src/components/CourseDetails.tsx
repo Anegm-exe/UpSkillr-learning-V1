@@ -21,7 +21,6 @@ export interface CourseDetailsProps {
     instructor_ids: string[];
     difficulty_level: string;
   };
-  onBack: () => void;
   instructors: Instructor[];
 }
 
