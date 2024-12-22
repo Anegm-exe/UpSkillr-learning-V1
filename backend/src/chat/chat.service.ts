@@ -38,7 +38,13 @@ export class ChatService {
   }
 
   async findAllChats(User_Id: string) : Promise<Chat[]> {
-    const chats = await this.chatModel.find({ user_ids: User_Id });
+    const chats = await this.chatModel.find({ user_ids: User_Id }).populate([
+      { path: 'messages', populate: [
+        { path: 'user_id', select: ['name','profile_picture_url'] },
+        { path: 'repliedTo_id', populate: { path: 'user_id', select: ['name','profile_picture_url'] } }
+      ]},
+      { path: 'user_ids', select: ['name','profile_picture_url'] }
+    ]).exec();
     if(!chats) {
       throw new NotFoundException("User has no chats")
     }
