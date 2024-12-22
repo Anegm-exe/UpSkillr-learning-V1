@@ -207,7 +207,7 @@ export function useFetchAllCourses() {
         };
 
         fetchCourseData();
-    }, );
+    }, []);
 
     return { AllCoursesdata, error };
 }
@@ -230,7 +230,7 @@ export function useFetchAllUsers() {
         };
 
         fetchCourseData();
-    },);
+    },[]);
 
     return { UsersData, error };
 }

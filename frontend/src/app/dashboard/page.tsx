@@ -9,7 +9,7 @@ import { useFetchUserCourses, useFetchInstructorCourses, useFetchAllCourses, use
 import NotificationDetails from "../../components/NotificationDetails";
 import axios from "../../app/api/axios";
 import { useState } from 'react';
-import { CourseDetailsProps, UserDetailsProps, AllCoursesDetails, EnrolledCourses, CompletedCourses, SupervisedCourses, DetailedSupervisedCourses, AllCourses, AllUsersData } from "../../components/StudentDashboardcourse";
+import { CourseDetailsProps, UserDetailsProps, AllCoursesDetails, EnrolledCourses, CompletedCourses, SupervisedCourses, DetailedSupervisedCourses, AllDetailedCourses, AllCourses, AllUsersData } from "../../components/StudentDashboardcourse";
 
 export default function Dashboard() {
     const { tokenDetails, isloading } = useAuth();
@@ -23,7 +23,7 @@ export default function Dashboard() {
     }
 
     if (tokenDetails.role === 'student') {
-        return <StudentDashboard/>;
+        return <StudentDashboard tokenDetails={tokenDetails} />;
     }
 
     if (tokenDetails.role === 'instructor') {
@@ -101,7 +101,7 @@ function AdminDashboard({ tokenDetails }) {
                     <div className={DashboardCss.notificationcenter}>
                         <h1>Manage User Accounts</h1>
                         <div className={DashboardCss.separatorline} style={{ width: '30%' }}></div>  {/* Separator */}
-                        <div className={DashboardCss.notificationDiv}>
+                        <div className={DashboardCss.notificationDiv} style={{ 'gap': '1rem' }}>
                             {UsersData && UsersData.length > 0 ? (
                                 UsersData.map((data: UserDetailsProps['userData']) => (
                                     <AllUsersData key={data._id} userData={data} />
@@ -120,7 +120,7 @@ function AdminDashboard({ tokenDetails }) {
                     <div className={DashboardCss.courseDiv}>
                         {(AllCoursesdata && AllCoursesdata.length > 0) ? (
                             AllCoursesdata.map((course: CourseDetailsProps['courseData']) => (
-                                <DetailedSupervisedCourses key={course._id} courseData={course} />
+                                <AllDetailedCourses key={course._id} courseData={course} />
                             ))
                         ) : (
                             <h1>Create Courses To Be Able To Supervise And Show Details On Here!</h1>

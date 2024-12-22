@@ -170,6 +170,48 @@ export function DetailedSupervisedCourses({ courseData }: CourseDetailsProps) {
     );
 }
 
+export function AllDetailedCourses({ courseData }: CourseDetailsProps) {
+    const router = useRouter();
+    const [isArchived, setIsArchived] = useState(courseData.isArchived);
+    const toggleId = `toggle-${courseData._id}`;
+
+    const handleCourseClick = () => {
+        router.push(`/course/${courseData._id}`);
+    };
+
+    const handleToggle = async (newStatus: boolean) => {
+        setIsArchived(newStatus);
+
+        try {
+            await axios.patch(`/course/${courseData._id}`, { isArchived: newStatus });
+        } catch {
+            console.error("Error fetching progresses data");
+            setIsArchived(!newStatus);
+        }
+    };
+
+    return (
+        <div className={dashboardcss.courseTemplate} >
+            <div className={dashboardcss.IcourseTemplate} onClick={handleCourseClick}>
+                <h1>{courseData.title}</h1>
+                <p>Description: {courseData.description}</p>
+                <p>Category: {courseData.category}</p>
+                <p>Instructors: {courseData.instructor_ids.join(', ')}</p>
+                <p>Students: {courseData.students.join(', ')}</p>
+            </div>
+            <div className={dashboardcss.coursestatetext}>
+                {isArchived ? "Archived" : "Active"}
+            </div>
+            <div className={dashboardcss.toggle}>
+                <input type="checkbox" id={toggleId} className={dashboardcss.toggleinput} checked={!isArchived} onChange={() => handleToggle(!isArchived)} />
+                <label htmlFor={toggleId} className={dashboardcss.togglelabel}>
+                    <span className={dashboardcss.toggleslider}></span>
+                </label>
+            </div>
+        </div>
+    );
+}
+
 export function AllCourses({ courseData }: CourseDetailsProps) {
     const router = useRouter(); // Initialize the navigate function
 
@@ -197,9 +239,9 @@ export function AllUsersData({ userData }: UserDetailsProps) {
             <div className={dashboardcss.userInfoContainer}>
                 <img src={userData.profile_picture_url} alt="User Profile" className={dashboardcss.userAvatar} />
                 <div className={dashboardcss.userDetails}>
-                    <p><strong>Name:</strong> {userData.name}</p>
                     <p><strong>Email:</strong> {userData.email}</p>
                     <p><strong>Role:</strong> {userData.role}</p>
+                    <span><strong>Id:</strong> {userData._id}</span>
                 </div>
             </div>
             <button className={dashboardcss.trashButton} onClick={() => handleDeleteUser()}>x</button>
