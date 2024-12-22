@@ -8,39 +8,40 @@ export function useFetchUserProgresses(userId: string) {
   const [progressesData, setProgressData] = useState<any>([]);
 
   useEffect(() => {
-    const fetchProgressData = async () => {
-      try {
-        const response = await axios.get(`/progress/user/${userId}`);
-        setProgressData(response.data);
-      } catch {
-        console.error("Error fetching progresses data");
-      }
-    };
+    if (userId) {
+      const fetchProgressData = async () => {
+        try {
+          const response = await axios.get(`/progress/user/${userId}`);
+          setProgressData(response.data);
+        } catch {
+          console.error("Error fetching progresses data");
+        }
+      };
 
-    fetchProgressData();
+      fetchProgressData();
+    }
   }, [userId]);
 
   return { progressesData };
 }
 
-export function useFetchCourseProgresses(courseId: string, userId: string | undefined) {
+export function useFetchCourseProgress(courseId: string, userId: string) {
   const [progressData, setProgressData] = useState<any>([]);
 
   useEffect(() => {
-    //dont fetch if no userid
-    if (!userId) return;
+    if (userId && courseId) {
+      const fetchProgressData = async () => {
+        try {
+          const response = await axios.get(`progress/course/${courseId}/user/${userId}`);
+          setProgressData(response.data);
+          console.log(response.data.completion_percentage);
+        } catch {
+          console.error("Error fetching progresses data");
+        }
+      };
 
-    const fetchProgressData = async () => {
-      try {
-        const response = await axios.get(`progress/course/${courseId}/user/${userId}`);
-        setProgressData(response.data);
-        console.log(response.data.completion_percentage);
-      } catch (error) {
-        console.error("Error fetching progress data:", error);
-      }
-    };
-
-    fetchProgressData();
+      fetchProgressData();
+    }
   }, [courseId, userId]);
 
   return { progressData };

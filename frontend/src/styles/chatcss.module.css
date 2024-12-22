@@ -1,0 +1,187 @@
+/* Body or parent container for full width and height */
+.body, .html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Take the full width */
+  max-width: 100%; /* Allow the width to extend fully */
+  height: 100vh; /* Take the full height of the viewport */
+  padding: 2rem;
+  background-color: var(--background-color);
+  border: 1.5px solid var(--border-color);
+  border-radius: 15px;
+  color: white;
+  font-family: roboto-condensed;
+  position: absolute;
+  right: 0; /* Position it to the right */
+  top: 0; /* Align it to the top of the page */
+  bottom: 0; /* Stretch to the bottom */
+  max-width: none; /* Remove the max-width constraint */
+}
+
+/* Chat Header */
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.chatTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.backButton {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: var(--accent-color-hover);
+  filter: brightness(1.1);
+}
+
+/* Messages Section */
+.messagesContainer {
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--secondary-background-color);
+  padding: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Individual Message */
+.messageItem {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  gap: 1rem;
+}
+
+.messageItem:hover {
+  filter: invert(0.1);
+}
+
+.profilePicture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--border-color);
+}
+
+.messageContent {
+  flex: 1;
+}
+
+.userName {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.messageText {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: var(--text-color-light);
+}
+
+/* Reply Section */
+.replySection {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-left: 4px solid var(--accent-color);
+  background-color: var(--secondary-background-color);
+  font-size: 0.85rem;
+}
+
+/* Chat Details Container */
+.chatDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 2rem;
+  background-color: var(--background-color);
+  border: none;
+  color: white;
+  font-family: roboto-condensed;
+  justify-content: space-between;
+}
+
+/* Messages Section */
+.messagesContainer {
+  flex: 1;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--secondary-background-color);
+  padding: 1rem;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+/* Send Message Section */
+.sendMessageContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--secondary-background-color);
+}
+
+.messageInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.messageInput:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.sendButton {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sendButton:hover {
+  background-color: var(--accent-color-hover);
+  filter: brightness(1.1);
+}
