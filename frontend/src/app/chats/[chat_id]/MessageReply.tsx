@@ -15,7 +15,7 @@ export default function ReplyMessage({ chatId, messageId, handleReplySent }: { c
         setError('');
 
         try {
-            const response = await axios.post(`/chat/${chatId}/reply/${messageId}`, {
+            const response = await axios.post(`/chats/${chatId}/reply/${messageId}`, {
                 message: reply,
             });
 

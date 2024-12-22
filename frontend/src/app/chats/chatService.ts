@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Set the base URL of your backend API
-const BASE_URL = 'http://localhost:3000/chat';
+const BASE_URL = 'http://localhost:3000/chats';
 
 // Get all chats for a user
 export const getAllChats = async (userId: string) => {

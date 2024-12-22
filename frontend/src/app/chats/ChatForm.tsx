@@ -31,7 +31,7 @@ export default function ChatForm() {
     const createChatDTO = { chatName };
 
     try {
-      const response = await axios.post('/api/chat', {
+      const response = await axios.post('/api/chats', {
         chat: createChatDTO,
         emails: emailList,
       });
@@ -57,7 +57,7 @@ export default function ChatForm() {
     setError('');
 
     try {
-      const response = await axios.delete(`/api/chat/${chatId}`);
+      const response = await axios.delete(`/api/chats/${chatId}`);
 
       if (response.data) {
         alert('Chat deleted successfully!');
@@ -84,7 +84,7 @@ export default function ChatForm() {
       setError('');
 
       try {
-        const response = await axios.get(`/api/chat/search/${searchQuery}`);
+        const response = await axios.get(`/api/chats/search/${searchQuery}`);
         setChatResults(response.data || []);
       } catch (err: any) {
         setError('Error fetching search results: ' + err.message);
@@ -102,7 +102,7 @@ export default function ChatForm() {
     setError('');
 
     try {
-      const response = await axios.post(`/api/chat/user/${addUserEmail}`);
+      const response = await axios.post(`/chats/user/${addUserEmail}`);
 
       if (response.data) {
         alert('User added to chat successfully!');
@@ -124,7 +124,7 @@ export default function ChatForm() {
     setSuccess('');
 
     try {
-      const response = await axios.delete(`/api/chat/${chatId}/message/${messageId}`);
+      const response = await axios.delete(`/chats/${chatId}/message/${messageId}`);
 
       if (response.data) {
         setSuccess('Message deleted successfully.');
