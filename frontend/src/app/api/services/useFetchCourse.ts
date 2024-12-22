@@ -130,3 +130,49 @@ export function useFetchCourseCompletedStudents(courseId: string) {
 
     return { ccStudents, averagecoursescore, error };
 }
+
+// all courses in general
+export function useFetchAllCourses() {
+    const [AllCoursesdata, setAllCoursesdata] = useState<any>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchCourseData = async () => {
+            try {
+                const response = await axios.get(`/course`);
+                setAllCoursesdata(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching course data:', error);
+                setError('Failed to fetch course data.');
+            }
+        };
+
+        fetchCourseData();
+    }, );
+
+    return { AllCoursesdata, error };
+}
+
+// all Users Data in general
+export function useFetchAllUsers() {
+    const [UsersData, setUsersData] = useState<any>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchCourseData = async () => {
+            try {
+                const response = await axios.get(`/user`);
+                setUsersData(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching course data:', error);
+                setError('Failed to fetch course data.');
+            }
+        };
+
+        fetchCourseData();
+    },);
+
+    return { UsersData, error };
+}

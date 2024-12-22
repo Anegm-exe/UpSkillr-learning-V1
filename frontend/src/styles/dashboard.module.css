@@ -168,6 +168,7 @@
     border: solid var(--border-color) 1.5px;
     border-radius: 15px;
     align-items: center;
+    justify-content: center;
 }
 
 .notificationcenter {
@@ -183,8 +184,9 @@
 .notificationDiv {
     display: flex;
     flex-direction: column-reverse;
-    gap: 25%;
+    gap: 2rem;
     padding: 1rem 1rem;
+    margin-top: .75rem;
     width: calc(100% - 2rem);
     height: 75%;
     overflow-y: auto;
@@ -197,11 +199,22 @@
 
 .notificationtemplate {
     width: 100%;
-    height: 1rem;
+    height: auto; /* Automatically adjust height based on content */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Align items to the center */
+    justify-content: center; /* Optional: Center content vertically */
 }
+
+    .notificationtemplate h1 {
+        font-family: roboto-condensed;
+        margin: 0;
+        text-align: center;
+    }
 
     .notificationtemplate p {
         font-family: roboto-thin;
+        margin: 1rem 0 2rem 0;
         text-align: center;
     }
 
@@ -402,4 +415,278 @@
 
     .toggleinput:checked + .togglelabel .toggleslider {
         top: 3.5rem;
+    }
+
+.searchbox {
+    display: flex; /* Enable flexbox */
+   
+    justify-content: center; /* Horizontally center the content */
+    align-items: center;
+    padding: 1rem 0; /* Add some padding for spacing */
+}
+
+.searchbar {
+    border: .1rem outset var(--accent-color);
+    padding: 0;
+    margin: auto 1rem;
+    width: 50%;
+    height: 1.75rem;
+    border-radius: 5px;
+    background-color: black;
+    text-align: center;
+    color: white;
+    font-family: roboto-light;
+    font-size: 1rem; /* Adjust font size of placeholder */
+}
+
+    .searchbar::placeholder {
+        color: rgba(255,255,255,0.25); /* Set the color of the placeholder text */
+        font-family: roboto-light;
+        font-size: 1rem; /* Adjust font size of placeholder */
+    }
+
+.searchbutton {
+    position: relative;
+    height: 2rem;
+    padding: 0 1rem;
+    border-radius: 10px;
+    border: 2px outset var(--accent-color);
+    background-color: black;
+    color: white;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    transition: .1s all ease;
+}
+
+    .searchbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .searchbutton:active {
+        transform: scale(0.95); /* Shrink slightly on click */
+    }
+
+.resultsList {
+    height: 70%; /* Limit the height of the list */
+    overflow-y: auto; /* Make it scrollable vertically */
+    padding: 0;
+    margin: 0;
+    list-style: none; /* Remove default list styles */
+    scrollbar-width: none;
+}
+
+    .resultsList::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+    }
+
+.resultItem {
+    padding: .5rem 0; /* Remove any default padding */
+    margin: 0 2rem;
+}
+
+.resultDiv {
+    display: flex;
+    height: 100%;
+    align-items: flex-start;
+    padding: 1.5rem 0; /* Space inside each item */
+    border-radius: 5px;
+    border: 1.5px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover/click effects */
+}
+
+    .resultDiv:hover {
+        transform: scale(1.05); /* Slightly enlarge */
+    }
+
+    .resultDiv:active {
+        transform: scale(0.95); /* Shrink slightly when clicked */
+        background-color: #333; /* Optional pressed effect */
+    }
+
+.userAvatar {
+    margin: 0 1rem;
+    width: 75px; /* Adjust as needed */
+    height: 75px; /* Match width for square aspect ratio */
+    border-radius: 50%; /* Circular image */
+    border: 2px solid var(--border-color); /* Optional border for styling */
+    object-fit: cover; /* Ensure the image fits nicely */
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    height: 100%;
+    margin: auto 0;
+}
+
+    .userInfo p {
+        font-family: roboto-light;
+        font-size: .75rem;
+        padding: .2rem 0;
+        margin: 0;
+    }
+
+    .userInfo span {
+        font-family: roboto-condensed;
+        font-size: 0.75rem;
+        opacity: 0.1;
+        padding: .2rem 0;
+        margin: 0;
+    }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modalContent {
+    background: var(--background-color);
+    padding: 2rem;
+    border-radius: 25px;
+    border: 1.5px solid var(--border-color);
+    width: 50%;
+    height: 50%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.resultsList::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
+}
+
+.modalContent h2 {
+    margin: 1rem 0 .5rem 0;
+    font-family: roboto-thin;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.courseItem {
+    padding: 1rem;
+    border-bottom: 1.5px solid var(--border-color);
+}
+
+    .courseItem h3 {
+        font-family: roboto-bold;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        text-align: left;
+    }
+
+    .courseItem p {
+        font-family: roboto-thin;
+        font-size: 1rem;
+        margin: 0.2rem 0;
+    }
+
+        .courseItem p strong {
+            font-family: roboto-bold;
+        }
+
+.closeButton {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    cursor: pointer;
+    z-index: -1;
+}
+
+.notificationForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    height: 80%;
+    align-items: center;
+}
+
+.textArea {
+    width: 75%;
+    height: 60%;
+    border: 1.5px outset var(--accent-color);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: roboto-light;
+    font-size: 1.1rem;
+    resize: none;
+    background-color: black;
+    color: white;
+}
+
+    .textArea::placeholder {
+        color: rgba(255,255,255,0.25); /* Set the color of the placeholder text */
+        font-family: roboto-thin;
+        font-size: 1rem; /* Adjust font size of placeholder */
+    }
+
+.submitButton {
+    align-self: center;
+    padding: 0.5rem 1rem;
+    background-color: black;
+    color: white;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    border: 1.5px outset var(--accent-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+    .submitButton:hover {
+        transform: scale(1.05);
+    }
+
+.userContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 15px;
+}
+
+.userInfoContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.25rem;
+}
+
+    .userDetails p {
+        margin: 0;
+        font-size: 0.75rem;
+        font-family: roboto-thin;
+    }
+
+.trashButton {
+    background-color: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: roboto-thin;
+}
+
+    .trashButton:hover {
+        transform: scale(1.05);
     }

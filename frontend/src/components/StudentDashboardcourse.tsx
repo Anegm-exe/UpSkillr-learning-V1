@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import dashboardcss from '../styles/dashboard.module.css';
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,7 @@ import axios from "../app/api/axios";
 import { useState } from 'react';
 import { useAuth } from "@/components/AuthContext";
 
-interface CourseDetailsProps {
+export interface CourseDetailsProps {
     courseData: {
         _id: string;
         title: string;
@@ -20,16 +21,15 @@ interface CourseDetailsProps {
     };
 }
 
-interface ProgressDetailsProps {
-    progressData: {
-        _id?: string;
-        user_id: { _id: string, name: string };
-        course_id: { _id: string, title: string };
-        completion_percentage: number;
-        last_accessed: Date;
-        completed_modules: { module_id: string; score: number }[];
-        average_quiz?: number;
-        opened_times: number;
+export interface UserDetailsProps {
+    userData: {
+        _id: string;
+        name: string;
+        email: string;
+        dateOfBirth: Date;
+        role: string;
+        profile_picture_url: string;
+        categories: string[];
     };
 }
 
@@ -56,7 +56,7 @@ export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
                 <h1>{courseData.title}</h1>
                 <p>Description: {courseData.description}</p>
                 <p>Category: {courseData.category}</p>
-                <p>Instructor: {courseData.instructor_ids.join(', ')}</p>
+                <p>Instructors: {courseData.instructor_ids.join(', ')}</p>
                 <p>Last Accessed: {new Date(progressData.last_accessed).toLocaleString()}</p>
             </div>
         </div>
@@ -137,8 +137,6 @@ export function DetailedSupervisedCourses({ courseData }: CourseDetailsProps) {
         }
     };
 
-    
-
     return (
         <div className={dashboardcss.courseTemplate} >
             <div className={dashboardcss.IcourseTemplate} onClick={handleCourseClick}>
@@ -163,6 +161,43 @@ export function DetailedSupervisedCourses({ courseData }: CourseDetailsProps) {
                     <span className={dashboardcss.toggleslider}></span>
                 </label>
             </div>
+        </div>
+    );
+}
+
+export function AllCourses({ courseData }: CourseDetailsProps) {
+    const router = useRouter(); // Initialize the navigate function
+
+    const handleCourseClick = () => {
+        router.push(`/course/${courseData._id}`);
+    };
+
+    return (
+        <li onClick={handleCourseClick}>
+            {courseData.title}
+            <p><strong>category:</strong> {courseData.category}</p>
+        </li>
+    );
+}
+
+
+export function AllUsersData({ userData }: UserDetailsProps) {
+
+    const handleDeleteUser = () => {
+        //blablabla
+    };
+
+    return (
+        <div className={dashboardcss.userContainer}>
+            <div className={dashboardcss.userInfoContainer}>
+                <img src={userData.profile_picture_url} alt="User Profile" className={dashboardcss.userAvatar} />
+                <div className={dashboardcss.userDetails}>
+                    <p><strong>Name:</strong> {userData.name}</p>
+                    <p><strong>Email:</strong> {userData.email}</p>
+                    <p><strong>Role:</strong> {userData.role}</p>
+                </div>
+            </div>
+            <button className={dashboardcss.trashButton} onClick={() => handleDeleteUser()}>x</button>
         </div>
     );
 }
