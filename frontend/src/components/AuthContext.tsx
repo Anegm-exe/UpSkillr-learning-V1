@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { getTokenDetails } from "../app/api/services/getTokenDetails";
 import { useRouter } from "next/navigation";
@@ -20,11 +20,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchTokenDetails = async () => {
       try {
-        setIsLoading(true);
         const userDetails = await getTokenDetails();
         setTokenDetails(userDetails.data);
       } catch (error) {
-        setTokenDetails(null);
+        console.error("Error fetching auth details", error);
       } finally {
         setIsLoading(false);
       }
@@ -45,24 +44,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("An error occurred during logout:", error);
     }
   };
-  
+
   const login = async (details: any) => {
     setTokenDetails(details);
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      tokenDetails, 
-      isLoading,
-      login,
-      logout 
-    }}>
+    <AuthContext.Provider
+      value={{
+        tokenDetails,
+        isLoading,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth : any = () => {
+export const useAuth: any = () => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
