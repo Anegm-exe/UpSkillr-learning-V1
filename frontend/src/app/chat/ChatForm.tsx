@@ -96,26 +96,6 @@ export default function ChatForm() {
     fetchChats();
   }, [searchQuery]);
 
-  // handle adding a user to a chat
-  const handleAddUserToChat = async () => {
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await axios.post(`/chats/user/${addUserEmail}`);
-
-      if (response.data) {
-        alert('User added to chat successfully!');
-        setAddUserEmail('');
-      } else {
-        throw new Error('Failed to add user to the chat');
-      }
-    } catch (err: any) {
-      setError('An error occurred: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // handle deleting a message
   const handleDeleteMessage = async () => {
@@ -203,20 +183,6 @@ export default function ChatForm() {
       </div>
 
       <hr />
-
-      <h3>Manage Chat Members</h3>
-      <div>
-        <label>User Email:</label>
-        <input
-          type="text"
-          value={addUserEmail}
-          onChange={(e) => setAddUserEmail(e.target.value)}
-          placeholder="Enter user email"
-        />
-      </div>
-      <button onClick={handleAddUserToChat} disabled={loading || !addUserEmail}>
-        {loading ? 'Adding User...' : 'Add User to Chat'}
-      </button>
 
       <hr />
 

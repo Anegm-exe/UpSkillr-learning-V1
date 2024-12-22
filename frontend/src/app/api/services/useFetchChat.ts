@@ -26,7 +26,7 @@ export function useFetchChat(chatId: string) {
     }
     }, [chatId]);
 
-    return { chatData, error };
+    return { chatData, error , refetch: useFetchChat};
 }
 
 export function useFetchUserChats(userId: string) {

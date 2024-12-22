@@ -23,10 +23,14 @@ interface ChatDetailsProps {
     messages: Message[];
   };
   onBack: () => void;
-  onNewMessageSent: () => void; // Add onNewMessageSent prop
+  onMessage: () => void; // Add onNewMessageSent prop
+  onChatDetails: () => void;
+  onReplyClick?: (messageId: string) => void; // Add this property
+  replyToMessageId?: string | null; // Add this property
+  onLeaveSuccess?: () => void; // Add this property
 }
 
-export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsProps) {
+export default function ChatDetails({ chatData, onMessage }: ChatDetailsProps) {
   const [messageText, setMessageText] = useState("");
   const [replyingTo, setReplyingTo] = useState<Message | null>(null); // State for replying to a specific message
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -49,7 +53,7 @@ export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsP
       {
         await axios.post(`chat/${chatData._id}/send`, payload);
       }
-      onNewMessageSent();
+      onMessage();
     } catch {
       console.error("Error sending message");
     }

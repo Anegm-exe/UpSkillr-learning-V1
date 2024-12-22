@@ -12,7 +12,7 @@ export default function MessageSend({ chatId, onMessageSent }: { chatId: string,
     setError(''); // Clear any previous error
 
     try {
-      const response = await axios.post(`/chats/${chatId}/send`);
+      const response = await axios.post(`/chat/${chatId}/send`);
       if (!response.data) {
         throw new Error('Failed to send message');
       }

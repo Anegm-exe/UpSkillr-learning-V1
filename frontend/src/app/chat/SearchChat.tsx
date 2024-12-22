@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useFetchChat } from "@/app/api/services/useFetchChat"; // Hook for fetching chat data
-import axios from '../../api/axios'; // Ensure axios is configured properly
+import axios from '../api/axios'; // Ensure axios is configured properly
 import ChatDetails from "@/components/ChatDetails";
-import LeaveChat from "../LeaveChat";
+import LeaveChat from "./LeaveChat";
 
 // Define SearchChats directly within ChatPage component
-export default function ChatPage({ params }: { params: Promise<{ chat_id: string } >}) {
-  const { chat_id } = React.use(params);
+export default function ChatPage({ params }: { params: { chat_id: string } }) {
+  const { chat_id } = params;
   const { chatData, refetch } = useFetchChat(chat_id); // Assuming useFetchChat returns chat data and a refetch function
   const [replyToMessageId, setReplyToMessageId] = useState<string | null>(null); // State for tracking reply context
   const [searchQuery, setSearchQuery] = useState<string>(''); // Search query state

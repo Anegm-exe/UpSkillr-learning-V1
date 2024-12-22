@@ -27,8 +27,8 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/auth/login",formData);
-      login(response.data.user)
+      const response = await axios.post("/auth/login", formData);
+      login(response.data.user);
       console.log("Login successful:", response.data);
       router.push("/dashboard");
     } catch (error) {
