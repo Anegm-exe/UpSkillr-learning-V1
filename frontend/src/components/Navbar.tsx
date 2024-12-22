@@ -17,7 +17,7 @@ export default function Navbar() {
         <Link href="/about" className={navbarcss.button}>About</Link>
         <Link href="/courses" className={navbarcss.button}>Courses</Link>
         <Link href="/forums" className={navbarcss.button}>Forums</Link>
-        <Link href="/chats" className={navbarcss.button}>Chats</Link>
+        <Link href="/chat" className={navbarcss.button}>Chats</Link>
         <Link href="/notes" className={navbarcss.button}>Notes</Link>
       </div>
       {!isLoading&& 

@@ -1,0 +1,87 @@
+/* Chat Page Container */
+/* Prevent Scrollbars on the page */
+.html, .body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+  }
+  
+  /* Chat Page Container */
+  .chatPageContainer {
+    display: flex;
+    height: 100%;
+    background-color: var(--background-color);
+    overflow: hidden; /* Prevent scrollbars on the container */
+  }
+  
+  /* Chat List (Sidebar) */
+  .chatListContainer {
+    width: 25%;
+    padding: 1rem;
+    background-color: var(--secondary-background-color);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto; /* Allow scrolling in the sidebar if necessary */
+  }
+  
+  /* Chat Details Section */
+  .chatDetailsContainer {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    overflow-y: auto; /* Allow scrolling if necessary inside chat details */
+  }
+  
+  /* Make sure placeholder is centered */
+  .placeholder {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-color);
+  }
+  
+  
+  .sidebarTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: white;
+    text-align: center;
+  }
+  
+  .chatList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .chatListItem {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .chatListItem:hover {
+    background-color: var(--hover-background-color);
+  }
+  
+  .activeChat {
+    background-color: var(--accent-color);
+    color: white;
+  }
+  
+  /* Chat Details Section */
+  .chatDetailsContainer {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    overflow-y: auto;
+  }
+  

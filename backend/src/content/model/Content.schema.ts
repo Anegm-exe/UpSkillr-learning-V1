@@ -17,6 +17,9 @@ export class FileVersion {
 
   @Prop({ required: true })
   createdAt: Date;
+
+  @Prop({ required: true })
+  fileType: string;
 }
 
 export const FileVersionSchema = SchemaFactory.createForClass(FileVersion);
@@ -32,7 +35,7 @@ export class Content {
   @Prop({ type: [{ type: Types.ObjectId, ref: "FileVersion" }], required: true })
   versions: Types.ObjectId[];
 
-  readonly _id?:string;
+  readonly _id?: string;
 }
 
 export const ContentSchema = SchemaFactory.createForClass(Content);

@@ -54,8 +54,8 @@ export class ContentController {
   @Get("download/:fileVersionId")
   async downloadFile(@Param("fileVersionId") fileVersionId: string, @Res() res: Response) {
     try {
-      const filePath = await this.contentService.getFilePath(fileVersionId);
-
+      const { filePath, fileType } = await this.contentService.getFilePath(fileVersionId);
+      res.setHeader("Content-Type", fileType);
       res.download(filePath, (err) => {
         if (err) {
           throw new NotFoundException(`Failed to download file: ${err.message}`);
@@ -82,8 +82,8 @@ export class ContentController {
   @UseGuards(authorizationGuard)
   @Post("upload/module/:id")
   @UseInterceptors(FileInterceptor("file"))
-  uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File,@Param('id') module_id:string) {
-    return this.contentService.uploadContent(createContentDto, file,module_id);
+  uploadContent(@Body() createContentDto: CreateContentDto, @UploadedFile() file: Express.Multer.File, @Param("id") module_id: string) {
+    return this.contentService.uploadContent(createContentDto, file, module_id);
   }
 
   @Roles(Role.Instructor, Role.Admin)
@@ -94,13 +94,10 @@ export class ContentController {
     return this.contentService.updateContent(contentId, updateContentDto, file);
   }
 
-  @Roles(Role.Admin,Role.Instructor)
+  @Roles(Role.Admin, Role.Instructor)
   @UseGuards(authorizationGuard)
   @Delete(":id/module/:module_id")
-  remove(
-    @Param("id") id: string,
-    @Param("module_id") moduleId: string
-  ) {
-    return this.contentService.deleteContent(id,moduleId);
+  remove(@Param("id") id: string, @Param("module_id") moduleId: string) {
+    return this.contentService.deleteContent(id, moduleId);
   }
 }
