@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import dashboardcss from '../styles/dashboard.module.css';
-import { useRouter } from 'next/navigation';
-import { useFetchCourseProgresses } from "../app/api/services/useFetchProgress";
+import dashboardcss from "../styles/dashboard.module.css";
+import { useRouter } from "next/navigation";
+import { useFetchCourseProgress } from "../app/api/services/useFetchProgress";
 import { useFetchCourseCompletedStudents } from "../app/api/services/useFetchCourse";
 import axios from "../app/api/axios";
-import { useState } from 'react';
+import { useState } from "react";
 import { useAuth } from "@/components/AuthContext";
 
 export interface CourseDetailsProps {
@@ -34,15 +34,18 @@ export interface UserDetailsProps {
 }
 
 export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
-    const router = useRouter(); // Initialize the navigate function
+  const router = useRouter(); // Initialize the navigate function
 
-    const { tokenDetails } = useAuth();
-    const { progressData } = useFetchCourseProgresses(courseData._id, tokenDetails?._id);
+  const { tokenDetails, isLoading } = useAuth();
+  const { progressData } = useFetchCourseProgress(courseData._id, tokenDetails?._id);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    const handleCourseClick = () => {
-        router.push(`/course/${courseData._id}`);
-    };
+  const handleCourseClick = () => {
+    router.push(`/course/${courseData._id}`);
+  };
 
     return (
         <div className={dashboardcss.courseTemplate} onClick={handleCourseClick}>
@@ -64,78 +67,80 @@ export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
 }
 
 export function EnrolledCourses({ courseData }: CourseDetailsProps) {
-    const router = useRouter(); // Initialize the navigate function
+  const router = useRouter(); // Initialize the navigate function
 
-    const { tokenDetails } = useAuth();
-    const { progressData } = useFetchCourseProgresses(courseData._id, tokenDetails?._id);
+  const { tokenDetails } = useAuth();
+  const { progressData } = useFetchCourseProgress(courseData._id, tokenDetails?._id);
 
+  const handleCourseClick = () => {
+    router.push(`/course/${courseData._id}`);
+  };
 
-    const handleCourseClick = () => {
-        router.push(`/course/${courseData._id}`);
-    };
-
-    return (
-        <li onClick={handleCourseClick}>
-            {courseData.title}
-            <div className={dashboardcss.progress}>
-                <div className={dashboardcss.progressv} style={{ '--target-width': `${progressData.completion_percentage || 0}%` } as React.CSSProperties}></div>
-            </div>
-        </li>
-    );
+  return (
+    <li onClick={handleCourseClick}>
+      {courseData.title}
+      <div className={dashboardcss.progress}>
+        <div
+          className={dashboardcss.progressv}
+          style={{ "--target-width": `${progressData.completion_percentage || 0}%` } as React.CSSProperties}
+        ></div>
+      </div>
+    </li>
+  );
 }
 
 export function CompletedCourses({ courseData }: CourseDetailsProps) {
-    const router = useRouter(); // Initialize the navigate function
+  const router = useRouter(); // Initialize the navigate function
 
-    const handleCourseClick = () => {
-        router.push(`/course/${courseData._id}`);
-    };
+  const handleCourseClick = () => {
+    router.push(`/course/${courseData._id}`);
+  };
 
-    return (
-        <li onClick={handleCourseClick}>
-            {courseData.title}
-            <div className={dashboardcss.progress}>
-                <div className={dashboardcss.progressv} style={{ '--target-width)': `100%` } as React.CSSProperties}></div>
-            </div>
-        </li>
-    );
+  return (
+    <li onClick={handleCourseClick}>
+      {courseData.title}
+      <div className={dashboardcss.progress}>
+        <div className={dashboardcss.progressv} style={{ "--target-width)": `100%` } as React.CSSProperties}></div>
+      </div>
+    </li>
+  );
 }
 
 export function SupervisedCourses({ courseData }: CourseDetailsProps) {
-    const router = useRouter(); // Initialize the navigate function
+  const router = useRouter(); // Initialize the navigate function
 
-    const handleCourseClick = () => {
-        router.push(`/course/${courseData._id}`);
-    };
+  const handleCourseClick = () => {
+    router.push(`/course/${courseData._id}`);
+  };
 
-    return (
-        <li onClick={handleCourseClick}>
-            {courseData.title}
-            <p>Enrolled Students: {courseData.students.length}</p>
-        </li>
-    );
+  return (
+    <li onClick={handleCourseClick}>
+      {courseData.title}
+      <p>Enrolled Students: {courseData.students.length}</p>
+    </li>
+  );
 }
 
 export function DetailedSupervisedCourses({ courseData }: CourseDetailsProps) {
-    const router = useRouter();
-    const [isArchived, setIsArchived] = useState(courseData.isArchived);
-    const { ccStudents, averagecoursescore } = useFetchCourseCompletedStudents(courseData._id);
-    const toggleId = `toggle-${courseData._id}`;
+  const router = useRouter();
+  const [isArchived, setIsArchived] = useState(courseData.isArchived);
+  const { ccStudents, averagecoursescore } = useFetchCourseCompletedStudents(courseData._id);
+  const toggleId = `toggle-${courseData._id}`;
 
-    const handleCourseClick = () => {
-        router.push(`/course/${courseData._id}`);
-    };
+  const handleCourseClick = () => {
+    router.push(`/course/${courseData._id}`);
+  };
 
-    const handleToggle = async (newStatus: boolean) => {
-        setIsArchived(newStatus);
+  const handleToggle = async (newStatus: boolean) => {
+    setIsArchived(newStatus);
 
-        try {
-            await axios.patch(`/course/${courseData._id}`, { isArchived: newStatus });
-        } catch {
-            console.error('Error fetching progresses data');
-            setIsArchived(!newStatus);
-        }
-    };
+    try {
+      await axios.patch(`/course/${courseData._id}`, { isArchived: newStatus });
+    } catch {
+      console.error("Error fetching progresses data");
+      setIsArchived(!newStatus);
+    }
+  };
 
     return (
         <div className={dashboardcss.courseTemplate} >

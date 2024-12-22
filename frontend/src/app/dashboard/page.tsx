@@ -23,7 +23,7 @@ export default function Dashboard() {
     }
 
     if (tokenDetails.role === 'student') {
-        return <StudentDashboard tokenDetails={tokenDetails} />;
+        return <StudentDashboard/>;
     }
 
     if (tokenDetails.role === 'instructor') {

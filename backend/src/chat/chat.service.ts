@@ -38,7 +38,13 @@ export class ChatService {
   }
 
   async findAllChats(User_Id: string) : Promise<Chat[]> {
-    const chats = await this.chatModel.find({ user_ids: User_Id });
+    const chats = await this.chatModel.find({ user_ids: User_Id }).populate([
+      { path: 'messages', populate: [
+        { path: 'user_id', select: ['name','profile_picture_url'] },
+        { path: 'repliedTo_id', populate: { path: 'user_id', select: ['name','profile_picture_url'] } }
+      ]},
+      { path: 'user_ids', select: ['name','profile_picture_url'] }
+    ]).exec();
     if(!chats) {
       throw new NotFoundException("User has no chats")
     }
@@ -85,8 +91,8 @@ export class ChatService {
     return chat.save();
   }
 
-  // Reply to a message
-  async replyToMessage(chat_id: string, message_id: string, text: string, req: Request) {
+  // Reply to a message (working in thunderclient)
+  async replyToMessage(chat_id: string, message_id: string, text: string, req: Request) : Promise<Chat> {
     const chat = await this.chatModel.findById(chat_id);
     if (!chat) {
       throw new NotFoundException('Chat not found');
@@ -123,8 +129,8 @@ export class ChatService {
     chat.messages.push(message._id);
     return chat.save();
   }
-
-  async delete(chat_id: string, req: Request) {
+//works in thunder client
+  async deleteChat(chat_id: string, req: Request) {
     const chat = await this.chatModel.findById({ _id: chat_id })
     if (!chat) {
       throw new Error('chat not found');
@@ -148,7 +154,7 @@ export class ChatService {
     await this.chatModel.deleteOne({ _id: chat_id }).exec();
   return { success: true };
   }
-
+//works in thunder client
   async addUserToChat(chat_id: string, email: string, req: Request): Promise<Chat> {
     // Find the chat by ID
     const chat = await this.chatModel.findById(chat_id);
@@ -243,10 +249,12 @@ export class ChatService {
       this.MessageService.delete(message_id);
 
       // remove from chat messages array
-      chat.messages.splice(index, 1);      
+      chat.messages.splice(index, 1);
+      
+      return; //not working in thunderclient 
   }
 
-  // Leave chat 
+  // Leave chat works in thunderclient
   async leaveChat(chat_id: string, req: Request): Promise<void> {
     // Find the chat by ID
     const chat = await this.chatModel.findById(chat_id);
@@ -287,12 +295,11 @@ export class ChatService {
     chat.user_ids.splice(index, 1);
     chat.save()
   }
-
-  // search by name
   async searchByName(name: string, req: Request): Promise<Chat[]> {
     return this.chatModel.find({ 
       name: { $regex: name, $options: 'i'}, 
       user_ids : req['user'].userid
     })
+    
   }
 }
