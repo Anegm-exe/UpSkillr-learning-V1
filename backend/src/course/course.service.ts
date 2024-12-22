@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Course, CourseDocument } from './model/course.schema';
+import {Course, CourseDocument} from './model/course.schema';
 import { CreateCourseDto, UpdateCourseDto } from './dtos/course.dto';
 import { Request } from 'express';
 import { ProgressService } from 'src/progress/progress.service';
@@ -16,7 +16,7 @@ import { CreateModuleDto } from 'src/module/dtos/module.dto';
 import { createObjectCsvStringifier } from 'csv-writer';
 
 @Injectable()
-export class CourseService {
+export class CourseService{
     constructor(
         @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
         private readonly quizService: QuizService,
@@ -28,7 +28,7 @@ export class CourseService {
     ) { }
 
     // create a new course
-    async create(course: CreateCourseDto, req: Request): Promise<Course> {
+    async create(course: CreateCourseDto,req: Request): Promise<Course> {
         const newCourse = new this.courseModel(course);
         newCourse.instructor_ids.push(req['user'].userid);
         return newCourse.save();
@@ -51,13 +51,13 @@ export class CourseService {
     // update a course
     async update(id: string, updateData: UpdateCourseDto): Promise<Course> {
         const updatedCourse = await this.courseModel
-            .findOneAndUpdate({ _id: id }, updateData, { new: true })
+            .findOneAndUpdate({ _id: id },updateData, { new: true })
             .exec();
         if (!updatedCourse) {
             throw new NotFoundException(`Course with ID ${id} not found`);
         }
         return updatedCourse;
-    }
+    }    
 
     // delete a course
     async delete(id: string): Promise<void> {
@@ -92,8 +92,8 @@ export class CourseService {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
         course.instructor_ids.push(instructorId);
-        await this.notificationService.create({ user_ids: [instructorId], message: `You have been added as an instructor to ${course.title} course!` })
-        await this.notificationService.create({ user_ids: course.students, message: `A new instructor has been added to ${course.title} course!` })
+        await this.notificationService.create({user_ids:[instructorId],message:`You have been added as an instructor to ${course.title} course!`})
+        await this.notificationService.create({user_ids:course.students,message:`A new instructor has been added to ${course.title} course!`})
         return course.save();
     }
 
@@ -110,7 +110,7 @@ export class CourseService {
 
     // get by instrucotr_id
     async getByInstructor(instructorId: string): Promise<any[]> {
-        return this.courseModel.find({ instructor_ids: instructorId }).populate([{ path: 'students', select: ['name'] }]).exec();
+        return this.courseModel.find({ instructor_ids:instructorId}).populate([{ path: 'students', select: ['name']}]).exec();
     }
 
     // search course by title
@@ -145,17 +145,17 @@ export class CourseService {
                 }
             })
         );
-
+    
         return students.filter((name) => name !== undefined && name !== null) as string[];
     }
-
+    
 
     // Get student preformance 
-    async getStudentPerformance(req: Request, courseId: string):
+    async getStudentPerformance(req:Request, courseId: string) : 
         Promise<{
-            Below_average: number,
-            Average: number,
-            Above_Average: number,
+            Below_average:number,
+            Average:number,
+            Above_Average:number,
             Excellent: number
         }> {
         const course = await this.courseModel.findById(courseId).exec();
@@ -164,28 +164,28 @@ export class CourseService {
             throw new NotFoundException('Course not found');
         }
         // check if instructor gives the course
-        if (!course.instructor_ids.includes(req['user'].userid)) {
+        if(!course.instructor_ids.includes(req['user'].userid) && req['user'].role !== 'admin') {
             throw new UnauthorizedException('You are not authorized to access this course');
         }
         const progresses = await this.progressService.findProgressesByCourse(courseId);
         const res = {
-            Below_average: 0,
-            Average: 0,
-            Above_Average: 0,
+            Below_average:0,
+            Average:0,
+            Above_Average:0,
             Excellent: 0
         }
-        Promise.all(progresses.map((progress) => {
-            if (progress.average_quiz < 50) {
+        Promise.all(progresses.map((progress)=>{
+            if(progress.average_quiz < 50) {
                 res.Below_average++;
             }
-            else if (progress.average_quiz < 70) {
+            else if(progress.average_quiz < 70) {
                 res.Average++;
             }
-            else if (progress.average_quiz < 90) {
+            else if(progress.average_quiz < 90) {
                 res.Above_Average++;
             }
             else {
-                res.Excellent++;
+                res.Excellent++;    
             }
         }))
         return res;
@@ -197,44 +197,43 @@ export class CourseService {
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        if (course.isArchived) {
+        if(course.isArchived) {
             throw new BadRequestException('Course is unavailable');
         }
         course.students.push(req['user'].userid);
-        this.progressService.create({ course_id: courseId, user_id: req['user'].userid });
+        this.progressService.create({course_id:courseId,user_id: req['user'].userid});
         // send a notification
-        await this.notificationService.create({ user_ids: [req['user'].userid], message: `You successfuly enrolled in ${course.title} course!` });
+        await this.notificationService.create({user_ids:[req['user'].userid],message:`You successfuly enrolled in ${course.title} course!`});
         return course.save();
     }
+        
 
-
-    async exportAnalytics(req: Request, rating: number): Promise<string> {
+    async exportAnalytics(req: Request, rating:number): Promise<string> {
         const instructorId = req['user'].userid || '6755e5161cccf04a9ee865d6';
-
+    
         // Fetch courses by instructor
         const courses = await this.getByInstructor(instructorId);
         if (!courses || courses.length === 0) {
             throw new NotFoundException('No courses found for the instructor');
         }
-
+    
         // Prepare analytics data
         const analytics = [];
-
+    
         for (const course of courses) {
             const modules = await this.moduleService.findAllByCourseIntructor(course._id,); // Fetch modules
             const ratings = modules.map((module) => {
-                if (module.ratings.length === 0)
+                if(module.ratings.length===0)
                     return 0;
-                return module.ratings.reduce((a, b) => a + b, 0) / module.ratings.length;
+                return module.ratings.reduce((a, b) => a + b, 0)/module.ratings.length;
             });
             const courseRating = (await this.updateRating(course._id)).rating;
             const instructorRating = rating;
-            console.log(course)
             const enrolledStudents = course.students.map(student => student.name);
             const completedStudents = await this.findCompletedStudents(course._id);
-
-            const studentPerformanceMetrics = await this.getStudentPerformance(req, course._id);
-
+    
+            const studentPerformanceMetrics = await this.getStudentPerformance(req,course._id);
+    
             analytics.push({
                 courseId: course._id,
                 courseName: course.title,
@@ -249,7 +248,7 @@ export class CourseService {
                 excellent: studentPerformanceMetrics.Excellent,
             });
         }
-
+    
         // Define the CSV writer
         const csvStringifier = createObjectCsvStringifier({
             header: [
@@ -266,11 +265,11 @@ export class CourseService {
                 { id: 'excellent', title: 'Excellent Students' },
             ],
         });
-
+    
         // Generate the CSV content
         const csvHeader = csvStringifier.getHeaderString();
         const csvBody = csvStringifier.stringifyRecords(analytics);
-
+    
         // Return the complete CSV string
         return csvHeader + csvBody;
     }
@@ -290,20 +289,6 @@ export class CourseService {
 
     }
 
-    async findEnrolledCoursesByUser(user_id: string): Promise<Course[]> {
-        const courses = await this.courseModel.find({ students: user_id }).exec();
-        const filteredCourses = await Promise.all(
-            courses.map(async (course) => {
-                const isCompleted = await this.progressService.isCourseCompletedByUser(course._id, user_id);
-                return isCompleted ? null : course; // Return `null` for completed courses
-            })
-        );
-
-        // Filter null or undefined courses after resolving the promises
-        return filteredCourses.filter(course => course !== null && course !== undefined);
-
-    }
-
     // remove an instructor from a course
     async removeInstructor(courseId: string, instructorId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
@@ -314,7 +299,7 @@ export class CourseService {
         if (!course.instructor_ids.includes(instructorId)) {
             throw new NotFoundException(`Instructor with ID ${instructorId} not found in course with ID ${courseId}`)
         }
-        await this.notificationService.create({ user_ids: course.students, message: `An instructor has been removed from ${course.title} course!` })
+        await this.notificationService.create({user_ids:course.students,message:`An instructor has been removed from ${course.title} course!`})
         course.instructor_ids = course.instructor_ids.filter(id => id !== instructorId);
         return course.save();
     }
@@ -325,10 +310,10 @@ export class CourseService {
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-        if (!course.students.includes(studentId)) {
+        if(!course.students.includes(studentId)) {
             throw new NotFoundException(`Student with ID ${studentId} not found in course with ID ${courseId}`)
         }
-
+    
         course.students = course.students.filter(id => id !== studentId);
         return course.save();
     }
@@ -339,9 +324,9 @@ export class CourseService {
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
-
+        
         course.modules = course.modules.filter(id => id !== moduleId);
-        await this.notificationService.create({ user_ids: course.students, message: `A module has been removed from ${course.title} course!` })
+        await this.notificationService.create({user_ids:course.students,message:`A module has been removed from ${course.title} course!`})
         return course.save();
     }
 
@@ -353,8 +338,8 @@ export class CourseService {
     // get course by rating
     async getByRating(rating: number): Promise<Course[]> {
         return this.courseModel.find({ rating: rating }).exec();
-    }
-
+    }  
+    
     // calculate course rating
     async updateRating(courseId: string): Promise<Course> {
         const course = await this.courseModel.findOne({ _id: courseId }).exec();
@@ -366,21 +351,21 @@ export class CourseService {
         // add all module ratings
         await Promise.all(course.modules.map(async (moduleId) => {
             const module = await this.moduleService.findOne(moduleId);
-            if (module.ratings.length > 0) {
-                totalratings += module.ratings.reduce((rating, sum) => rating + sum, 0);
-                count += module.ratings.length;
+            if(module.ratings.length > 0) {
+                totalratings += module.ratings.reduce((rating,sum) => rating+sum,0);
+                count+=module.ratings.length;
             }
         }))
-        if (count === 0)
+        if(count === 0)
             return course;
         // calculate average rating
         const averageRating = totalratings / count;
-        const updatedCourse = await this.courseModel.findByIdAndUpdate({ _id: courseId }, { rating: averageRating }, { new: true });
+        const updatedCourse = await this.courseModel.findByIdAndUpdate({_id:courseId},{rating:averageRating},{new:true});
         return updatedCourse;
     }
 
     // generate Quiz
-    async generateQuiz(course_id: string, moduleId: string, user_id: string): Promise<string> {
+    async generateQuiz(course_id:string, moduleId: string, user_id:string): Promise<string> {
         const course = await this.courseModel.findOne({ _id: course_id }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${course_id} not found`);
@@ -390,19 +375,19 @@ export class CourseService {
             throw new NotFoundException(`Module with ID ${moduleId} not found`);
         }
         // check if module is in course
-        if (!course.modules.includes(moduleId)) {
+        if(!course.modules.includes(moduleId)) {
             throw new NotFoundException(`Module with ID ${moduleId} not found in course with ID ${course_id}`)
         }
-
+        
         const progress = await this.progressService.findByUserAndCourse(user_id, course_id);
-        if (!progress) {
+        if(!progress) {
             throw new NotFoundException(`Progress with User ID ${user_id} and Course ID ${course_id} not found`);
         }
 
         // check if module difficulty is harder than the student preformance
-        if (
+        if(
             module.difficulty === 'hard' && progress.average_quiz && progress.average_quiz < 0.75 ||
-            module.difficulty === 'medium' && progress.average_quiz && progress.average_quiz < 0.5
+            module.difficulty === 'medium' && progress.average_quiz && progress.average_quiz < 0.5 
         ) {
 
             throw new UnauthorizedException(`You can't take this quiz because your performance is not good enough`)
@@ -412,46 +397,47 @@ export class CourseService {
             module.question_bank.map(async (questionId) => {
                 return await this.questionService.findOne(questionId)
             }
-            ));
+        ));
 
         // Get n Random Questions Based On type 
-        function getRandomItems(questions: Questions[], n: number, questionDifficulty: string[], type: string) {
-            let filter = questions.filter(question =>
-                questionDifficulty.includes(question.difficulty) &&
+        function getRandomItems(questions:Questions[], n:number, questionDifficulty:string[], type: string) {
+            let filter = questions.filter(question => 
+                questionDifficulty.includes(question.difficulty) && 
                 type === question.type
             );
-            if (type === 'both')
+            if(type === 'both') 
                 filter = questions.filter(question => questionDifficulty.includes(question.difficulty));
 
             // suffle the array
-            for (let i = filter.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [filter[i], filter[j]] = [filter[j], filter[i]];
-            }
+            for (let i = filter.length - 1; i > 0; i--) { 
+                const j = Math.floor(Math.random() * (i + 1)); 
+                [filter[i], filter[j]] = [filter[j], filter[i]]; 
+            } 
             // return the first n items
             return filter.slice(0, n)
         }
 
         let questions;
-        if (!progress.average_quiz || progress.average_quiz >= 0.75)
-            questions = getRandomItems(question_bank, module.no_question, ['easy', 'medium', 'hard'], module.type)
-        else if (progress.average_quiz >= 0.50)
-            questions = getRandomItems(question_bank, module.no_question, ['easy', 'medium'], module.type)
+        if(!progress.average_quiz || progress.average_quiz >= 0.75) 
+            questions = getRandomItems(question_bank,module.no_question,['easy','medium','hard'],module.type)
+        else if(progress.average_quiz >= 0.50) 
+            questions = getRandomItems(question_bank,module.no_question,['easy','medium'],module.type)
         else
-            questions = getRandomItems(question_bank, module.no_question, ['easy'], module.type)
+            questions = getRandomItems(question_bank,module.no_question,['easy'],module.type)
 
         // Create a new quiz
         const quiz = await this.quizService.create({
             questions: questions,
             type: module.type,
             user_id: user_id,
-            module_id: moduleId
+            module_id:moduleId,
+            course_id:course_id
         });
         return quiz._id;
     }
 
     // Initialize All Quizzer for users
-    async initializeAllQuizzes(course_id: string, module_id: string): Promise<void> {
+    async initializeAllQuizzes(course_id:string, module_id:string): Promise<void> {
         const course = await this.courseModel.findOne({ _id: course_id }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${course_id} not found`)
@@ -464,45 +450,35 @@ export class CourseService {
             course.students.map(async (studentId) => {
                 return await this.generateQuiz(course_id, module_id, studentId)
             }
-            ));
-        await this.moduleService.addQuizzes(module_id, quizzes);
+        ));
+        await this.moduleService.addQuizzes(module_id,quizzes);
         await this.notificationService.create({
-            user_ids: course.students,
-            message: `A new quiz has been added to ${course.title} course!`
+            user_ids:course.students,
+            message:`A new quiz has been added to ${course.title} course!`
         })
     }
 
     // solve quiz
-    async solveQuiz(course_id: string, module_id: string, req: Request, CreateResponseDto: CreateResponseDto): Promise<string> {
-        const course = await this.courseModel.findOne({ _id: course_id }).exec();
-        if (!course) {
-            throw new NotFoundException(`Course with ID ${course_id} not found`);
-        }
-        // check if student is enrolled
-        if (!course.students.includes(req['user'].userid)) {
-            throw new UnauthorizedException(`You are not enrolled in this course`)
-        }
+    async solveQuiz(module_id:string, req: Request, CreateResponseDto: CreateResponseDto): Promise<string> {
         const module = await this.moduleService.findOne(module_id);
         if (!module) {
             throw new NotFoundException(`Module with ID ${module_id} not found`)
         }
-        // check if course has module
-        if (!course.modules.includes(module_id)) {
-            throw new NotFoundException(`Module with ID ${module_id} not found in course with ID ${course_id}`)
-        }
-        const quiz = await this.quizService.findByUserAndModule(req['user'].userid, module_id);
+
+        const quiz = await this.quizService.findByUserAndModule(req['user'].userid,module_id);
         if (!quiz) {
             throw new NotFoundException(`Quiz not found`);
         }
-        const quiz_id = quiz._id;
+        const quiz_id = quiz._id.toString();
         // check if quiz is in module.quizzes
-        if (!module.quizzes.includes(quiz_id)) {
+        if(!module.quizzes.includes(quiz_id)){
             throw new NotFoundException(`Quiz with ID ${quiz_id} not found in module with ID ${module_id}`);
         }
         // check if user matches the user in the quiz
         if (quiz.user_id !== req['user'].userid) {
             throw new UnauthorizedException('You are not authorized to solve this quiz.');
         }
+        const course = await this.courseModel.findById({_id:quiz.course_id}).exec();
         // Check if the quiz is already solved by the user
         const responseExists = await this.responseService.findByQuizAndUser(quiz_id, req['user'].userid);
         if (responseExists) {
@@ -512,7 +488,7 @@ export class CourseService {
         const progress = await this.progressService.findByUserAndCourse(req['user'].userid, module.course_id);
 
         // Add the new response
-        progress.completed_modules.push({ module_id: module_id, score: response.score });
+        progress.completed_modules.push({ module_id: module_id,score:response.score});
 
         // Update the average quiz score
         const totalScore = progress.completed_modules.reduce((sum, item) => sum + item.score, 0);
@@ -523,48 +499,53 @@ export class CourseService {
 
         // Save the updated progress
         await this.progressService.update(progress._id, progress);
-
-        return response._id;
+        return response._id.toString();
     }
 
     // retake quiz in module
-    async retakeQuiz(course_id: string, module_id: string, req: Request): Promise<string> {
-        const course = await this.courseModel.findOne({ _id: course_id }).exec();
-        if (!course) {
-            throw new NotFoundException(`Course with ID ${course_id} not found`)
-        }
-        // check if course has module
-        if (!course.modules.includes(module_id)) {
-            throw new NotFoundException(`Module with ID ${module_id} not found in course with ID ${course_id}`)
-        }
-        const module = await this.moduleService.findOne(module_id);
-        if (!module) {
-            throw new NotFoundException(`Module with ID ${module_id} not found`)
-        }
-        const quiz = await this.quizService.findByUserAndModule(req['user'].userid, module_id);
+    async retakeQuiz(quiz_id:string, req: Request) : Promise<string> {
+
+        const quiz = await this.quizService.findOne(quiz_id);
         if (!quiz) {
             throw new NotFoundException(`Quiz not found for user and module`)
         }
+        const course = await this.courseModel.findOne({_id:quiz.course_id}).exec();
+        if (!course) {
+            throw new NotFoundException(`Course not found`)
+        }
+        const course_id = quiz.course_id;
+        const module = await this.moduleService.findOne(quiz.module_id);
+        if (!module)  {
+            throw new NotFoundException(`Module not found`)
+        }
+        // console.log(module)
+        const module_id = module._id.toString();
+        // check if course has module
+        if(!course.modules.includes(module_id)) {
+        throw new NotFoundException(`Module with ID ${module_id} not found in course with ID ${course_id}`)
+        }
+        
         // check if user has solved the quiz before
         const response = await this.responseService.findByQuizAndUser(quiz._id, req['user'].userid)
-        if (!response) {
+        if (!response)  {
             throw new NotFoundException(`You have not solved the quiz before`)
         }
         // remove module from progress
         const progress = await this.progressService.findByUserAndCourse(req['user'].userid, course_id);
-        if (!progress)
+        if (!progress)  
             throw new NotFoundException(`Progress not found for user and course`)
         const moduleIndex = progress.completed_modules.findIndex(item => item.module_id === module_id);
-        if (moduleIndex !== -1)
+        if (moduleIndex !== -1)  
             progress.completed_modules.splice(moduleIndex, 1);
         await this.progressService.update(progress._id, progress)
 
         // Delete the existing response and quiz
-        await this.moduleService.deleteQuiz(module_id, quiz._id);
-        await this.responseService.delete(response._id);
+        await this.moduleService.deleteQuiz(module_id,quiz_id);
+
+        await this.responseService.delete(response._id.toString());
 
         const newQuiz = await this.generateQuiz(course_id, module_id, req['user'].userid);
-        await this.moduleService.addQuizzes(module_id, [newQuiz]);
+        await this.moduleService.addQuizzes(module_id,[newQuiz]);
         return newQuiz;
     }
 
@@ -584,15 +565,15 @@ export class CourseService {
     }
 
     // create module
-    async createModule(course_id: string, createModuleDto: CreateModuleDto, req: Request): Promise<Course> {
-        const course = await this.courseModel.findOne({ _id: course_id }).exec();
+    async createModule(course_id: string,createModuleDto: CreateModuleDto, req: Request): Promise<Course> {
+        const course = await this.courseModel.findOne({_id:course_id}).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${course_id} not found`)
         }
-        if (!course.instructor_ids.includes(req['user'].userid) && req['user'].role !== 'admin') {
+        if (!course.instructor_ids.includes(req['user'].userid) && req['user'].role !== 'admin')  {
             throw new UnauthorizedException('You are not authorized to create a module for this course.');
         }
-        const module = await this.moduleService.create(createModuleDto, course_id);
+        const module = await this.moduleService.create(createModuleDto,course_id);
         course.modules.push(module._id);
         await this.notificationService.create({
             message: `A new module has been added to the ${course.title} course.`,
