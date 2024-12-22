@@ -2,20 +2,21 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "../../api/axios";
+import notecss from "@/styles/notecss.module.css";
 
 interface Note {
-  _id: string;
-  user_id: string;
+  _id?: string;
+  user_id?: string;
   course_id?: string;   
-  content: string;
-  timestamp: Date;
-  last_updated: Date;
+  content?: string;
+  timestamp?: Date;
+  last_updated?: Date;
 }
 
 export default function NoteDetails({
   params,
 }: {
-  params: Promise<{ noteId: string }>;
+  params: Promise<{ noteid: string }>;
 }) {
   const router = useRouter();
   const [note, setNote] = useState<Note>({
@@ -26,12 +27,11 @@ export default function NoteDetails({
     timestamp: new Date(),
     last_updated: new Date(),
   });
-  const [allNotes, setAllNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const { noteId } = React.use(params);
+  const { noteid: noteId } = React.use(params);
 
   // Fetch note details by ID
   useEffect(() => {
@@ -51,14 +51,45 @@ export default function NoteDetails({
     fetchNote();
   }, [noteId]);
 
- 
+  // Auto-save function
+  const autoSave = async () => {
+    try {
+      if (note._id) {
+        await axios.patch(`/note/${note._id}`, {
+          content: note.content
+        });
+        console.log("Note auto-saved");
+      }
+    } catch (err) {
+      console.error("Auto-save failed");
+    }
+  };
+
+  // Set up auto-save when editing
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isEditing) {
+      interval = setInterval(() => {
+        autoSave();
+      }, 2000); // Auto-save every 2 seconds
+    } else {
+      if (interval) clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isEditing, note.content]);
 
   // Delete note by ID
-  const deleteNote = async (id: string) => {
+  const deleteNote = async () => {
     try {
-      await axios.delete(`/note/${id}`);
-      alert("Note deleted successfully");
-      router.push("/"); // Redirect to home or reload the list of notes
+      if (note._id) {
+        await axios.delete(`/note/${note._id}`);
+        alert("Note deleted successfully");
+        router.push("/"); // Redirect to home or reload the list of notes
+      }
     } catch (err) {
       setError("Failed to delete the note");
     }
@@ -73,7 +104,7 @@ export default function NoteDetails({
   const handleSave = async () => {
     try {
       await axios.patch(`/note/${note._id}`, {
-        content: note.content,
+        content: note.content
       });
       setIsEditing(false);
       alert("Note updated successfully");
@@ -82,14 +113,13 @@ export default function NoteDetails({
     }
   };
 
-  //if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="container">
       <h1>Note Details</h1>
       {isEditing ? (
-        <div className="edit-note">
+        <div className={notecss.edit_note}>
           <textarea
             name="content"
             value={note.content}
@@ -101,51 +131,15 @@ export default function NoteDetails({
           </div>
         </div>
       ) : (
-        <div className="note-details">
+        <div className={notecss.note_details}>
           <p>{note.content || 'No content available'}</p>
           <div>
             <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={() => deleteNote(note._id)}>Delete</button>
-            <button onClick={() => router.push("/")}>Back</button>
+            <button onClick={() => deleteNote()}>Delete</button>
+            <button onClick={() => router.push("/notes")}>Back</button>
           </div>
         </div>
       )}
-    
-
-      <style jsx>{`
-        .container {
-          padding: 20px;
-        }
-        .note-details,
-        .edit-note,
-        .all-notes {
-          margin-bottom: 20px;
-        }
-        .edit-note textarea {
-          display: block;
-          width: 100%;
-          margin-bottom: 10px;
-          padding: 10px;
-          font-size: 14px;
-          border-radius: 4px;
-          border: 1px solid #ccc;
-        }
-        button {
-          margin-right: 10px;
-          padding: 10px 15px;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-        button:first-of-type {
-          background-color: #0070f3;
-          color: white;
-        }
-        button:last-of-type {
-          background-color: #f44336;
-          color: white;
-        }
-      `}</style>
     </div>
   );
 }
