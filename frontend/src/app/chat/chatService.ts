@@ -1,12 +1,8 @@
-import axios from 'axios';
-
-// Set the base URL of your backend API
-const BASE_URL = 'http://localhost:3000/chat';
-
+import axios from '@/app/api/axios';
 // Get all chats for a user
 export const getAllChats = async (userId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/user/${userId}`);
+    const response = await axios.get(`/course/user/${userId}`);
     return response.data;
   }
   catch(error){
@@ -17,31 +13,31 @@ export const getAllChats = async (userId: string) => {
 
 // Get chat details
 export const getChatDetails = async (chatId: string) => {
-  const response = await axios.get(`${BASE_URL}/${chatId}`);
+  const response = await axios.get(`/chat/${chatId}`);
   return response.data;
 };
 
 // creating a new chat
 export const createChat = async (chatData: any, emails: string[]) => {
-  const response = await axios.post(BASE_URL, { chat: chatData, emails });
+  const response = await axios.post('/chat', { chat: chatData, emails });
   return response.data;
 };
 
 // sending a message to a chat
 export const sendMessage = async (chatId: string, message: string) => {
-  const response = await axios.post(`${BASE_URL}/${chatId}/send`, { message });
+  const response = await axios.post(`/chat/${chatId}/send`, { message });
   return response.data;
 };
 
 // add a user to a chat
 export const addUserToChat = async (chatId: string, email: string) => {
-  const response = await axios.post(`${BASE_URL}/${chatId}/user/${email}`);
+  const response = await axios.post(`/chat/${chatId}/user/${email}`);
   return response.data;
 };
 
 // remove a user from a chat
 export const removeUserFromChat = async (chatId: string, userId: string) => {
-  const response = await axios.delete(`${BASE_URL}/${chatId}/user/${userId}`);
+  const response = await axios.delete(`/chat/${chatId}/user/${userId}`);
   return response.data;
 };
 //reply to a message
@@ -54,7 +50,7 @@ export const replyToMessage = async (
   try {
     const headers = getTokenDetails ? { Authorization: `Bearer ${getTokenDetails}` } : {};
     const response = await axios.post(
-      `${BASE_URL}/${chatId}/reply/${messageId}`,
+      `chat/${chatId}/reply/${messageId}`,
       { message: text },
       { headers } // Include authorization headers if necessary
     );
