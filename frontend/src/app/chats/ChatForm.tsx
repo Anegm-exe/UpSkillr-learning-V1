@@ -124,7 +124,7 @@ export default function ChatForm() {
     setSuccess('');
 
     try {
-      const response = await axios.delete(`/chats/${chatId}/message/${messageId}`);
+      const response = await axios.delete(`/api/chats/${chatId}/message/${messageId}`);
 
       if (response.data) {
         setSuccess('Message deleted successfully.');
