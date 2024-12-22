@@ -80,18 +80,18 @@ export function useFetchCourse(courseId: string) {
       modules: [],
     },
   });
-  const [instructor, setInstructor] = useState<any>([]);
+  const [instructors, setInstructors] = useState<any>([]);
   useEffect(() => {
     const fetchCourseData = async () => {
       const response = await axios.get(`/course/${courseId}`);
       const instructorResponse = await axios.get(`user/instructor/course/${courseId}`);
       setCourseDetails(response?.data);
-      setInstructor(instructorResponse?.data);
+      setInstructors(instructorResponse?.data);
     };
 
     fetchCourseData();
   }, [courseId]);
-  return { courseDetails, instructor };
+  return { courseDetails, instructors };
 }
 
 // all coursses for a student

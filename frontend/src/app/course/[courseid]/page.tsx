@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 import { useFetchCourse, useFetchModulesForCourse } from "@/app/api/services/useFetchCourse";
+import { useAuth } from "@/components/AuthContext";
 import CourseDetails from "@/components/CourseDetails";
 import CourseModule from "@/components/CourseModule";
 import React from "react";
@@ -24,15 +25,19 @@ type courseModuleProps = {
 export default function CoursePage({ params }: { params: { courseid: string } }) {
   //@ts-expect-error
   const { courseid } = React.use(params);
-  const { courseDetails } = useFetchCourse(courseid);
+  const { courseDetails, instructors } = useFetchCourse(courseid);
   const modules = useFetchModulesForCourse(courseid);
-  console.log(modules);
-  return (
-    <div>
-      <CourseDetails courseData={courseDetails} />
-      {modules.map((module) => {
-        return <CourseModule module={module} key={module._id} />;
-      })}
-    </div>
-  );
+  const { tokenDetails, isloading } = useAuth();
+  console.log(tokenDetails);
+  if (tokenDetails?.role === "student") {
+    return (
+      <div>
+        <CourseDetails courseData={courseDetails} instructors={instructors} />
+        {modules.map((module) => {
+          return <CourseModule module={module} key={module._id} />;
+        })}
+      </div>
+    );
+  }
+  return <div>yo</div>;
 }
