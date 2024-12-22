@@ -1,0 +1,120 @@
+.moduleContainer {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .moduleDetails {
+    margin-top: 10px;
+  }
+  
+  .moduleTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .moduleInfo {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .moduleInfo span {
+    font-weight: bold;
+  }
+  
+  .moduleInfo .archived {
+    color: red;
+  }
+  
+  .moduleInfo .notArchived {
+    color: green;
+  }
+  
+  .addButton {
+    font-size: 24px;
+    padding: 10px;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .addButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalContent {
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+  }
+  
+  .inputGroup {
+    margin-bottom: 10px;
+  }
+  
+  .inputGroup label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .inputGroup input,
+  .inputGroup textarea {
+    width: 95%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .submitButton {
+    padding: 8px 16px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .submitButton:hover {
+    background-color: #005bb5;
+  }
+  
+  .cancelButton {
+    padding: 8px 16px;
+    background-color: #ccc;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .cancelButton:hover {
+    background-color: #999;
+  }
