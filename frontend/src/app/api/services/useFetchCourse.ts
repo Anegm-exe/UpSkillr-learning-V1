@@ -26,12 +26,7 @@ export function useFetchModulesForCourse(courseId: string) {
   useEffect(() => {
     const fetchModuleData = async () => {
       console.log(courseId);
-      const response = await axios.get(`module/course/${courseId}`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJpZCI6IjY3NTVlMzFkMWNjY2YwNGE5ZWU4NjVjNCIsInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFiZGVscmFobWFuIHRoZSAxc3QiLCJwcm9maWxlX3BpY3R1cmVfdXJsIjoiaHR0cHM6Ly9pLnBpbmltZy5jb20vNzM2eC9jMy85YS9jNS9jMzlhYzVlYmYyNzk5Njk1ODRlOGUxMmI3NjIyYzU1Ni5qcGcifSwiaWF0IjoxNzM0OTA1Nzg1LCJleHAiOjE3MzQ5MDkzODV9.Dq6B3ZuV2UBF2NBBl_-MNOCPKJPMIPDHZXEg-OAph50`, // Replace `token` with the actual token
-        },
-      });
-      console.log(response);
+      const response = await axios.get(`module/course/${courseId}`);
       setModuleDetails(response?.data);
     };
 
@@ -187,9 +182,19 @@ export function useFetchAllCourses() {
   return { AllCoursesdata, error };
 }
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  dateOfBirth: Date;
+  role: string;
+  profile_picture_url: string;
+  categories: string[];
+}
+
 // all Users Data in general
 export function useFetchAllUsers() {
-  const [UsersData, setUsersData] = useState<any>([]);
+  const [UsersData, setUsersData] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

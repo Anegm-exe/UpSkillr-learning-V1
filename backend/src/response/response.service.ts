@@ -26,6 +26,7 @@ export class ResponseService {
       }
       response.score = score/response.answers.length;
       const newResponse = new this.responseModel(response);
+      await this.quizService.setSolved(response.quiz_id,true);
       return await newResponse.save();
     }
     

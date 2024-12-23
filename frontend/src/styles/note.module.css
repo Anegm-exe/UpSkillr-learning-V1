@@ -1,0 +1,316 @@
+.notesContainer {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--accent-color);
+    font-family: roboto-condensed;
+}
+
+.notesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.noteCard {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .noteCard:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+.noteContent {
+    flex-grow: 1;
+    overflow: hidden;
+    font-family: roboto-light;
+}
+
+.notePreview {
+    margin: 0;
+    line-height: 1.6;
+    color: white;
+    font-size: 1rem;
+}
+
+.noteFooter {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    font-family: roboto-regular;
+}
+
+.noteDate {
+    color: #666;
+}
+
+.viewMore {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+.backButton {
+    background-color: var(--border-color);
+    color: white;
+    border: 1.5px outset var(--accent-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.1s ease;
+    font-family: roboto-light;
+}
+
+    .backButton:hover {
+        border: none;
+        filter: invert();
+        opacity: 0.9;
+        transform: scale(1.1);
+    }
+
+.errorContainer {
+    padding: 2rem;
+    text-align: center;
+}
+
+.errorMessage {
+    color: #dc2626;
+    font-size: 1.125rem;
+}
+
+@media (max-width: 768px) {
+    .notesContainer {
+        padding: 1rem;
+    }
+
+    .notesGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.noteDetails {
+    background: var(--background-color);
+    border-radius: 12px;
+    padding: 4rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.noteContent {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: white;
+    margin-bottom: 2rem;
+    white-space: pre-wrap;
+    font-family: roboto-thin;
+}
+
+.metadata {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    color: #666;
+    font-size: 0.9rem;
+    font-family: roboto-light;
+}
+
+.metadataItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.editButton {
+    padding: .75rem 2rem;
+    background-color: var(--background-color);
+    color: white;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    transition: all 0.1s ease;
+}
+
+    .editButton:hover {
+        transform: scale(1.1);
+    }
+
+.deleteButton {
+    padding: .75rem 2rem;
+    background-color: var(--background-color);
+    color: white;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    transition: all 0.1s ease;
+}
+
+    .deleteButton:hover {
+        transform: scale(1.1);
+    }
+
+.backButton2 {
+    padding: .75rem 2rem;
+    background-color: var(--background-color);
+    color: white;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    transition: all 0.1s ease;
+}
+
+    .backButton2:hover {
+        transform: scale(1.1);
+    }
+
+/* Edit Mode Styles */
+.editNote {
+    position: relative;
+}
+
+.editTextarea {
+    width: 100%;
+    min-height: 70vh;
+    padding: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--background-color);
+    resize: vertical;
+    color: white;
+    margin-bottom: 1rem;
+    font-family: roboto-thin;
+}
+
+    .editTextarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.1);
+    }
+
+.autoSaveIndicator {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #374151;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+    .autoSaveIndicator.visible {
+        opacity: 1;
+    }
+
+.editButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.saveButton {
+    composes: button;
+    background-color: var(--accent-color);
+    color: white;
+}
+
+    .saveButton:hover {
+        opacity: 0.9;
+    }
+
+.cancelButton {
+    composes: button;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+    .cancelButton:hover {
+        background-color: #e5e7eb;
+    }
+
+/* Error State */
+.errorContainer {
+    padding: 2rem;
+    text-align: center;
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+/* Loading State */
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: var(--accent-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .noteDetails {
+        padding: 1.5rem;
+    }
+
+    .buttonContainer,
+    .editButtons {
+        flex-direction: column;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .editTextarea {
+        padding: 1rem;
+        min-height: 50vh;
+    }
+}

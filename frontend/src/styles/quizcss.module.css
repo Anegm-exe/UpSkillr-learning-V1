@@ -1,0 +1,105 @@
+/* quizcss.module.css */
+
+/* Quiz Container */
+.quizContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--background-color);
+    border: 1.5px solid var(--border-color);
+    border-radius: 15px;
+    color: white;
+    font-family: roboto-condensed;
+  }
+  
+  /* Quiz Details */
+  .quizDetails {
+    margin-top: 1.5rem;
+  }
+  
+  .quizInfo {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: var(--text-color);
+  }
+  
+  /* Quiz Questions */
+  .quizQuestions {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--secondary-background-color);
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+  }
+  
+  .quizQuestions h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .quizQuestions ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .quizQuestions li {
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    cursor: default;
+  }
+  
+  .quizQuestions li:hover {
+    filter: invert(0.1);
+  }
+  
+  /* Quiz Actions */
+  .quizActions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  /* Back Button */
+  .backButton, .moreDetailsButton {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: roboto-condensed;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .backButton:hover, .moreDetailsButton:hover {
+    background-color: var(--accent-color-hover);
+    filter: brightness(1.1);
+  }
+  
+  .moreDetailsButton {
+    background-color: var(--secondary-accent-color);
+  }
+  
+  .moreDetailsButton:hover {
+    background-color: var(--secondary-accent-color-hover);
+  }
+  
+  /* Title Styles */
+  .pageTitle {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  

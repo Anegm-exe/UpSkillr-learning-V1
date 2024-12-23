@@ -17,10 +17,16 @@ export class ForumController {
         return this.forumService.create(createForumDTO, req);
     }
 
-    //get one forum
-    @Get(':forum_id')
-    async findOne(@Param('forum_id') forum_id: string): Promise<Forum> {
-        return this.forumService.findOne(forum_id);
+    
+    @UseGuards(AuthGuard)
+    @Delete(':forum_id/message/:message_id')
+    async deleteMessage(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Req() req: Request): Promise<void> {
+        return this.forumService.deleteMessageFromForum(forum_id, message_id,req);
+    }
+
+    @Get('search/:title')
+    async searchByTitle(@Param('title') title: string): Promise<Forum[]> {
+        return this.forumService.searchByTitle(title);
     }
 
     //get all forums
@@ -28,6 +34,14 @@ export class ForumController {
     async findAll(): Promise<Forum[]> {
         return this.forumService.findAll();
     }
+
+    
+    @UseGuards(AuthGuard)
+    @Post(':forum_id/reply/:message_id')
+    async reply(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Body('message') message: string, @Req() req: Request) {
+        return await this.forumService.replyToMessage(forum_id, message_id, message, req);
+    }
+
 
     @Get('course/:_id')
     async getByCourse(@Param('_id') _id: string): Promise<Forum[]> {
@@ -37,6 +51,12 @@ export class ForumController {
     @Get('user/:_id')
     async getByUser(@Param('_id') _id: string): Promise<Forum[]> {
         return this.forumService.getByUser(_id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Post(':forum_id/send')
+    async sendMessage(@Param('forum_id') _id: string, @Body('message') message: string, @Req() req: Request) {
+        return await this.forumService.sendMessage(_id, message,req);
     }
 
     @UseGuards(AuthGuard)
@@ -50,31 +70,14 @@ export class ForumController {
     }
 
     @UseGuards(AuthGuard)
-    @Post(':forum_id')
-    async sendMessage(@Param('forum_id') _id: string, @Body('message') message: string, @Req() req: Request) {
-        return await this.forumService.sendMessage(_id, message,req);
-    }
-
-    @UseGuards(AuthGuard)
-    @Post(':forum_id/reply/:message_id')
-    async reply(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Body('message') message: string, @Req() req: Request) {
-        return await this.forumService.replyToMessage(forum_id, message_id, message, req);
-    }
-
-    @UseGuards(AuthGuard)
     @Delete(':forum_id')
     async delete(@Param('forum_id') forum_id: string, @Req() req: Request): Promise<void> {
         return this.forumService.delete(forum_id,req);
     }    
 
-    @UseGuards(AuthGuard)
-    @Delete(':forum_id/message/:message_id')
-    async deleteMessage(@Param('forum_id') forum_id: string, @Param('message_id') message_id: string, @Req() req: Request): Promise<void> {
-        return this.forumService.deleteMessageFromForum(forum_id, message_id,req);
-    }
-
-    @Get('search/:title')
-    async searchByTitle(@Param('title') title: string): Promise<Forum[]> {
-        return this.forumService.searchByTitle(title);
+    //get one forum
+    @Get(':forum_id')
+    async findOne(@Param('forum_id') forum_id: string): Promise<Forum> {
+        return this.forumService.findOne(forum_id);
     }
 }

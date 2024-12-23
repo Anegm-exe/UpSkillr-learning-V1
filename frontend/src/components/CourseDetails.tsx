@@ -21,11 +21,10 @@ export interface CourseDetailsProps {
     instructor_ids: string[];
     difficulty_level: string;
   };
-  onBack: () => void;
   instructors: Instructor[];
 }
 
-export default function CourseDetails({ courseData, onBack, instructors }: CourseDetailsProps) {
+export default function CourseDetails({ courseData, instructors }: CourseDetailsProps) {
   return (
     <div className={coursecss.moduleContainer}>
       <h1>Course Information for Course ID: {courseData._id}</h1>
@@ -45,9 +44,7 @@ export default function CourseDetails({ courseData, onBack, instructors }: Cours
           ))}
         </div>
       </div>
-      <button onClick={onBack} className={coursecss.backButton}>
-        Back to Courses
-      </button>
+      <button className={coursecss.backButton}>Back to Courses</button>
     </div>
   );
 }
