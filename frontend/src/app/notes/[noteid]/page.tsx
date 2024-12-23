@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "../../api/axios";
-import notecss from "@/styles/notecss.module.css";
+import styles from "../../../styles/note.module.css";
 
 interface Note {
   _id?: string;
@@ -13,11 +13,7 @@ interface Note {
   last_updated?: Date;
 }
 
-export default function NoteDetails({
-  params,
-}: {
-  params: Promise<{ noteid: string }>;
-}) {
+export default function NoteDetails({ params }: { params: Promise<{ noteid: string }> }) {
   const router = useRouter();
   const [note, setNote] = useState<Note>({
     _id: "",
@@ -30,7 +26,6 @@ export default function NoteDetails({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-
   const { noteid: noteId } = React.use(params);
 
   // Fetch note details by ID
@@ -42,7 +37,7 @@ export default function NoteDetails({
         const response = await axios.get(`/note/${noteId}`);
         setNote(response.data);
         setLoading(false);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch the note");
         setLoading(false);
       }
@@ -60,7 +55,7 @@ export default function NoteDetails({
         });
         console.log("Note auto-saved");
       }
-    } catch (err) {
+    } catch {
       console.error("Auto-save failed");
     }
   };
@@ -90,7 +85,7 @@ export default function NoteDetails({
         alert("Note deleted successfully");
         router.push("/"); // Redirect to home or reload the list of notes
       }
-    } catch (err) {
+    } catch {
       setError("Failed to delete the note");
     }
   };
@@ -108,38 +103,75 @@ export default function NoteDetails({
       });
       setIsEditing(false);
       alert("Note updated successfully");
-    } catch (err) {
+    } catch {
       setError("Failed to update the note");
     }
   };
 
-  if (error) return <div>{error}</div>;
+    if (loading) {
+        return (
+            <div className={styles.loadingContainer}>
+                Loading...
+            </div>
+        );
+    }
 
-  return (
-    <div className="container">
-      <h1>Note Details</h1>
-      {isEditing ? (
-        <div className={notecss.edit_note}>
-          <textarea
-            name="content"
-            value={note.content}
-            onChange={handleChange}
-          />
-          <div>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
-          </div>
+    if (error) {
+        return (
+            <div className={styles.errorContainer}>
+                {error}
+            </div>
+        );
+    }
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.pageTitle}>Note Details</h1>
+
+            {isEditing ? (
+                <div className={styles.editNote}>
+                    <textarea
+                        className={styles.editTextarea}
+                        name="content"
+                        value={note.content}
+                        onChange={handleChange}
+                        placeholder="Enter your note here..."
+                    />
+                    <div className={`${styles.autoSaveIndicator} ${isEditing ? styles.visible : ''}`}>
+                        Auto-saving...
+                    </div>
+                    <div className={styles.editButtons}>
+                        <button className={styles.saveButton} onClick={handleSave}>
+                            Save
+                        </button>
+                        <button className={styles.cancelButton} onClick={() => setIsEditing(false)}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className={styles.noteDetails}>
+                    <div className={styles.metadata}>
+                        <span className={styles.metadataItem}>
+                            Last updated: {new Date(note.last_updated!).toLocaleString()}
+                        </span>
+                    </div>
+                    <div className={styles.noteContent}>
+                        {note.content || 'No content available'}
+                    </div>
+                    <div className={styles.buttonContainer}>
+                        <button className={styles.editButton} onClick={() => setIsEditing(true)}>
+                            Edit
+                        </button>
+                        <button className={styles.deleteButton} onClick={deleteNote}>
+                            Delete
+                        </button>
+                        <button className={styles.backButton2} onClick={() => router.push("/notes")}>
+                            Back
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
-      ) : (
-        <div className={notecss.note_details}>
-          <p>{note.content || 'No content available'}</p>
-          <div>
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={() => deleteNote()}>Delete</button>
-            <button onClick={() => router.push("/notes")}>Back</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    );
 }
