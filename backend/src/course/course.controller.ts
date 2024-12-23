@@ -86,8 +86,6 @@ export class CourseController {
         return this.courseService.updateRating(courseId);
     }
 
-
-
     //remove a student from a course
     @Roles(Role.Admin,Role.Instructor)
     @UseGuards(authorizationGuard)
@@ -129,7 +127,7 @@ export class CourseController {
         return this.courseService.findCompletedCourses(req);
     }
 
-    @Roles(Role.Instructor)
+    @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':course_id/complete')
     async getCompletedStudents(
@@ -138,7 +136,7 @@ export class CourseController {
         return this.courseService.findCompletedStudents(courseId);
     }
 
-    @Roles(Role.Instructor)
+    @Roles(Role.Instructor,Role.Admin)
     @UseGuards(authorizationGuard)
     @Get(':course_id/student-preformance')
     async getStudentPreformance(
@@ -202,27 +200,25 @@ export class CourseController {
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
     
-    @Post(':id/module/:moduleId/solvequiz')
+    @Post('/module/:moduleId/solvequiz')
     async solveQuiz(
-        @Param('id') courseId: string, 
         @Param('moduleId') moduleId: string, 
         @Body() createResponseDto: CreateResponseDto,
         @Req() req: Request
     ): Promise<string> {
-        return this.courseService.solveQuiz(courseId, moduleId,req,createResponseDto);
+        return this.courseService.solveQuiz(moduleId,req,createResponseDto);
     }
 
     // retake quiz
     @Roles(Role.Student)
     @UseGuards(authorizationGuard)
     
-    @Post(':id/module/:moduleId/retakequiz')
+    @Post('retakequiz/:quiz_id')
     async retakeQuiz(
-        @Param('id') courseId: string, 
-        @Param('moduleId') moduleId: string, 
+        @Param('quiz_id') quiz_id: string, 
         @Req() req: Request
     ): Promise<string> {
-        return this.courseService.retakeQuiz(courseId, moduleId,req);
+        return this.courseService.retakeQuiz(quiz_id,req);
     }
 
     // Create module in course

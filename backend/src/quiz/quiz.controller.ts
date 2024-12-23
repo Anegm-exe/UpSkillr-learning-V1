@@ -27,8 +27,18 @@ export class QuizController {
         return this.quizService.findAll();
     }
 
-    @Roles(Role.Admin,Role.Instructor)
+    @Roles(Role.Student)
     @UseGuards(authorizationGuard)
+    @Get('user/:id')
+    async findByUser(@Param('id') id: string): Promise<Quiz[]> {
+        return this.quizService.findQuizForUser(id);
+    }
+
+    @Get(':id/details')
+    async findDetails(@Param('id') id: string): Promise<Quiz> {
+        return this.quizService.findDetails(id);
+    }
+
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Quiz> {
         return this.quizService.findOne(id);

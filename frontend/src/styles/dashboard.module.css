@@ -1,0 +1,699 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.maincontainer {
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding-top: 2rem;
+}
+
+.separatorline {
+    display: block;
+    position: relative;
+    height: 2px;
+    width: 50%;
+    margin: 0 auto; /* Center horizontally with some vertical margin */
+    background-color: var(--border-color);
+}
+
+/* Profile Container */
+.leftcontainer {
+    flex: 1;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    padding: 2rem 0;
+    margin: 0 2rem auto 2rem;
+    border-radius: 15px;
+    border: solid var(--border-color) 1.5px;
+}
+    .leftcontainer h1 {
+        font-size: 1.1rem;
+        padding: .75rem 0 .5rem 0;
+        margin: 0;
+        font-family: roboto-condensed;
+        text-align: center;
+        cursor: default;
+    }
+
+    .leftcontainer img {
+        width: 7.5rem;
+        height: 7.5rem;
+        position: relative;
+        object-fit: cover;
+        border-radius: 50%;
+        border: solid var(--border-color) 1.5px;
+    }
+
+.viewprofile {
+    display: block;
+    margin: 0;
+    padding: 0 0 .75rem 0;
+    font-size: 14px;
+    font-family: roboto-light;
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all 0.1s ease;
+}
+
+    .viewprofile:hover {
+        filter: grayscale();
+        transform: scale(1.05);
+    }
+
+/*enrolled courses list*/
+.list-container {
+    margin: 0 auto;
+    width: 75%; /* Adjust the width as needed */
+}
+
+/* Enrolled list styling */
+.vertical-list {
+    list-style-type: none;
+    padding: 0 0 1rem 0;
+    margin: 0;
+}
+
+    .vertical-list li {
+        background-color: var(--background-color);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        font-family: roboto-Condensed;
+        transition: all 0.1s ease;
+    }
+
+        .vertical-list li:hover {
+            filter: invert();
+            transform: scale(1.05);
+        }
+
+    .vertical-list p {
+        font-size: .75rem;
+        padding: .5rem 0 .25rem 0;
+        margin: 0;
+        font-family: roboto-light;
+        text-align: center;
+        cursor: default;
+    }
+
+.progress {
+    margin: 0.75rem 1rem .25rem 1rem;
+    background: rgba(255,255,255,0.1);
+    justify-content: flex-start;
+    border-radius: 100px;
+    align-items: center;
+    position: relative;
+    padding: 1px 2px;
+    display: flex;
+    height: 10px;
+    width: calc(100% - 2rem - 10px);
+}
+
+.progressv {
+    animation: load 3s normal forwards;
+    box-shadow: 0 10px 40px -10px #fff;
+    border-radius: 100px;
+    background: #fff;
+    height: 7.5px;
+    width: 0%;
+    --target-width: 100%;
+}
+
+@keyframes load {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: var(--target-width);
+    }
+}
+
+/* Notifications + Courses */
+.rightcontainer {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    color: white;
+    gap: 2rem;
+}
+
+/* Notifications in the right section */
+.toprightcontainer {
+    height: 25rem;
+    display: flex;
+    flex-direction: row;
+    padding: 0 2rem;
+    gap: 5%;
+}
+
+    .toprightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.LatestEnrolled {
+    flex: 1;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificationcenter {
+    flex: 2;
+    height: 100%;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.notificationDiv {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
+    padding: 1rem 1rem;
+    margin-top: .75rem;
+    width: calc(100% - 2rem);
+    height: 75%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+    .notificationDiv::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+    }
+
+.notificationtemplate {
+    width: 100%;
+    height: auto; /* Automatically adjust height based on content */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Align items to the center */
+    justify-content: center; /* Optional: Center content vertically */
+}
+
+    .notificationtemplate h1 {
+        font-family: roboto-condensed;
+        margin: 0;
+        text-align: center;
+    }
+
+    .notificationtemplate p {
+        font-family: roboto-thin;
+        margin: 1rem 0 2rem 0;
+        text-align: center;
+    }
+
+/* Courses in the right section */
+.bottomrightcontainer {
+    height: auto;
+    padding-bottom: 1rem;
+    background-color: var(--background-color);
+    border: solid var(--border-color) 1.5px;
+    border-radius: 15px;
+    font-size: 20px;
+    color: white;
+    margin: 0 2rem 2rem 2rem;
+}
+
+    .bottomrightcontainer h1 {
+        font-size: 1.2rem;
+        font-family: roboto-condensed;
+        text-align: center;
+    }
+
+.courseDiv {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    width: calc(100% - 4rem);
+    padding: 1rem 0 1rem 0;
+    margin: 0 auto;
+}
+
+.courseTemplate {
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    width: calc(100% - 2rem);
+    height: 12rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    transition: all 0.1s ease;
+}
+
+    .courseTemplate:hover {
+        transform: scale(1.02);
+    }
+
+.courseTemplateStates {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+    .courseTemplateStates h1 {
+        font-size: .75rem;
+        font-family: roboto-thin;
+        text-align: center;
+        padding: .75rem 0 0 0;
+        margin: 0;
+    }
+
+.progresscircle {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    -webkit-mask: linear-gradient(0deg,#000 55%,#0000 0) bottom/100% 18.18%;
+    background: linear-gradient(white 0 0) bottom/100% 0% no-repeat var(--border-color);
+    animation: p8 3s forwards steps(6);
+    --target-BG: 100% 100%;
+}
+
+@keyframes p8 {
+    100% {
+        background-size: var(--target-BG);
+    }
+}
+
+.progressradial {
+    position: absolute;
+    transform: rotate(-135deg) translateX(20px) translateY(18px); /* Moves the element up */
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent-color) 0% 0%, transparent 75% 100%);
+}
+
+    .progressradial:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 95%;
+        height: 95%;
+        border-radius: 50%;
+        background-color: var(--background-color); /* This hides the inner part of the circle */
+        transform: translate(-50%, -50%);
+    }
+
+
+.courseTemplatecontnet {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;
+    height: calc(100% - 2rem);
+}
+
+    .courseTemplatecontnet h1 {
+        font-size: 1rem;
+        font-family: roboto-light;
+        text-align: center;
+    }
+
+    .courseTemplatecontnet p {
+        padding: 0.25rem 0;
+        margin: 0;
+        font-size: 1rem;
+        font-family: roboto-thin;
+        text-align: center;
+    }
+
+/* Instructor Courses Looks */
+.IcourseTemplate{
+    width: 85%;
+}
+
+    .IcourseTemplate h1 {
+        font-size: 1.25rem;
+        font-family: roboto-light;
+        text-align: left;
+    }
+
+    .IcourseTemplate p {
+        font-size: .8rem;
+        font-family: roboto-thin;
+        text-align: left;
+    }
+
+.coursestatetext {
+    width: 5%;
+    align-content: center;
+    justify-content: center;
+    transform-origin: center;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    transform: rotate(-90deg);
+    height: 95%;
+}
+
+/* Container for the toggle */
+.toggle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.25rem;
+    transform: rotate(180deg);
+    z-index: 1;
+}
+
+/* Invisible checkbox input */
+.toggleinput {
+    display: none;
+}
+
+/* Label styles for the toggle button */
+.togglelabel {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    background: black;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* The slider inside the toggle */
+.toggleslider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* Change background and move the slider when checked */
+.toggleinput:checked + .togglelabel {
+    background: var(--accent-color);
+}
+
+    .toggleinput:checked + .togglelabel .toggleslider {
+        top: 3.5rem;
+    }
+
+.searchbox {
+    display: flex; /* Enable flexbox */
+   
+    justify-content: center; /* Horizontally center the content */
+    align-items: center;
+    padding: 1rem 0; /* Add some padding for spacing */
+}
+
+.searchbar {
+    border: .1rem outset var(--accent-color);
+    padding: 0;
+    margin: auto 1rem;
+    width: 50%;
+    height: 1.75rem;
+    border-radius: 5px;
+    background-color: black;
+    text-align: center;
+    color: white;
+    font-family: roboto-light;
+    font-size: 1rem; /* Adjust font size of placeholder */
+}
+
+    .searchbar::placeholder {
+        color: rgba(255,255,255,0.25); /* Set the color of the placeholder text */
+        font-family: roboto-light;
+        font-size: 1rem; /* Adjust font size of placeholder */
+    }
+
+.searchbutton {
+    position: relative;
+    height: 2rem;
+    padding: 0 1rem;
+    border-radius: 10px;
+    border: 2px outset var(--accent-color);
+    background-color: black;
+    color: white;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    transition: .1s all ease;
+}
+
+    .searchbutton:hover {
+        transform: scale(1.1);
+    }
+
+    .searchbutton:active {
+        transform: scale(0.95); /* Shrink slightly on click */
+    }
+
+.resultsList {
+    height: 70%; /* Limit the height of the list */
+    overflow-y: auto; /* Make it scrollable vertically */
+    padding: 0;
+    margin: 0;
+    list-style: none; /* Remove default list styles */
+    scrollbar-width: none;
+}
+
+    .resultsList::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+    }
+
+.resultItem {
+    padding: .5rem 0; /* Remove any default padding */
+    margin: 0 2rem;
+}
+
+.resultDiv {
+    display: flex;
+    height: 100%;
+    align-items: flex-start;
+    padding: 1.5rem 0; /* Space inside each item */
+    border-radius: 5px;
+    border: 1.5px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover/click effects */
+}
+
+    .resultDiv:hover {
+        transform: scale(1.05); /* Slightly enlarge */
+    }
+
+    .resultDiv:active {
+        transform: scale(0.95); /* Shrink slightly when clicked */
+        background-color: #333; /* Optional pressed effect */
+    }
+
+.userAvatar {
+    margin: 0 1rem;
+    width: 75px; /* Adjust as needed */
+    height: 75px; /* Match width for square aspect ratio */
+    border-radius: 50%; /* Circular image */
+    border: 2px solid var(--border-color); /* Optional border for styling */
+    object-fit: cover; /* Ensure the image fits nicely */
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    height: 100%;
+    margin: auto 0;
+}
+
+    .userInfo p {
+        font-family: roboto-light;
+        font-size: .75rem;
+        padding: .2rem 0;
+        margin: 0;
+    }
+
+    .userInfo span {
+        font-family: roboto-condensed;
+        font-size: 0.75rem;
+        opacity: 0.1;
+        padding: .2rem 0;
+        margin: 0;
+    }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modalContent {
+    background: var(--background-color);
+    padding: 2rem;
+    border-radius: 25px;
+    border: 1.5px solid var(--border-color);
+    width: 50%;
+    height: 50%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.resultsList::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
+}
+
+.modalContent h2 {
+    margin: 1rem 0 .5rem 0;
+    font-family: roboto-thin;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.courseItem {
+    padding: 1rem;
+    border-bottom: 1.5px solid var(--border-color);
+}
+
+    .courseItem h3 {
+        font-family: roboto-bold;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        text-align: left;
+    }
+
+    .courseItem p {
+        font-family: roboto-thin;
+        font-size: 1rem;
+        margin: 0.2rem 0;
+    }
+
+        .courseItem p strong {
+            font-family: roboto-bold;
+        }
+
+.closeButton {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    cursor: pointer;
+    z-index: -1;
+}
+
+.notificationForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    height: 80%;
+    align-items: center;
+}
+
+.textArea {
+    width: 75%;
+    height: 60%;
+    border: 1.5px outset var(--accent-color);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: roboto-light;
+    font-size: 1.1rem;
+    resize: none;
+    background-color: var(--background-color);
+    color: white;
+}
+
+    .textArea::placeholder {
+        color: rgba(255,255,255,0.25); /* Set the color of the placeholder text */
+        font-family: roboto-thin;
+        font-size: 1rem; /* Adjust font size of placeholder */
+    }
+
+.submitButton {
+    align-self: center;
+    padding: 0.5rem 1rem;
+    background-color: black;
+    color: white;
+    font-family: roboto-thin;
+    font-size: 1rem;
+    border: 1.5px outset var(--accent-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+    .submitButton:hover {
+        transform: scale(1.05);
+    }
+
+.userContainer {
+    justify-content: space-between;
+    display: flex;
+    margin: 0 1rem;
+    padding: 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 15px;
+}
+
+.userInfoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.userDetails {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 0.25rem;
+}
+
+    .userDetails p {
+        margin: 0;
+        font-size: 1rem;
+        font-family: roboto-condensed;
+    }
+
+    .userDetails span {
+        margin: 0;
+        font-size: .75rem;
+        font-family: roboto-condensed;
+        opacity: 0.25;
+    }
+
+.trashButton {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: roboto-light;
+}
+
+    .trashButton:hover {
+        transform: scale(1.05);
+    }

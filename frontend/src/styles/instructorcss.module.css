@@ -1,0 +1,23 @@
+.addModule {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    padding: 12px 24px;
+    border: 2px solid var(--accent-color);
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+  }
+  
+  .addModule:hover {
+    background-color: #ffffff;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .addModule:active {
+    transform: translateY(0);
+  }

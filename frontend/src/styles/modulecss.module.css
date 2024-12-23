@@ -1,0 +1,95 @@
+/* General container */
+.moduleContainer {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Title and text */
+.moduleTitle {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.moduleText {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* Input and form fields */
+.moduleInput,
+.moduleTextArea {
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.moduleInput:focus,
+.moduleTextArea:focus {
+  outline: none;
+  border-color: #fff;
+}
+
+/* Buttons */
+.moduleButton {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.moduleButton:hover {
+  background-color: #777;
+}
+
+/* Form styling */
+.moduleForm {
+  margin-top: 20px;
+}
+
+.moduleLabel {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #bbb;
+}
+
+/* Div for question inputs */
+.moduleDivInput {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.moduleDivInput > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.moduleDivInput input[type="number"] {
+  width: 70%;
+}
+
+.moduleDivInput button {
+  width: 30%;
+}
+
+/* Close button container */
+.moduleCloseButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

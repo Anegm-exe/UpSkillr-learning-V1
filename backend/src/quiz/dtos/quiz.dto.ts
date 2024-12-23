@@ -3,6 +3,7 @@ export class CreateQuizDto {
     questions: string[];
     type: string;
     module_id:string;
+    course_id:string;
 }
 
 export class UpdateQuizDto {

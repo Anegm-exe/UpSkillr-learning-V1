@@ -123,15 +123,16 @@ export class CourseService{
     }
 
     // courses completed
-    async findCompletedCourses(req:Request) : Promise<Course[]> {
-        const courses = await this.findEnrolledCourses(req);
-        const completedCourses = await Promise.all(
+    async findCompletedCourses(req: Request): Promise<Course[]> {
+        const courses = await this.courseModel.find({ students: req['user'].userid }).exec();
+        const filteredCourses = await Promise.all(
             courses.map(async (course) => {
-                if(await this.progressService.isCourseCompletedByUser(course._id,req['user'].userid))
-                    return course;
+                const isCompleted = await this.progressService.isCourseCompletedByUser(course._id, req['user'].userid);
+                return isCompleted ? course : null; // Return `null` for incomplete courses
             })
         );
-        return completedCourses;
+        // Filter null or undefined courses after resolving the promises
+        return filteredCourses.filter(course => course !== null && course !== undefined);
     }
 
     // courses completed
@@ -163,7 +164,7 @@ export class CourseService{
             throw new NotFoundException('Course not found');
         }
         // check if instructor gives the course
-        if(!course.instructor_ids.includes(req['user'].userid)) {
+        if(!course.instructor_ids.includes(req['user'].userid) && req['user'].role !== 'admin') {
             throw new UnauthorizedException('You are not authorized to access this course');
         }
         const progresses = await this.progressService.findProgressesByCourse(courseId);
@@ -228,7 +229,6 @@ export class CourseService{
             });
             const courseRating = (await this.updateRating(course._id)).rating;
             const instructorRating = rating;
-            console.log(course)
             const enrolledStudents = course.students.map(student => student.name);
             const completedStudents = await this.findCompletedStudents(course._id);
     
@@ -276,7 +276,17 @@ export class CourseService{
 
     // find enrolled courses for user
     async findEnrolledCourses(req: Request): Promise<Course[]> {
-        return this.courseModel.find({ students: req['user'].userid }).exec(); 
+        const courses = await this.courseModel.find({ students: req['user'].userid }).exec();
+        const filteredCourses = await Promise.all(
+            courses.map(async (course) => {
+                const isCompleted = await this.progressService.isCourseCompletedByUser(course._id, req['user'].userid);
+                return isCompleted ? null : course; // Return `null` for completed courses
+            })
+        );
+
+        // Filter null or undefined courses after resolving the promises
+        return filteredCourses.filter(course => course !== null && course !== undefined);
+
     }
 
     // remove an instructor from a course
@@ -420,7 +430,8 @@ export class CourseService{
             questions: questions,
             type: module.type,
             user_id: user_id,
-            module_id:moduleId
+            module_id:moduleId,
+            course_id:course_id
         });
         return quiz._id;
     }
@@ -448,28 +459,17 @@ export class CourseService{
     }
 
     // solve quiz
-    async solveQuiz(course_id:string, module_id:string, req: Request, CreateResponseDto: CreateResponseDto): Promise<string> {
-        const course = await this.courseModel.findOne({_id:course_id}).exec();
-        if (!course) {
-            throw new NotFoundException(`Course with ID ${course_id} not found`);
-        }
-        // check if student is enrolled
-        if(!course.students.includes(req['user'].userid)) {
-             throw new UnauthorizedException(`You are not enrolled in this course`)
-        }
+    async solveQuiz(module_id:string, req: Request, CreateResponseDto: CreateResponseDto): Promise<string> {
         const module = await this.moduleService.findOne(module_id);
         if (!module) {
             throw new NotFoundException(`Module with ID ${module_id} not found`)
         }
-        // check if course has module
-        if(!course.modules.includes(module_id)){
-            throw new NotFoundException(`Module with ID ${module_id} not found in course with ID ${course_id}`)
-        }
+
         const quiz = await this.quizService.findByUserAndModule(req['user'].userid,module_id);
         if (!quiz) {
             throw new NotFoundException(`Quiz not found`);
         }
-        const quiz_id = quiz._id;
+        const quiz_id = quiz._id.toString();
         // check if quiz is in module.quizzes
         if(!module.quizzes.includes(quiz_id)){
             throw new NotFoundException(`Quiz with ID ${quiz_id} not found in module with ID ${module_id}`);
@@ -478,6 +478,7 @@ export class CourseService{
         if (quiz.user_id !== req['user'].userid) {
             throw new UnauthorizedException('You are not authorized to solve this quiz.');
         }
+        const course = await this.courseModel.findById({_id:quiz.course_id}).exec();
         // Check if the quiz is already solved by the user
         const responseExists = await this.responseService.findByQuizAndUser(quiz_id, req['user'].userid);
         if (responseExists) {
@@ -498,28 +499,32 @@ export class CourseService{
 
         // Save the updated progress
         await this.progressService.update(progress._id, progress);
-
-        return response._id;
+        return response._id.toString();
     }
 
     // retake quiz in module
-    async retakeQuiz(course_id:string, module_id:string, req: Request) : Promise<string> {
-        const course = await this.courseModel.findOne({_id:course_id}).exec();
-        if (!course) {
-            throw new NotFoundException(`Course with ID ${course_id} not found`)
+    async retakeQuiz(quiz_id:string, req: Request) : Promise<string> {
+
+        const quiz = await this.quizService.findOne(quiz_id);
+        if (!quiz) {
+            throw new NotFoundException(`Quiz not found for user and module`)
         }
+        const course = await this.courseModel.findOne({_id:quiz.course_id}).exec();
+        if (!course) {
+            throw new NotFoundException(`Course not found`)
+        }
+        const course_id = quiz.course_id;
+        const module = await this.moduleService.findOne(quiz.module_id);
+        if (!module)  {
+            throw new NotFoundException(`Module not found`)
+        }
+        // console.log(module)
+        const module_id = module._id.toString();
         // check if course has module
         if(!course.modules.includes(module_id)) {
         throw new NotFoundException(`Module with ID ${module_id} not found in course with ID ${course_id}`)
         }
-        const module = await this.moduleService.findOne(module_id);
-        if (!module)  {
-            throw new NotFoundException(`Module with ID ${module_id} not found`)
-        }
-        const quiz = await this.quizService.findByUserAndModule(req['user'].userid, module_id);
-        if (!quiz) {
-            throw new NotFoundException(`Quiz not found for user and module`)
-        }
+        
         // check if user has solved the quiz before
         const response = await this.responseService.findByQuizAndUser(quiz._id, req['user'].userid)
         if (!response)  {
@@ -533,10 +538,11 @@ export class CourseService{
         if (moduleIndex !== -1)  
             progress.completed_modules.splice(moduleIndex, 1);
         await this.progressService.update(progress._id, progress)
-        
+
         // Delete the existing response and quiz
-        await this.moduleService.deleteQuiz(module_id,quiz._id);
-        await this.responseService.delete(response._id);
+        await this.moduleService.deleteQuiz(module_id,quiz_id);
+
+        await this.responseService.delete(response._id.toString());
 
         const newQuiz = await this.generateQuiz(course_id, module_id, req['user'].userid);
         await this.moduleService.addQuizzes(module_id,[newQuiz]);
@@ -544,8 +550,8 @@ export class CourseService{
     }
 
     // chaneg Archive status of course
-    async changeArchiveStatus(course_id:string, req: Request): Promise<Course> {
-        const course = await this.courseModel.findOne({_id:course_id}).exec();
+    async changeArchiveStatus(course_id: string, req: Request): Promise<Course> {
+        const course = await this.courseModel.findOne({ _id: course_id }).exec();
         if (!course) {
             throw new NotFoundException(`Course with ID ${course_id} not found`)
         }
