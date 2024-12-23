@@ -1,66 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 /* Scroll Bar Hide */
-html {scrollbar-width: none; /* Firefox */}
+html {
+  scrollbar-width: none; /* Firefox */
+}
 
-body::-webkit-scrollbar {display: none; /* (Chrome, Safari, etc.) */}
+body::-webkit-scrollbar {
+  display: none; /* (Chrome, Safari, etc.) */
+}
 
-body::-webkit-scrollbar-track {background: transparent; /* scrollbar track invisible */}
+body::-webkit-scrollbar-track {
+  background: transparent; /* scrollbar track invisible */
+}
 
-body::-webkit-scrollbar-thumb {background: transparent; /* scrollbar thumb (the draggable part) invisible */}
+body::-webkit-scrollbar-thumb {
+  background: transparent; /* scrollbar thumb (the draggable part) invisible */
+}
 
 :root {
-    --background-color: #09090b;
-    --primary-color: white;
-    --accent-color: lightcoral;
-    --border-color: #27272a;
-    --button-background: transparent;
-    --button-hover-color: lightcoral;
+  --background-color: #09090b;
+  --primary-color: white;
+  --accent-color: lightcoral;
+  --border-color: #27272a;
+  --button-background: transparent;
+  --button-hover-color: lightcoral;
 }
 
 body {
-    padding: 0;
-    margin: 0;
-    color: white;
-    background-color: var(--background-color);
-    font-family:'Roboto-Medium'
+  padding: 0;
+  margin: 0;
+  color: white;
+  background-color: var(--background-color);
+  font-family: "Roboto-Medium";
 }
 
 /* Global Fonts Def */
 @font-face {
-    font-family: 'Roboto-Light';
-    src: url('fonts/roboto/Roboto-Light.ttf') format('truetype');
+  font-family: "Roboto-Light";
+  src: url("fonts/roboto/Roboto-Light.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Thin';
-    src: url('fonts/roboto/Roboto-Thin.ttf') format('truetype');
+  font-family: "Roboto-Thin";
+  src: url("fonts/roboto/Roboto-Thin.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Regular';
-    src: url('fonts/roboto/Roboto-Regular.ttf') format('truetype');
+  font-family: "Roboto-Regular";
+  src: url("fonts/roboto/Roboto-Regular.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Medium';
-    src: url('fonts/roboto/Roboto-Medium.ttf') format('truetype');
+  font-family: "Roboto-Medium";
+  src: url("fonts/roboto/Roboto-Medium.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Bold';
-    src: url('fonts/roboto/Roboto-Bold.ttf') format('truetype');
+  font-family: "Roboto-Bold";
+  src: url("fonts/roboto/Roboto-Bold.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Black';
-    src: url('fonts/roboto/Roboto-Black.ttf') format('truetype');
+  font-family: "Roboto-Black";
+  src: url("fonts/roboto/Roboto-Black.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-Condensed';
-    src: url('fonts/roboto/Roboto-Condensed.ttf') format('truetype');
+  font-family: "Roboto-Condensed";
+  src: url("fonts/roboto/Roboto-Condensed.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Roboto-BoldCondensed';
-    src: url('fonts/roboto/Roboto-BoldCondensed.ttf') format('truetype');
+  font-family: "Roboto-BoldCondensed";
+  src: url("fonts/roboto/Roboto-BoldCondensed.ttf") format("truetype");
 }
