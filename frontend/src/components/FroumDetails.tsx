@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useRef, useEffect } from "react";
 import forumcss from "@/styles/forumcss.module.css";
 import axios from "@/app/api/axios";
@@ -121,7 +122,7 @@ export default function ForumDetails({ forumData, onNewMessageSent,onDelete }: F
   useEffect(() => {    
     const interval = setInterval(() => {
       onNewMessageSent();
-    }, 10000);
+    }, 3000);
     
     return () => clearInterval(interval);
   }, []);
@@ -141,7 +142,7 @@ export default function ForumDetails({ forumData, onNewMessageSent,onDelete }: F
             Posted on: {new Date(forumData.timestamp).toLocaleDateString()}
           </div>
         </div>
-        {tokenDetails?._id === forumData.user_id._id && (
+              {(tokenDetails?._id === forumData.user_id._id || tokenDetails?.role === "instructor") && (
           <div className={forumcss.actionButtons}>
             {!isEditing ? (
               <button
