@@ -1,0 +1,59 @@
+/* General container styling for forums */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Heading styling */
+.heading {
+    font-size: 3rem;
+    font-family: roboto-condensed;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    text-align: center;
+}
+
+/* Grid layout for forum cards */
+.forumGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 80%;
+}
+
+/* Individual forum card styling */
+.forumCard {
+    background-color: var(--background-color);
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+    .forumCard:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+/* Forum title styling */
+.forumTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--accent-color);
+}
+
+/* Forum details section styling */
+.forumDetails {
+    font-size: 1rem;
+    color: white;
+    line-height: 1.5;
+    font-family: roboto-thin;
+}
+
+    .forumDetails p {
+        margin: 5px 0;
+    }

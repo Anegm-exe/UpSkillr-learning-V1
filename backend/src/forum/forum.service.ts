@@ -22,24 +22,27 @@ export class ForumService {
 
     async findAll(): Promise<Forum[]> {
         return this.forumModel.find().populate([
-            { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
+            { path: 'messages', populate: [{ path: 'user_id', select: ['name','profile_picture_url']}]},
             { path: 'user_id', select: ['name','profile_picture_url'] } 
         ]).exec();
     }
 
     async findOne(id: string): Promise<Forum> {
         const forum = await this.forumModel
-            .findById({ _id: id })
-            .populate([
-                { path: 'messages', populate: { path: 'user_id', select: ['name','profile_picture_url'] } },
-                { path: 'user_id', select: ['name','profile_picture_url'] } 
-            ])
+            .findById({_id:id}) // Correctly pass the ID without wrapping in an object
+            .populate([{ path: 'messages', populate: [
+                { path: 'user_id', select: ['name','profile_picture_url'] },
+                { path: 'repliedTo_id', populate: { path: 'user_id', select: ['name','profile_picture_url'] } }
+              ]},
+              { path: 'user_id', select: ['name','profile_picture_url'] }])
             .exec();
+        
         if (!forum) {
             throw new NotFoundException(`Forum with ID ${id} not found`);
         }
         return forum;
     }
+    
 
     async update(id: string,updateData: UpdateForumDto, req: Request): Promise<Forum> {
         const forum = await this.forumModel.findOne({ _id: id });
@@ -85,6 +88,7 @@ export class ForumService {
           text: text,
           user_id: req['user'].userid
         })
+        
         await this.notificationService.create({
             user_ids: [forum.user_id],
             message: `New reply on forum: ${forum.title.slice(0, 30)}...`,
