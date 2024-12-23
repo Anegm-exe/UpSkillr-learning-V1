@@ -182,9 +182,19 @@ export function useFetchAllCourses() {
   return { AllCoursesdata, error };
 }
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  dateOfBirth: Date;
+  role: string;
+  profile_picture_url: string;
+  categories: string[];
+}
+
 // all Users Data in general
 export function useFetchAllUsers() {
-  const [UsersData, setUsersData] = useState<any>([]);
+  const [UsersData, setUsersData] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

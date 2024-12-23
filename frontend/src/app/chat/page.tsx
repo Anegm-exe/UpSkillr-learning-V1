@@ -7,7 +7,6 @@ import ChatDetails from "@/components/ChatDetails";
 import chatPageCss from "@/styles/chatPage.module.css";
 
 export default function ChatPage() {
-  const router = useRouter();
   const { tokenDetails } = useAuth();
   const { chatsData, refetch } = useFetchUserChats(tokenDetails?._id);  // Add refetch to re-fetch chat data
   const [selectedChat, setSelectedChat] = useState<string | null>(null);

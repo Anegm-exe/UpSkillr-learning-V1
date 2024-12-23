@@ -34,6 +34,7 @@ export default function Dashboard() {
 }
 
 // Admin Dashboard Comopnenets
+//@ts-expect-error
 function AdminDashboard({ tokenDetails }) {
     const { AllCoursesdata } = useFetchAllCourses();
     const { UsersData } = useFetchAllUsers();
@@ -42,8 +43,10 @@ function AdminDashboard({ tokenDetails }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevent page refresh
         try {
-            const response = await axios.post('/notifications/send', {
-                text: notificationText,
+            const userIds = UsersData.map(user => user._id); 
+            const response = await axios.post('/notifications', {
+                message: notificationText,
+                user_ids:userIds
             });
             console.log('Notification sent:', response.data);
             alert('Notification sent successfully!');
@@ -55,7 +58,12 @@ function AdminDashboard({ tokenDetails }) {
     };
 
     const backupserver = () => {
-        //Do Something Here
+        try {
+            axios.post('/backup');
+        }catch(error) {
+            //@ts-expect-error
+            console.error('Error sending backup request:', error.response.data.message);
+        }
     };
 
     return (
@@ -133,6 +141,7 @@ function AdminDashboard({ tokenDetails }) {
 }
 
 // Student Dashboard Comopnenets
+//@ts-expect-error
 function StudentDashboard({ tokenDetails }) {
     const { enrolledCourseData, completedCourseData } = useFetchUserCourses();
     const { notificationsData } = useFetchNotifications(tokenDetails._id);
@@ -292,6 +301,7 @@ function StudentDashboard({ tokenDetails }) {
 }
 
 // Instructor DashBoard Components
+//@ts-expect-error
 function InstructorDashboard({ tokenDetails }) {
     const { notificationsData } = useFetchNotifications(tokenDetails?._id);
     const { superCourses } = useFetchInstructorCourses(tokenDetails?._id);
