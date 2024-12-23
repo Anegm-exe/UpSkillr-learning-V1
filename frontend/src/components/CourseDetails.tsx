@@ -1,5 +1,6 @@
-import coursecss from "../styles/coursecss.module.css";
+import React from "react";
 import Image from "next/image";
+
 export interface Instructor {
   _id: string;
   name: string;
@@ -26,25 +27,25 @@ export interface CourseDetailsProps {
 
 export default function CourseDetails({ courseData, instructors }: CourseDetailsProps) {
   return (
-    <div className={coursecss.moduleContainer}>
-      <h1>Course Information for Course ID: {courseData._id}</h1>
-      <div className={coursecss.moduleDetails}>
-        <h2 className={coursecss.moduleTitle}>Course Title: {courseData.title}</h2>
-        <p className={coursecss.moduleInfo}>Description: {courseData.description}</p>
-        <p className={coursecss.moduleInfo}>Category: {courseData.category}</p>
-        <h3 className={coursecss.moduleSubtitle}>Instructors:</h3>
-        <div className={coursecss.instructorsContainer}>
+    <div className="p-6 bg-zinc-800 rounded-lg border border-zinc-700 shadow-lg text-center">
+      <h1 className="text-3xl font-bold text-white mb-6">Course Information</h1>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-white">{courseData.title}</h2>
+        <p className="text-zinc-400">{courseData.description}</p>
+        <p className="text-zinc-400">Category: {courseData.category.join(", ")}</p>
+        <h3 className="text-xl font-medium text-white mt-6">Instructors</h3>
+        <div className="flex flex-wrap justify-center gap-4">
           {instructors.map((instructor: Instructor) => (
-            <div key={instructor._id} className={coursecss.instructorCard}>
-              <Image width={125} height={125} src={instructor.profile_picture_url} alt={instructor.name} className={coursecss.profilePic} />
-              <div className={coursecss.instructorInfo}>
-                <p className={coursecss.instructorName}>{instructor.name}</p>
+            <div key={instructor._id} className="bg-zinc-700 p-4 rounded-md flex items-center gap-4">
+              <Image width={125} height={125} src={instructor.profile_picture_url} alt={instructor.name} className="rounded-full" />
+              <div>
+                <p className="text-white font-medium">{instructor.name}</p>
+                <p className="text-zinc-400 text-sm">{instructor.role}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
-      <button className={coursecss.backButton}>Back to Courses</button>
     </div>
   );
 }

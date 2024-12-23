@@ -2,7 +2,7 @@
 import { useAuth } from "@/components/AuthContext";
 import { Adminforums, Studentforums, Instructorforums } from '../../components/forumsMainComp';
 
-export default function Dashboard() {
+export default function ForumPage() {
     const { tokenDetails, isLoading } = useAuth();
 
     if (isLoading) {

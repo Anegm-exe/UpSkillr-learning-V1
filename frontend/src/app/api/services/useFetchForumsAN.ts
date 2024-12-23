@@ -70,14 +70,16 @@ export function useFetchAllForums() {
 }
 
 export function FetchAllUserCourses() {
-    const [userCourses, setuserCourses] = useState<any>(null);
+    const [userCourses, setuserCourses] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`/course/completed`);
-                setuserCourses(response.data);
+                const response1 = await axios.get(`/course/completed`);
+                const response2 = await axios.get(`/course/enrolled`);
+                setuserCourses([...response1.data, ...response2.data]);
+                console.log(userCourses);
             } catch (error) {
                 console.error('Error fetching User Notifications:', error);
                 setError('Failed to fetch User Notifications.');
