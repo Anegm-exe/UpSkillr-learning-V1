@@ -230,3 +230,39 @@
 .saveButton:hover {
   background-color: #45a049;
 }
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.chatName {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.chatActions {
+  display: flex;
+  gap: 10px;
+}
+
+.leaveButton,
+.detailsButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.leaveButton:hover {
+  background-color: #ff4d4f;
+}
+
+.detailsButton:hover {
+  background-color: #0056b3;
+}

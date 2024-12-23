@@ -1,12 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+interface Message {
+    _id: string;
+    user_id: {
+      _id: string;
+      name: string;
+      profile_picture_url: string;
+    };
+    repliedTo_id?: Message;
+    text: string;
+    timestamp: Date;
+  }
+  
+  interface Chat {
+      _id: string;
+      admin_id: string;
+      name: string;
+      user_ids: {
+        _id: string;
+        name: string;
+        profile_picture_url: string;
+      }[];
+      messages: Message[];
+  }
+
+
 import { useState, useEffect, useCallback } from 'react';
 import axios from '../../api/axios';
 
 // Grab Chat Using Its ID
 export function useFetchChat(chatId: string) {
-    const [chatData, setChatData] = useState<any>(null);
+    const [chatData, setChatData] = useState<Chat | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -30,7 +55,7 @@ export function useFetchChat(chatId: string) {
 }
 
 export function useFetchUserChats(userId: string) {
-    const [chatsData, setChatsData] = useState<any[]>([]);
+    const [chatsData, setChatsData] = useState<Chat[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const fetchChatsData = useCallback(async () => {

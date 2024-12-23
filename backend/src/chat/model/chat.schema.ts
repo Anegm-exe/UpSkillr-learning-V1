@@ -15,10 +15,6 @@ export class Chat {
     type: [String],
     ref: 'User',
     required: true,
-    validate: {
-      validator: (value: string[]) => value.length >= 2,
-      message: 'At least 2 users are required',
-    },
   })
   user_ids: string[];
 

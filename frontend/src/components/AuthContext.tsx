@@ -8,6 +8,7 @@ interface TokenDetails {
     userid: string;
     name: string;
     profile_picture_url: string;
+    email: string;
     iat: string;
     exp: string;
 }
