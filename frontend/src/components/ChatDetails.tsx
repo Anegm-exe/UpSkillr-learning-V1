@@ -20,9 +20,14 @@ interface ChatDetailsProps {
     _id: string;
     admin_id: string;
     name: string;
-    user_ids: string[];
+    user_ids: {
+      _id: string;
+      name: string;
+      profile_picture_url: string;
+    }[];
     messages: Message[];
   };
+<<<<<<< HEAD
   onBack: () => void;
   onMessage: () => void; // Add onNewMessageSent prop
   onChatDetails: () => void;
@@ -36,6 +41,13 @@ interface ChatDetailsProps {
 export default function ChatDetails({ chatData, onMessage, onLeaveSuccess }: ChatDetailsProps) {
 =======
 export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsProps) {
+=======
+  onNewMessageSent: () => void; // Add onNewMessageSent prop
+  onDetails: () => void;
+}
+
+export default function ChatDetails({ chatData, onNewMessageSent, onDetails }: ChatDetailsProps) {
+>>>>>>> 7bdeee6de11f778df683293e6d6fa522206cab62
   const { tokenDetails } = useAuth();
 >>>>>>> 357627f094a2bc80eebdd110c50f8ffa728194c7
 =======
@@ -173,9 +185,16 @@ catch{
   }, [chatData.messages]); // This will trigger whenever messages update
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 357627f094a2bc80eebdd110c50f8ffa728194c7
 =======
 >>>>>>> 02d855607f8d4c67c312ec3551d64029f6c91e50
+=======
+  const handleLeaveChat = async () => {
+    await axios.delete(`chat/${chatData._id}/leave`);
+  }
+
+>>>>>>> 7bdeee6de11f778df683293e6d6fa522206cab62
   if (!chatData) return <h2>Loading...</h2>;
   return (
     <div className={chatcss.chatDetailsContainer}>
@@ -188,6 +207,20 @@ catch{
           className={chatcss.profilePicture}
         />
         <h1 className={chatcss.chatTitle}>{chatData.name}</h1>
+        <div className={chatcss.chatHeaderActions}>
+          <button
+            className={chatcss.leaveButton}
+            onClick={handleLeaveChat}
+          >
+            Leave
+          </button>
+          <button
+            className={chatcss.detailsButton}
+            onClick={onDetails}
+          >
+            Chat Details
+          </button>
+        </div>
       </div>
 
       {/* Messages Section */}
