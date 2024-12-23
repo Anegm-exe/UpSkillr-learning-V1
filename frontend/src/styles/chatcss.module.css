@@ -1,268 +1,228 @@
-/* Body or parent container for full width and height */
-.body, .html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.chatContainer {
+.chatDetailsContainer {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Take the full width */
-  max-width: 100%; /* Allow the width to extend fully */
-  height: 100vh; /* Take the full height of the viewport */
-  padding: 2rem;
-  background-color: var(--background-color);
-  border: 1.5px solid var(--border-color);
-  border-radius: 15px;
-  color: white;
-  font-family: roboto-condensed;
-  position: absolute;
-  right: 0; /* Position it to the right */
-  top: 0; /* Align it to the top of the page */
-  bottom: 0; /* Stretch to the bottom */
-  max-width: none; /* Remove the max-width constraint */
+  height: 100%;
+  background-color: #1a1a1a;
 }
 
-/* Chat Header */
 .chatHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.chatTitle {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.backButton {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--accent-color);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.backButton:hover {
-  background-color: var(--accent-color-hover);
-  filter: brightness(1.1);
-}
-
-/* Messages Section */
-.messagesContainer {
-  border: 1.5px solid var(--border-color);
-  border-radius: 10px;
-  background-color: var(--secondary-background-color);
-  padding: 1rem;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-/* Individual Message */
-.messageItem {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #3a3a3a;
   gap: 1rem;
 }
 
-.messageItem:hover {
-  filter: invert(0.1);
+.chatTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
 }
 
 .profilePicture {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid var(--border-color);
+}
+
+.chatHeaderActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.detailsButton, .leaveButton {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.detailsButton {
+  background-color: #3a3a3a;
+  border: 1px solid #4a4a4a;
+  color: #d1d1d1;
+}
+
+.detailsButton:hover {
+  background-color: #4a4a4a;
+}
+
+.leaveButton {
+  background-color: #6b1a1a;
+  border: 1px solid #8b2a2a;
+  color: #ff4d4d;
+}
+
+.leaveButton:hover {
+  background-color: #8b2a2a;
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #1a1a1a;
+}
+
+.messageItem {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
+}
+
+.messageItem:hover {
+  background-color: #3a3a3a;
 }
 
 .messageContent {
   flex: 1;
+  min-width: 0;
 }
 
 .userName {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
 }
 
 .messageText {
-  font-size: 0.9rem;
+  color: #e6e6e6;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
+  word-wrap: break-word;
 }
 
 .timestamp {
-  font-size: 0.8rem;
-  color: var(--text-color-light);
+  font-size: 0.75rem;
+  color: #888888;
 }
 
-/* Reply Section */
 .replySection {
   margin-top: 0.5rem;
-  padding: 0.75rem;
-  border-left: 4px solid var(--accent-color);
-  background-color: var(--secondary-background-color);
-  font-size: 0.85rem;
-}
-
-/* Chat Details Container */
-.chatDetailsContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 2rem;
-  background-color: var(--background-color);
-  border: none;
-  color: white;
-  font-family: roboto-condensed;
-  justify-content: space-between;
-}
-
-/* Messages Section */
-.messagesContainer {
-  flex: 1;
-  border: 1.5px solid var(--border-color);
-  border-radius: 10px;
-  background-color: var(--secondary-background-color);
-  padding: 1rem;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-
-/* Send Message Section */
-.sendMessageContainer {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1.5px solid var(--border-color);
-  border-radius: 10px;
-  background-color: var(--secondary-background-color);
-}
-
-.messageInput {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  font-size: 1rem;
-  color: var(--text-color);
-  background-color: var(--background-color);
-}
-
-.messageInput:focus {
-  outline: none;
-  border-color: var(--accent-color);
-}
-
-.sendButton {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--accent-color);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.sendButton:hover {
-  background-color: var(--accent-color-hover);
-  filter: brightness(1.1);
+  padding: 0.5rem;
+  background-color: #3a3a3a;
+  border-radius: 4px;
+  font-size: 0.875rem;
 }
 
 .messageActions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .actionButton {
-  padding: 4px 8px;
-  border: none;
+  padding: 0.25rem 0.75rem;
   border-radius: 4px;
-  background-color: #f0f0f0;
+  font-size: 0.75rem;
+  border: 1px solid #4a4a4a;
+  background-color: #2a2a2a;
+  color: #d1d1d1;
   cursor: pointer;
-  font-size: 12px;
+  transition: all 0.2s;
 }
 
 .actionButton:hover {
-  background-color: #e0e0e0;
+  background-color: #3a3a3a;
 }
 
 .editInterface {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .editInput {
   flex: 1;
-  padding: 4px 8px;
-  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border: 1px solid #4a4a4a;
   border-radius: 4px;
+  font-size: 0.875rem;
+  background-color: #2a2a2a;
+  color: #ffffff;
 }
 
 .saveButton {
-  padding: 4px 12px;
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
   border: none;
   border-radius: 4px;
-  background-color: #4CAF50;
-  color: white;
   cursor: pointer;
 }
 
 .saveButton:hover {
-  background-color: #45a049;
+  background-color: #1d4ed8;
 }
 
-.chatHeader {
+.sendMessageContainer {
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-top: 1px solid #3a3a3a;
+}
+
+.replyContext {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background-color: #3a3a3a;
+  border-radius: 6px;
+  font-size: 0.875rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  gap: 0.75rem;
 }
 
-.chatName {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.chatActions {
-  display: flex;
-  gap: 10px;
-}
-
-.leaveButton,
-.detailsButton {
-  background-color: #007bff;
-  color: #fff;
+.cancelReplyButton {
+  padding: 0.25rem 0.5rem;
+  background-color: #4a4a4a;
   border: none;
-  padding: 8px 12px;
   border-radius: 4px;
+  font-size: 0.75rem;
+  color: #d1d1d1;
   cursor: pointer;
 }
 
-.leaveButton:hover {
-  background-color: #ff4d4f;
+.messageInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #4a4a4a;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  background-color: #2a2a2a;
+  color: #ffffff;
 }
 
-.detailsButton:hover {
-  background-color: #0056b3;
+.messageInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+}
+
+.sendButton {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sendButton:hover {
+  background-color: #1d4ed8;
 }

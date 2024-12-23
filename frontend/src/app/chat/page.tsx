@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAuth } from "@/components/AuthContext";
 import { useFetchUserChats } from "@/app/api/services/useFetchChat";
 import ChatDetails from "@/components/ChatDetails";
+<<<<<<< HEAD
 import chatPageCss from "@/styles/chatPage.module.css";
 import AddUser from "./[chat_id]/AddUser";
 import LeaveChat from "./LeaveChat";
@@ -27,22 +28,47 @@ export default function ChatPage() {
   const [isCreatingChat, setIsCreatingChat] = useState<boolean>(false); // To toggle chat creation form
   const [chatName, setChatName] = useState<string>(''); // Store chat name
   const [emails, setEmails] = useState<string[]>([]); // Store user emails
-  const router = useRouter();
+=======
+import chatPagecss from '@/styles/chatPage.module.css';
 
+interface Chat {
+  _id: string;
+  name: string;
+  lastMessage?: {
+    content: string;
+    timestamp: string;
+  };
+}
+
+export default function ChatPage() {
+>>>>>>> 56f9599197cc16b45cb1edbcd236d8f717058590
+  const router = useRouter();
+  const { tokenDetails } = useAuth();
+  const { chatsData, refetch } = useFetchUserChats(tokenDetails?._id);
+  const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+<<<<<<< HEAD
 >>>>>>> 7bdeee6de11f778df683293e6d6fa522206cab62
   if (!chatsData) return <h2>Loading...</h2>;
+=======
+  if (!chatsData) {
+    return (
+      <div className={chatPagecss.loadingContainer}>
+        <span>Loading your chats...</span>
+      </div>
+    );
+  }
+>>>>>>> 56f9599197cc16b45cb1edbcd236d8f717058590
 
-  // Handler for selecting a chat
   const handleSelectChat = (chatId: string) => {
     setSelectedChat(chatId);
   };
 
-  // Find the selected chat data
   const currentChat = chatsData.find((chat) => chat._id === selectedChat);
 
-  // Function to handle refreshing chat data after sending a message
   const handleRefreshChat = () => {
     refetch();
+<<<<<<< HEAD
   };
   const handleAddUserSuccess = () => {
     setShowAddUser(false); // Hide the AddUser form on success
@@ -127,42 +153,74 @@ export default function ChatPage() {
       // Redirect to the new chat's details page (optional)
       // router.push(`/chat/${newChat._id}`);
     }
+=======
+>>>>>>> 56f9599197cc16b45cb1edbcd236d8f717058590
   };
 
   const handleCreateNewChat = () => {
-    router.push('/chat/create'); // Redirect to the create chat page
+    router.push('/chat/create');
+  };
+
+  const formatLastMessage = (chat: Chat) => {
+    if (!chat.lastMessage) return null;
+    return {
+      content: chat.lastMessage.content.length > 30 
+        ? chat.lastMessage.content.substring(0, 30) + '...'
+        : chat.lastMessage.content,
+      timestamp: new Date(chat.lastMessage.timestamp).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    };
   };
 
 >>>>>>> 7bdeee6de11f778df683293e6d6fa522206cab62
   return (
-    <div className={chatPageCss.chatPageContainer}>
-      {/* Sidebar with Chat List */}
-      <div className={chatPageCss.chatListContainer}>
-        <h2 className={chatPageCss.sidebarTitle}>Chats</h2>
-        <ul className={chatPageCss.chatList}>
-          {chatsData.map((chat: any) => (
-            <li
-              key={chat._id}
-              onClick={() => handleSelectChat(chat._id)}
-              className={`${chatPageCss.chatListItem} ${
-                selectedChat === chat._id ? chatPageCss.activeChat : ""
-              }`}
-            >
-              {chat.name}
-            </li>
-          ))}
+    <div className={chatPagecss.chatPageContainer}>
+      <div className={chatPagecss.chatListContainer}>
+        <h2 className={chatPagecss.sidebarTitle}>Your Chats</h2>
+        <ul className={chatPagecss.chatList}>
+          {chatsData.map((chat: Chat) => {
+            const lastMessage = formatLastMessage(chat);
+            return (
+              <li
+                key={chat._id}
+                onClick={() => handleSelectChat(chat._id)}
+                className={`${chatPagecss.chatListItem} ${
+                  selectedChat === chat._id ? chatPagecss.activeChat : ""
+                }`}
+              >
+                <div>
+                  <div>{chat.name}</div>
+                  {lastMessage && (
+                    <div style={{ 
+                      fontSize: '0.75rem', 
+                      color: '#6b7280',
+                      marginTop: '0.25rem' 
+                    }}>
+                      {lastMessage.content}
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ul>
-        {/* Create Chat Button */}
         <button
-          className={chatPageCss.createChatButton}
+          className={chatPagecss.createChatButton}
           onClick={handleCreateNewChat}
         >
           Create New Chat
         </button>
       </div>
+<<<<<<< HEAD
   
       {/* Chat Details Section */}
       <div className={chatPageCss.chatDetailsContainer}>
+=======
+
+      <div className={chatPagecss.chatDetailsContainer}>
+>>>>>>> 56f9599197cc16b45cb1edbcd236d8f717058590
         {currentChat ? (
 <<<<<<< HEAD
           <>
@@ -205,13 +263,13 @@ export default function ChatPage() {
 =======
           <ChatDetails
             chatData={currentChat}
-            onNewMessageSent={handleRefreshChat}  // Pass the function to refresh chat
+            onNewMessageSent={handleRefreshChat}
             onDetails={() => router.push(`/chat/${currentChat._id}`)}
           />
 >>>>>>> 7bdeee6de11f778df683293e6d6fa522206cab62
         ) : (
-          <div className={chatPageCss.placeholder}>
-            <p>Select a chat to view details.</p>
+          <div className={chatPagecss.placeholder}>
+            <p>Select a chat to start messaging</p>
           </div>
         )}
       </div>
@@ -230,7 +288,10 @@ export default function ChatPage() {
       </div>
     </div>
   );
+<<<<<<< HEAD
   
   
   
+=======
+>>>>>>> 56f9599197cc16b45cb1edbcd236d8f717058590
 }

@@ -198,35 +198,26 @@ catch{
   if (!chatData) return <h2>Loading...</h2>;
   return (
     <div className={chatcss.chatDetailsContainer}>
-      {/* Chat Header */}
-      <div className={chatcss.chatHeader}>
-        <img
-          src={
-            "https://lh3.googleusercontent.com/ABlX4ekWIQimPjZ1HlsMLYXibPo2xiWnZ2iny1clXQm2IQTcU2RG0-4S1srWsBQmGAo"
-          }
-          className={chatcss.profilePicture}
-        />
-        <h1 className={chatcss.chatTitle}>{chatData.name}</h1>
-        <div className={chatcss.chatHeaderActions}>
-          <button
-            className={chatcss.leaveButton}
-            onClick={handleLeaveChat}
-          >
-            Leave
-          </button>
-          <button
-            className={chatcss.detailsButton}
-            onClick={onDetails}
-          >
-            Chat Details
-          </button>
-        </div>
+    {/* Chat Header */}
+    <div className={chatcss.chatHeader}>
+      <img
+        src={'https://cdn.pixabay.com/photo/2020/05/29/13/26/icons-5235125_1280.png'}
+        alt={chatData.name}
+        className={chatcss.profilePicture}
+      />
+      <h1 className={chatcss.chatTitle}>{chatData.name}</h1>
+      <div className={chatcss.chatHeaderActions}>
+        <button className={chatcss.leaveButton} onClick={handleLeaveChat}>
+          Leave
+        </button>
+        <button className={chatcss.detailsButton} onClick={onDetails}>
+          Chat Details
+        </button>
       </div>
+    </div>
 
-      {/* Messages Section */}
-      <div 
-      className={chatcss.messagesContainer}
-      ref={messagesContainerRef}>
+    {/* Messages Section */}
+    <div className={chatcss.messagesContainer} ref={messagesContainerRef}>
       {chatData.messages.length > 0 ? (
         chatData.messages.map((message) => (
           <div
@@ -235,24 +226,26 @@ catch{
             onDoubleClick={() => setSelectedMessage(message)}
           >
             <img
-              src={message.user_id.profile_picture_url}
+              src={message.user_id.profile_picture_url || '/default-avatar.png'}
               alt={message.user_id.name}
               className={chatcss.profilePicture}
             />
             <div className={chatcss.messageContent}>
-              <div className={chatcss.userName}>{message.user_id._id === tokenDetails?._id? 'You' : message.user_id.name}</div>
+              <div className={chatcss.userName}>
+                {message.user_id._id === tokenDetails?._id ? 'You' : message.user_id.name}
+              </div>
               <div className={chatcss.messageText}>{message.text}</div>
               <div className={chatcss.timestamp}>
                 {new Date(message.timestamp).toLocaleString()}
               </div>
+
               {message.repliedTo_id && (
                 <div className={chatcss.replySection}>
                   <strong>Replying to {message.repliedTo_id.user_id.name}:</strong>{" "}
                   <span>{message.repliedTo_id.text}</span>
                 </div>
               )}
-              
-              {/* Message Actions Menu */}
+
               {selectedMessage?._id === message._id && (
                 <div className={chatcss.messageActions}>
                   <button
@@ -264,24 +257,26 @@ catch{
                   >
                     Reply
                   </button>
-                  {tokenDetails?._id === selectedMessage.user_id._id && 
-                  <button
-                    className={chatcss.actionButton}
-                    onClick={() => {
-                      setEditingText(message.text);
-                      setSelectedMessage(message);
-                    }}
-                  >
-                    Edit 
-                  </button>
-                  }
-                  {(tokenDetails?._id === selectedMessage.user_id._id || tokenDetails?._id === chatData.admin_id) && 
-                  <button
-                    className={chatcss.actionButton}
-                    onClick={() => handleDeleteMessage(message._id)}
-                  >
-                    Delete
-                  </button>}
+                  {tokenDetails?._id === message.user_id._id && (
+                    <button
+                      className={chatcss.actionButton}
+                      onClick={() => {
+                        setEditingText(message.text);
+                        setSelectedMessage(message);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  {(tokenDetails?._id === message.user_id._id || 
+                    tokenDetails?._id === chatData.admin_id) && (
+                    <button
+                      className={chatcss.actionButton}
+                      onClick={() => handleDeleteMessage(message._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
                   <button
                     className={chatcss.actionButton}
                     onClick={() => setSelectedMessage(null)}
@@ -290,8 +285,7 @@ catch{
                   </button>
                 </div>
               )}
-              
-              {/* Editing Interface */}
+
               {selectedMessage?._id === message._id && editingText !== "" && (
                 <div className={chatcss.editInterface}>
                   <input
@@ -314,35 +308,35 @@ catch{
       ) : (
         <p>No messages yet.</p>
       )}
-        <div ref={messageEndRef} /> {/* Empty div to serve as a scroll target */}
-      </div>
-
-      {/* Send Message Section */}
-      <div className={chatcss.sendMessageContainer}>
-        {replyingTo && ( // Show reply context if replying to a message
-          <div className={chatcss.replyContext}>
-            <strong>Replying to {replyingTo.user_id.name}:</strong>{" "}
-            <span>{replyingTo.text}</span>
-            <button
-              onClick={() => setReplyingTo(null)}
-              className={chatcss.cancelReplyButton}
-            >
-              Cancel
-            </button>
-          </div>
-        )}
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          onKeyDown={handleKeyDown} // Handle Enter key press
-          className={chatcss.messageInput}
-        />
-        <button onClick={handleSendMessage} className={chatcss.sendButton}>
-          Send
-        </button>
-      </div>
+      <div ref={messageEndRef} />
     </div>
+
+    {/* Send Message Section */}
+    <div className={chatcss.sendMessageContainer}>
+      {replyingTo && (
+        <div className={chatcss.replyContext}>
+          <strong>Replying to {replyingTo.user_id.name}:</strong>{" "}
+          <span>{replyingTo.text}</span>
+          <button
+            onClick={() => setReplyingTo(null)}
+            className={chatcss.cancelReplyButton}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+      <input
+        type="text"
+        placeholder="Type your message..."
+        value={messageText}
+        onChange={(e) => setMessageText(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className={chatcss.messageInput}
+      />
+      <button onClick={handleSendMessage} className={chatcss.sendButton}>
+        Send
+      </button>
+    </div>
+  </div>
   );
 }
