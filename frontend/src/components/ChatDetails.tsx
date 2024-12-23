@@ -32,11 +32,16 @@ interface ChatDetailsProps {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default function ChatDetails({ chatData, onMessage, onLeaveSuccess }: ChatDetailsProps) {
 =======
 export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsProps) {
   const { tokenDetails } = useAuth();
 >>>>>>> 357627f094a2bc80eebdd110c50f8ffa728194c7
+=======
+export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsProps) {
+  const { tokenDetails } = useAuth();
+>>>>>>> 02d855607f8d4c67c312ec3551d64029f6c91e50
   const [messageText, setMessageText] = useState("");
   const [replyingTo, setReplyingTo] = useState<Message | null>(null); // State for replying to a specific message
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -144,6 +149,7 @@ useEffect(() => {
 
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     scrollToBottom();
   }, [chatData.messages]);
 const handleLeaveChat = async () =>{
@@ -156,6 +162,8 @@ catch{
 }
 }
 =======
+=======
+>>>>>>> 02d855607f8d4c67c312ec3551d64029f6c91e50
     if (chatData.messages.length > 0) {
       // If it's the initial load or user is at bottom, scroll down
       if (!messagesContainerRef.current?.scrollTop || isAtBottom) {
@@ -164,7 +172,10 @@ catch{
     }
   }, [chatData.messages]); // This will trigger whenever messages update
 
+<<<<<<< HEAD
 >>>>>>> 357627f094a2bc80eebdd110c50f8ffa728194c7
+=======
+>>>>>>> 02d855607f8d4c67c312ec3551d64029f6c91e50
   if (!chatData) return <h2>Loading...</h2>;
   return (
     <div className={chatcss.chatDetailsContainer}>
