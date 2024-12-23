@@ -1,40 +1,6 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import { useInstructorModuleFunctions } from "@/app/_hooks/useInstructorModuleFunctions";
-
-export interface Instructor {
-  _id: string;
-  name: string;
-  profile_picture_url: string;
-  dateOfBirth: string;
-  role: string;
-}
-
-export interface CourseDetailsProps {
-  courseData: {
-    _id: string;
-    title: string;
-    description: string;
-    category: string[];
-    modules: string[];
-    students: string[];
-    rating: number;
-    isArchived: boolean;
-    instructor_ids: string[];
-    difficulty_level: string;
-  };
-  instructors: Instructor[];
-}
-
-export interface CreateModuleDto {
-  course_id?: string;
-  title: string;
-  difficulty: string;
-  no_question: number;
-  type: string;
-  resources?: string[];
-  content_ids?: string[];
-}
+import { useCourse, UpdateCourseDto } from "@/app/_hooks/useCourse";
 
 export default function InstructorCourseDetails({ courseData, instructors }: CourseDetailsProps) {
   const [moduleTitle, setModuleTitle] = useState<string>("");
@@ -46,6 +12,12 @@ export default function InstructorCourseDetails({ courseData, instructors }: Cou
   const [contentIds, setContentIds] = useState<string[]>([]);
 
   const { createModule } = useInstructorModuleFunctions();
+  const { updateCourse } = useCourse(courseId);
+
+  const [title, setTitle] = useState<string>(courseData.title);
+  const [description, setDescription] = useState<string>(courseData.description);
+  const [category, setCategory] = useState<string>(courseData.category.join(", "));
+  const [difficultyLevel, setDifficultyLevel] = useState<string>(courseData.difficulty_level);
 
   const handleCreateModule = async (courseId: string, createModuleDto: CreateModuleDto) => {
     try {
@@ -53,6 +25,22 @@ export default function InstructorCourseDetails({ courseData, instructors }: Cou
       alert("Module created successfully!");
     } catch (error) {
       console.error("Error creating module:", error);
+    }
+  };
+
+  const handleUpdateCourse = async () => {
+    const updateCourseDto: UpdateCourseDto = {
+      title,
+      description,
+      category,
+      difficulty_Level: difficultyLevel,
+    };
+
+    try {
+      await updateCourse(courseId, updateCourseDto);
+      alert("Course updated successfully!");
+    } catch (error) {
+      console.error("Error updating course:", error);
     }
   };
 
@@ -79,10 +67,10 @@ export default function InstructorCourseDetails({ courseData, instructors }: Cou
           <h3 className="text-lg font-medium text-white mb-4">Create Module</h3>
           <input
             type="text"
-            placeholder="Module Title"
-            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
             value={moduleTitle}
             onChange={(e) => setModuleTitle(e.target.value)}
+            placeholder="Module Title"
+            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
           />
           <select
             className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
@@ -116,6 +104,41 @@ export default function InstructorCourseDetails({ courseData, instructors }: Cou
             className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md transition-colors"
           >
             Create Module
+          </button>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-lg font-medium text-white mb-4">Update Course</h3>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Course Title"
+            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
+          />
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Course Description"
+            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
+          />
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Course Category"
+            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
+          />
+          <select
+            value={difficultyLevel}
+            onChange={(e) => setDifficultyLevel(e.target.value)}
+            className="bg-zinc-700 text-white rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent mb-4"
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <button onClick={handleUpdateCourse} className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md transition-colors">
+            Update Course
           </button>
         </div>
       </div>
