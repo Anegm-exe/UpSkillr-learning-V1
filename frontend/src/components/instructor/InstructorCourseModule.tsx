@@ -308,105 +308,94 @@ const ContentList: React.FC<ContentListProps> = ({ contentIds, handleDeleteConte
 };
 
 const InstructorContentItem: React.FC<ContentItemProps> = ({ contentId, handleDeleteContent, handleUpdateContent, moduleId }) => {
-  const { content, loading, error } = useFetchContent(contentId);
-  const { downloadFile } = useDownloadFile();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editFile, setEditFile] = useState<File | null>(null);
+    const { content, loading, error } = useFetchContent(contentId);
+    const { downloadFile } = useDownloadFile();
+    const [isEditing, setIsEditing] = useState(false);
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+    const [editFile, setEditFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    if (content) {
-      setEditTitle(content.title || "");
-      setEditDescription(content.description || "");
-    }
-  }, [content]);
+    const handleSave = async () => {
+        if (!editFile && !editDescription && !editTitle) {
+            alert("Please provide at least one field to update");
+            return;
+        }
+        await handleUpdateContent(
+            contentId,
+            {
+                title: editTitle,
+                desc: editDescription,
+                fileType: "pdf",
+            },
+            editFile!
+        );
+        setIsEditing(false);
+    };
 
-  const handleSave = async () => {
-    // Ensure file is selected or handle accordingly
-    if (!editFile && !editDescription && !editTitle) {
-      alert("Please provide at least one field to update");
-      return;
-    }
-    await handleUpdateContent(
-      contentId,
-      {
-        title: editTitle,
-        desc: editDescription,
-        fileType: "pdf", // fallback to existing fileType
-      },
-      editFile!
+    if (loading || error || !content) return null;
+
+    return (
+        <div className="bg-zinc-700/50 rounded-md p-4 border border-zinc-600">
+            {isEditing ? (
+                <div className="space-y-4">
+                    <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        placeholder="Content Title"
+                        className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
+                    />
+                    <input
+                        type="text"
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        placeholder="Content Description"
+                        className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
+                    />
+                    <input
+                        type="file"
+                        onChange={(e) => setEditFile(e.target.files?.[0] || null)}
+                        className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
+                    />
+                    <div className="flex gap-2">
+                        <button onClick={handleSave} className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md">
+                            Save
+                        </button>
+                        <button onClick={() => setIsEditing(false)} className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h4 className="text-white font-medium">{content.title}</h4>
+                            <p className="text-zinc-400 text-sm">{content.description}</p>
+                            <p className="text-zinc-500 text-xs mt-1">Versions: {content.versions.length}</p>
+                        </div>
+                        <div className="flex justify-center gap-2">
+                            <button
+                                onClick={() => downloadFile(content.currentVersion, content.title)}
+                                className="bg-zinc-600 hover:bg-zinc-500 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download
+                            </button>
+                            <button onClick={() => setIsEditing(true)} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md">
+                                Edit
+                            </button>
+                            <button onClick={() => handleDeleteContent(contentId, moduleId)} className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-md">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
-    setIsEditing(false);
-  };
-
-  if (loading || error || !content) return null;
-
-  return (
-    <div className="bg-zinc-700/50 rounded-md p-4 border border-zinc-600">
-      {isEditing ? (
-        <div className="space-y-4">
-          <input
-            type="text"
-            value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
-            placeholder="Content Title"
-            className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
-          />
-          <input
-            type="text"
-            value={editDescription}
-            onChange={(e) => setEditDescription(e.target.value)}
-            placeholder="Content Description"
-            className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
-          />
-          <input
-            type="file"
-            onChange={(e) => setEditFile(e.target.files?.[0] || null)}
-            className="bg-zinc-600 text-white rounded-md px-3 py-2 w-full"
-          />
-          <div className="flex gap-2">
-            <button onClick={handleSave} className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md">
-              Save
-            </button>
-            <button onClick={() => setIsEditing(false)} className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md">
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex justify-between items-center">
-          <div>
-            <h4 className="text-white font-medium">{content.title}</h4>
-            <p className="text-zinc-400 text-sm">{content.description}</p>
-          </div>
-          <div className="flex justify-center gap-2">
-            <button
-              onClick={() => downloadFile(content.currentVersion, content.title)}
-              className="bg-zinc-600 hover:bg-zinc-500 text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
-            >
-              {/* Download Icon */}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              Download
-            </button>
-            <button onClick={() => setIsEditing(true)} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md">
-              Edit
-            </button>
-            <button onClick={() => handleDeleteContent(contentId, moduleId)} className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-md">
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 };
 
 export default InstructorCourseModule;

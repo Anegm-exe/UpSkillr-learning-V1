@@ -112,3 +112,166 @@
 		grid-template-columns: 1fr;
 	}
 }
+
+.headerSection {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	max-width: 1400px;
+	margin: 0 auto 2rem;
+}
+
+.searchWrapper {
+	display: flex;
+	gap: 1rem;
+	max-width: 80%;
+	align-items: center;
+	flex: 1;
+}
+
+.createbutton {
+	position: relative;
+	padding: .5rem .75rem;
+	border-radius: 15px;
+	font-family: roboto-thin;
+	font-size: 1.25rem;
+	color: white;
+	border: 1.5px solid var(--accent-color);
+	transition: all .1s ease;
+}
+
+	.createbutton:hover {
+		transform: scale(1.1);
+	}
+
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1;
+}
+
+.modalContent {
+	background: var(--background-color);
+	width: 35%;
+	padding: 3rem;
+	border-radius: 15px;
+	border: 2px outset var(--accent-color);
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+	.modalContent h2 {
+		font-size: 2rem;
+		font-family: roboto-condensed;
+		margin-bottom: 1rem;
+		text-align: center;
+		color: white;
+	}
+
+.modalLabel {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+	color: var(--border); /* Subtle gray for label text */
+}
+
+/* Input and Textarea */
+.modalInput {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #ccc; /* Light gray border */
+	border-radius: 6px; /* Rounded input */
+	font-size: 1rem;
+	margin-bottom: 1rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+	.modalInput:focus {
+		border-color: #007bff; /* Blue border on focus */
+		box-shadow: 0 0 5px rgba(0, 123, 255, 0.4); /* Subtle glow */
+		outline: none;
+	}
+
+/* Add Category Button */
+.addCategoryButton {
+	color: #007bff; /* Blue text */
+	font-size: 0.85rem;
+	margin-top: 0.5rem;
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+	.addCategoryButton:hover {
+		color: #0056b3; /* Darker blue on hover */
+	}
+
+/* Select Dropdown */
+.select1 {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 1rem;
+	margin-bottom: 1rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+	.select1:focus {
+		border-color: #007bff;
+		box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+		outline: none;
+	}
+
+/* Action Buttons */
+.actionButtons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	margin-top: 1.5rem;
+}
+
+	.actionButtons button {
+		padding: 0.75rem 1.5rem;
+		font-size: 0.95rem;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: background-color 0.2s ease, color 0.2s ease;
+	}
+
+	.actionButtons .cancelButton {
+		color: #666;
+		background: #f0f0f0;
+	}
+
+		.actionButtons .cancelButton:hover {
+			background: #e0e0e0;
+			color: #333;
+		}
+
+	.actionButtons .submitButton {
+		color: #fff;
+		background: #007bff;
+	}
+
+		.actionButtons .submitButton:hover {
+			background: #0056b3;
+		}
+
+/* Animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}

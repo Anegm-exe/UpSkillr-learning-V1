@@ -1,5 +1,5 @@
 import React from 'react';
-import { FetchAllUserCourses, useFetchInstructorCourses, useFetchAllCourses } from "../app/api/services/useFetchForumsAN";
+import { useFetchInstructorCourses, useFetchAllCourses } from "../app/api/services/useFetchForumsAN";
 import CourseCss from "../styles/coursesmainpage.module.css";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
@@ -132,9 +132,18 @@ function Studentcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
 }
 
 function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
+
     const { superCourses } = useFetchInstructorCourses(tokenDetails._id);
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
+
+    const [showModal, setShowModal] = useState(false);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: [''],
+        difficulty_level: 'Beginner'
+    });
 
     const filteredCourses = superCourses?.filter((course: CourseData) => {
         const searchLower = searchTerm.toLowerCase();
@@ -150,17 +159,126 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
         router.push(`/course/${courseId}`);
     };
 
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await axios.post('/api/courses', {
+                ...formData,
+                instructor_ids: [tokenDetails._id],
+                modules: [],
+                students: [],
+                rating: 0,
+                isArchived: false
+            });
+            setShowModal(false);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error creating course:', error);
+        }
+    };
+
+    const handleCategoryChange = (index: number, value: string) => {
+        const newCategories = [...formData.category];
+        newCategories[index] = value;
+        setFormData({ ...formData, category: newCategories });
+    };
+
+    const addCategory = () => {
+        setFormData({ ...formData, category: [...formData.category, ''] });
+    };
+
     return (
         <div className={CourseCss.container}>
-            <div className={CourseCss.searchWrapper}>
-                <input
-                    type="text"
-                    placeholder="Search courses by name, category, ID or description..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={CourseCss.searchInput}
-                />
+            <div className={CourseCss.headerSection}>
+                <div className={CourseCss.searchWrapper}>
+                    <input
+                        type="text"
+                        placeholder="Search courses..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className={CourseCss.searchInput}
+                    />
+                    <button onClick={() => setShowModal(true)} className={CourseCss.createbutton}>Create</button>
+                </div>
+                
             </div>
+            {showModal && (
+                <div className={CourseCss.modalOverlay}>
+                    <div className={CourseCss.modalContent}>
+                        <h2>New Course</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <label className={CourseCss.modalLabel}>Title</label>
+                                <input
+                                    type="text"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    className={CourseCss.modalInput}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className={CourseCss.modalLabel}>Description</label>
+                                <textarea
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    className={CourseCss.modalInput}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className={CourseCss.modalLabel}>Categories</label>
+                                {formData.category.map((cat, index) => (
+                                    <div key={index} className="flex gap-2 mb-2">
+                                        <input
+                                            type="text"
+                                            value={cat}
+                                            onChange={(e) => handleCategoryChange(index, e.target.value)}
+                                            className={CourseCss.modalInput}
+                                            required
+                                        />
+                                    </div>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={addCategory}
+                                    className="text-blue-500 hover:text-blue-600 text-sm"
+                                >
+                                    + Add Category
+                                </button>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Difficulty Level</label>
+                                <select
+                                    value={formData.difficulty_level}
+                                    onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option>Beginner</option>
+                                    <option>Intermediate</option>
+                                    <option>Advanced</option>
+                                </select>
+                            </div>
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Create Course
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
             <div className={CourseCss.courseGrid}>
                 {Array.isArray(filteredCourses) && filteredCourses.map((course: CourseData) => (
                     <div key={course._id} className={CourseCss.courseCard} onClick={() => handleCardClick(course._id)}>
