@@ -231,7 +231,12 @@ export function AllCourses({ courseData }: CourseDetailsProps) {
 export function AllUsersData({ userData }: UserDetailsProps) {
 
     const handleDeleteUser = () => {
-        //blablabla
+        try {
+          axios.delete(`/user/${userData._id}`);
+        }catch(error) {
+          //@ts-expect-error
+          console.error("Error deleting user:" + error.response.data.message);
+        }
     };
 
     return (

@@ -4,11 +4,13 @@
 import { useState } from "react";
 import styles from "../../styles/profile.module.css";
 import { useAuth } from "@/components/AuthContext";
+import axios from "../api/axios";
 
 export default function Profile() {
-    const { tokenDetails, isLoading } = useAuth();
+    const { tokenDetails, isLoading,logout } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [userInfo, setUserInfo] = useState({
+        _id: tokenDetails?._id || "",
         name: tokenDetails?.name || "",
         email: tokenDetails?.email || "",
         profile_picture_url: tokenDetails?.profile_picture_url || "",
@@ -19,8 +21,7 @@ export default function Profile() {
         return <div className={styles.container}>Loading...</div>;
     }
 
-    const user = tokenDetails;
-    if (!user) {
+    if (!tokenDetails) {
         return <div className={styles.container}>Error: please sign in</div>;
     }
 
@@ -32,26 +33,42 @@ export default function Profile() {
         }));
     };
 
-    console.log(tokenDetails);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Handle form submission logic (e.g., API call)
-        console.log("Updated User Info:", userInfo);
-        // After successful submission
-        setIsEditing(false);
+        try{
+            const updatedUser = axios.patch(`user/${tokenDetails?._id}`,userInfo)
+            // After successful submission
+            setIsEditing(false);
+        }catch {
+            console.error("Error updating user info");
+        }
     };
+
+    const kys = () => {
+        try {
+            axios.delete(`/user/${tokenDetails._id}`);
+            logout()
+          }catch(error) {
+            //@ts-expect-error
+            console.error("Error deleting user:" + error.response.data.message);
+          }
+    }
 
     return (
         <div className={styles.container}>
-            <img src={user.profile_picture_url} alt={`${user.name}'s profile`} className={styles["profile_picture"]}></img>
+            <img src={tokenDetails.profile_picture_url} alt={`${tokenDetails.name}'s profile`} className={styles["profile_picture"]}></img>
             <div className={styles["profile_details"]}>
-                <h1>{user.name}</h1>
-                <p>Role: {user.role}</p>
-                <p>User ID: {user._id}</p>
+                <h1>{tokenDetails.name}</h1>
+                <p>Role: {tokenDetails.role}</p>
+                <p>User ID: {tokenDetails._id}</p>
 
                 <button
                     className={styles["edit_button"]}
-                    onClick={() => setIsEditing(!isEditing)}
+                    onClick={() => {
+                        setIsEditing(!isEditing)
+                        setUserInfo(tokenDetails)
+                    }}
                 >
                     {isEditing ? "Cancel" : "Edit"}
                 </button>
@@ -110,7 +127,9 @@ export default function Profile() {
                         </button>
                     </form>
                 )}
-
+                    <button onClick={kys} className={styles["submit_button"]}>
+                        KILL YOURSELF????
+                    </button>
             </div>
         </div>
     );

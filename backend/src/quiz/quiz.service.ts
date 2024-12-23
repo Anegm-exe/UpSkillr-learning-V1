@@ -18,6 +18,10 @@ export class QuizService {
         return quiz.save();
     }
 
+    async setSolved(quiz_id:string,solved:boolean) {
+        const quiz = await this.quizModel.findByIdAndUpdate({_id:quiz_id},{solved:solved}).exec();
+        return quiz;
+    }
     // Get All Quizs Existing
     async findAll(): Promise<Quiz[]> {
         return this.quizModel.find().exec();
@@ -26,6 +30,14 @@ export class QuizService {
     // Find A Specific Quiz by ID
     async findOne(id: string): Promise<Quiz> {
         const quiz = await this.quizModel.findOne({ _id: id }).exec();
+        if (!quiz) {
+            throw new NotFoundException(`Quiz with ID ${id} not found`);
+        }
+        return quiz;
+    }
+
+    async findDetails(id: string): Promise<Quiz> {
+        const quiz = await this.quizModel.findOne({ _id: id }).populate([{ path: 'user_id', select: ['name']},'module_id']).exec();
         if (!quiz) {
             throw new NotFoundException(`Quiz with ID ${id} not found`);
         }
@@ -76,4 +88,9 @@ export class QuizService {
         return quiz;
     }
 
+    // find quiz for userid
+    async findQuizForUser(user_id: string): Promise<Quiz[]> {
+        const quizzes = await this.quizModel.find({ user_id: user_id }).populate([{ path: 'user_id', select: ['name']},'module_id']).exec();
+        return quizzes;
+    }
 }

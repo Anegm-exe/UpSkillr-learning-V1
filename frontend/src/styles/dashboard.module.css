@@ -284,7 +284,7 @@
     border-radius: 50%;
     -webkit-mask: linear-gradient(0deg,#000 55%,#0000 0) bottom/100% 18.18%;
     background: linear-gradient(white 0 0) bottom/100% 0% no-repeat var(--border-color);
-    animation: p8 3s forwards steps(7);
+    animation: p8 3s forwards steps(6);
     --target-BG: 100% 100%;
 }
 
