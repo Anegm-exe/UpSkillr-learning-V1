@@ -33,6 +33,9 @@ export default function Navbar() {
         <Link href="/notes" className={navbarcss.button}>
           Notes
         </Link>
+        <Link href="/quiz" className={navbarcss.button}>
+          Quizzes
+        </Link>
       </div>
       {!isLoading && (
         <div className="flex">
