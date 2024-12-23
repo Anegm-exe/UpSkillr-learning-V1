@@ -65,9 +65,19 @@ export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsP
   };
 
   // Scroll to bottom on mount or when chatData changes
+  useEffect(() => {    
+    // Set up polling interval
+    const interval = setInterval(() => {
+      onNewMessageSent(); // This will trigger the chat refresh
+    }, 3000); // 3000 milliseconds = 3 seconds
+    
+    // Cleanup function to clear the interval when component unmounts
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array since we want this to run only once on mount
+
   useEffect(() => {
     scrollToBottom();
-  }, [chatData.messages]);
+  }, [chatData.messages]); // This will trigger whenever messages update
 
   if (!chatData) return <h2>Loading...</h2>;
 
