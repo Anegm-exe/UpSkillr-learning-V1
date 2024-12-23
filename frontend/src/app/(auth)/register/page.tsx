@@ -34,8 +34,8 @@ export default function Register() {
             console.log('Registration successful:', response.data);
             // Redirect or show success message
             console.log('Redirecting to home...');
-            router.push('/'); 
-        } catch (error) {
+            router.push('/login'); 
+        } catch {
             alert('Registration failed');
             // Handle error (show error message to the user)
         }

@@ -22,7 +22,7 @@ export class ContentService {
     return await this.contentModel.find().exec();
   }
 
-  async getFilePath(fileId: string): Promise<string> {
+  async getFilePath(fileId: string): Promise<{ filePath: string; fileType: string }> {
     const file = await this.fileVersionModel.findById(fileId).exec();
 
     if (!file) {
@@ -30,11 +30,12 @@ export class ContentService {
     }
 
     const filePath = path.join(process.cwd(), file.url);
+    const fileType = file.fileType;
     if (!existsSync(filePath)) {
       throw new NotFoundException(`File not found on the server`);
     }
 
-    return filePath;
+    return { filePath, fileType };
   }
 
   //yet to add and check if student can access content, maybe by adding course id to content
@@ -53,7 +54,7 @@ export class ContentService {
     return content;
   }
 
-  async uploadContent(createContentDto: CreateContentDto, file: Express.Multer.File,module_id:string) {
+  async uploadContent(createContentDto: CreateContentDto, file: Express.Multer.File, module_id: string) {
     const uploadDir = "./uploads";
     const fileName = `${uuidv4()}-${file.originalname}`;
     const filePath = path.join(uploadDir, fileName);
@@ -64,6 +65,7 @@ export class ContentService {
       url: filePath,
       desc: createContentDto.desc,
       createdAt: new Date(),
+      fileType: file.mimetype,
     });
 
     await newFileVersion.save();
@@ -74,10 +76,11 @@ export class ContentService {
       versions: [newFileVersion._id],
     });
     await newContent.save();
-    await this.moduleService.addContent(module_id,newContent._id)
+    await this.moduleService.addContent(module_id, newContent._id);
     return {
       newContent,
       url: filePath,
+      fileType: file.mimetype,
     };
   }
 
@@ -120,7 +123,7 @@ export class ContentService {
     };
   }
 
-  async deleteContent(contentId: string,module_id:string) {
+  async deleteContent(contentId: string, module_id: string) {
     const content = await this.contentModel.findById(contentId).exec();
     if (!content) {
       throw new NotFoundException(`Content with ID ${contentId} not found`);
@@ -137,7 +140,7 @@ export class ContentService {
         await this.fileVersionModel.findByIdAndDelete(versionId).exec();
       }
     }
-    this.moduleService.deleteContent(module_id,contentId);
+    this.moduleService.deleteContent(module_id, contentId);
     await this.contentModel.findByIdAndDelete(contentId).exec();
 
     return { message: "Content and associated file versions deleted successfully" };

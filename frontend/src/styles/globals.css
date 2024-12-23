@@ -1,3 +1,12 @@
+/* Scroll Bar Hide */
+html {scrollbar-width: none; /* Firefox */}
+
+body::-webkit-scrollbar {display: none; /* (Chrome, Safari, etc.) */}
+
+body::-webkit-scrollbar-track {background: transparent; /* scrollbar track invisible */}
+
+body::-webkit-scrollbar-thumb {background: transparent; /* scrollbar thumb (the draggable part) invisible */}
+
 :root {
     --background-color: #09090b;
     --primary-color: white;
@@ -10,7 +19,7 @@
 body {
     padding: 0;
     margin: 0;
-    color:white;
+    color: white;
     background-color: var(--background-color);
     font-family:'Roboto-Medium'
 }

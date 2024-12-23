@@ -24,6 +24,7 @@ export class UserDto {
     const userDto: UserDto = {
       _id: user._id,
       name: user.name,
+      email: user.email,
       profile_picture_url: user.profile_picture_url,
       dateOfBirth: user?.dateOfBirth,
       role: user?.role,
