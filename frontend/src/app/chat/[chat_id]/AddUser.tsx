@@ -23,17 +23,15 @@ const AddUser = ({ onSuccess, onError }: { onSuccess: () => void; onError: (mess
       return;
     }
 
-    if (!chat_id) {
-      setError('Chat ID not found.');
-      return;
-    }
 
     setLoading(true);
     setError(''); // Reset any previous error
 
     try {
       // Call the API to add the user to the chat
-      const response = await axios.post(`/api/chat/${chat_id}/user/${email}`);
+      console.log(chat_id);
+
+      const response = await axios.post(`/chat/${chat_id}/user/${email}`);
 
       if (response.status === 200) {
         // On success, clear the email and navigate back

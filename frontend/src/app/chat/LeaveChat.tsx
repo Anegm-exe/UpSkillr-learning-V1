@@ -12,7 +12,7 @@ export default function LeaveChat({ chatId, onLeaveSuccess }: { chatId: string, 
     setError(''); // Clear any previous error
 
     try {
-      const response = await axios.delete(`/chats/${chatId}/leave`);
+      const response = await axios.delete(`/chat/${chatId}/leave`);
 
       if (response.data) {
         onLeaveSuccess();

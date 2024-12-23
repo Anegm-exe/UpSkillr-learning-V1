@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from '../../api/axios';
 
-export default function ReplyMessage({ chatId, messageId, handleReplySent }: { chatId: string; messageId: string; handleReplySent: () => void }) {
+export default function MessageReply({ chatId, messageId, handleReplySent }: { chatId: string; messageId: string; handleReplySent: () => void }) {
     const [reply, setReply] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');

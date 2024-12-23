@@ -27,10 +27,10 @@ interface ChatDetailsProps {
   onChatDetails: () => void;
   onReplyClick?: (messageId: string) => void; // Add this property
   replyToMessageId?: string | null; // Add this property
-  onLeaveSuccess?: () => void; // Add this property
+  onLeaveSuccess: () => void; // Add this property
 }
 
-export default function ChatDetails({ chatData, onMessage }: ChatDetailsProps) {
+export default function ChatDetails({ chatData, onMessage, onLeaveSuccess }: ChatDetailsProps) {
   const [messageText, setMessageText] = useState("");
   const [replyingTo, setReplyingTo] = useState<Message | null>(null); // State for replying to a specific message
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -72,7 +72,15 @@ export default function ChatDetails({ chatData, onMessage }: ChatDetailsProps) {
   useEffect(() => {
     scrollToBottom();
   }, [chatData.messages]);
-
+const handleLeaveChat = async () =>{
+  try{
+    await axios.delete(`/chat/${chatData._id}/leave`)
+    onLeaveSuccess();
+  }
+catch{
+  alert('this is not working');
+}
+}
   if (!chatData) return <h2>Loading...</h2>;
 
   return (
