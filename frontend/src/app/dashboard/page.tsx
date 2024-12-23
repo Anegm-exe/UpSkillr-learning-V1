@@ -12,10 +12,14 @@ import { useState } from 'react';
 import { CourseDetailsProps, UserDetailsProps, AllCoursesDetails, EnrolledCourses, CompletedCourses, SupervisedCourses, DetailedSupervisedCourses, AllDetailedCourses, AllCourses, AllUsersData } from "../../components/StudentDashboardcourse";
 
 export default function Dashboard() {
-    const { tokenDetails, isloading } = useAuth();
+    const { tokenDetails, isLoading } = useAuth();
 
-    if (!tokenDetails || isloading) {
+    if (isLoading) {
         return <h1>Loading...</h1>;
+    }
+
+    if (!tokenDetails) {
+        return <h1>Please log in</h1>;
     }
 
     if (tokenDetails.role === 'admin') {
@@ -42,7 +46,7 @@ function AdminDashboard({ tokenDetails }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevent page refresh
         try {
-            const response = await axios.post('/notifications/send', {
+            const response = await axios.post('/notifications', {
                 text: notificationText,
             });
             console.log('Notification sent:', response.data);
@@ -55,7 +59,12 @@ function AdminDashboard({ tokenDetails }) {
     };
 
     const backupserver = () => {
-        //Do Something Here
+        try {
+            axios.post('/backup');
+        } catch (error) {
+            //@ts-expect-error
+            console.error('Error sending backup request:', error.response.data.message);
+        }
     };
 
     return (
