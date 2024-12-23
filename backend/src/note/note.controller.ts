@@ -29,7 +29,7 @@ export class NoteController {
     return this.noteService.findOne((id));
   }
 
-  // Get notes by course ID
+  // Get notes by user ID
   @Get('user')
   async findByUser(@Req() req: Request): Promise<Note[]> {
     return this.noteService.findByUser(req);

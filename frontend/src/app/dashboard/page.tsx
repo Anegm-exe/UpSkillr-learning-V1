@@ -46,8 +46,10 @@ function AdminDashboard({ tokenDetails }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevent page refresh
         try {
+            const userIds = UsersData.map(user => user._id);
             const response = await axios.post('/notifications', {
-                text: notificationText,
+                message: notificationText,
+                user_ids: userIds
             });
             console.log('Notification sent:', response.data);
             alert('Notification sent successfully!');
