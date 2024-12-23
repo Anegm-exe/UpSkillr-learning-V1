@@ -20,14 +20,18 @@ interface ChatDetailsProps {
     _id: string;
     admin_id: string;
     name: string;
-    user_ids: string[];
+    user_ids: {
+      _id: string;
+      name: string;
+      profile_picture_url: string;
+    }[];
     messages: Message[];
   };
-  onBack: () => void;
   onNewMessageSent: () => void; // Add onNewMessageSent prop
+  onDetails: () => void;
 }
 
-export default function ChatDetails({ chatData, onNewMessageSent }: ChatDetailsProps) {
+export default function ChatDetails({ chatData, onNewMessageSent, onDetails }: ChatDetailsProps) {
   const { tokenDetails } = useAuth();
   const [messageText, setMessageText] = useState("");
   const [replyingTo, setReplyingTo] = useState<Message | null>(null); // State for replying to a specific message
@@ -143,6 +147,10 @@ useEffect(() => {
     }
   }, [chatData.messages]); // This will trigger whenever messages update
 
+  const handleLeaveChat = async () => {
+    await axios.delete(`chat/${chatData._id}/leave`);
+  }
+
   if (!chatData) return <h2>Loading...</h2>;
   return (
     <div className={chatcss.chatDetailsContainer}>
@@ -155,6 +163,20 @@ useEffect(() => {
           className={chatcss.profilePicture}
         />
         <h1 className={chatcss.chatTitle}>{chatData.name}</h1>
+        <div className={chatcss.chatHeaderActions}>
+          <button
+            className={chatcss.leaveButton}
+            onClick={handleLeaveChat}
+          >
+            Leave
+          </button>
+          <button
+            className={chatcss.detailsButton}
+            onClick={onDetails}
+          >
+            Chat Details
+          </button>
+        </div>
       </div>
 
       {/* Messages Section */}

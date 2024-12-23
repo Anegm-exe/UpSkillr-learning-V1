@@ -284,6 +284,7 @@ export class ChatService {
         }
       ));
       await this.chatModel.deleteOne({ _id: chat_id }).exec();
+      return;
     }
 
     // if user is admin of the chat

@@ -102,10 +102,10 @@ export class ContentService {
         url: filePath,
         desc: updateContentDto.desc || "",
         createdAt: new Date(),
+        fileType: file.mimetype,
       });
 
       await newFileVersion.save();
-      console.log(newFileVersion);
       content.versions.push(newFileVersion._id as any);
       content.currentVersion = newFileVersion._id as any;
     }
@@ -120,6 +120,7 @@ export class ContentService {
     return {
       updatedContent,
       url: newFileVersion ? newFileVersion.url : undefined,
+      fileType: file.mimetype,
     };
   }
 
