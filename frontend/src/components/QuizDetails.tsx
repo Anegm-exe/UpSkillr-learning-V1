@@ -9,9 +9,15 @@ interface QuizDetailsProps {
     questions: string[];
     solved: boolean;
     timestamp: Date;
+    results?: {
+      totalQuestions: number;
+      correctAnswers: number;
+      score: number; // Score percentage
+    };
   };
   onMoreDetails: () => void;
   onRetake: (quiz_id: string) => void;
+
 }
 
 export default function QuizDetails({ quizData, onMoreDetails, onRetake }: QuizDetailsProps) {
@@ -41,6 +47,14 @@ export default function QuizDetails({ quizData, onMoreDetails, onRetake }: QuizD
           )}
         </div>
       </div>
+      {quizData.results && (
+        <div className={quizcss.quizReport}>
+          <h3>Quiz Report</h3>
+          <p>Total Questions: {quizData.results.totalQuestions}</p>
+          <p>Correct Answers: {quizData.results.correctAnswers}</p>
+          <p>Score: {quizData.results.score}%</p>
+        </div>
+      )}
     </div>
   );
-}
+}  
