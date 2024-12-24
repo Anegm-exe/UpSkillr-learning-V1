@@ -67,19 +67,19 @@ export class ModuleService {
 
   // Update the module
   async updateModule(moduleId: string, updateModuleDto: UpdateModuleDto): Promise<Modules> {
-    if(updateModuleDto.no_question || updateModuleDto.type) {
+    if (updateModuleDto.no_question || updateModuleDto.type) {
       const module = await this.moduleModel.findById(moduleId).exec();
       if (!module) {
         throw new NotFoundException("Module not found");
       }
       // responses of module
       const responses = await this.responseService.findByModuleId(moduleId);
-      if(responses) {
+      if (responses) {
         // error that a quiz was already solved
         throw new ConflictException("A quiz was already solved");
       }
     }
-    const updatedModule = await this.moduleModel.findByIdAndUpdate(moduleId,updateModuleDto, { new: true }).exec();
+    const updatedModule = await this.moduleModel.findByIdAndUpdate(moduleId, updateModuleDto, { new: true }).exec();
     if (!updatedModule) {
       throw new NotFoundException(`Module with ID ${moduleId} not found`);
     }
@@ -150,7 +150,9 @@ export class ModuleService {
 
   async findAllByCourseIntructor(course_id: string): Promise<Modules[]> {
     const modules = await this.moduleModel.find({ course_id: course_id });
+    console.log("test");
     if (!modules) {
+      console.log("asd");
       throw new NotFoundException("No modules found for this course");
     }
     return modules;
@@ -172,10 +174,10 @@ export class ModuleService {
       throw new NotFoundException(`Module with ID ${moduleId} not found`);
     }
     const responses = await this.responseService.findByModuleId(moduleId);
-      if(responses) {
-        // error that a quiz was already solved
-        throw new ConflictException("A quiz was already solved");
-      }
+    if (responses) {
+      // error that a quiz was already solved
+      throw new ConflictException("A quiz was already solved");
+    }
     // Check if any student has already solved the quizzes
     await Promise.all(
       module.quizzes.map(async (quizId) => {
