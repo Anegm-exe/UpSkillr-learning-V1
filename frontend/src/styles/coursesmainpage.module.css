@@ -259,6 +259,7 @@
 	color: white; /* Text color */
 	cursor: pointer;
 	transition: background 0.2s ease; /* Add a hover effect */
+	z-index: 2;
 }
 
 	.enrollButton:hover {
