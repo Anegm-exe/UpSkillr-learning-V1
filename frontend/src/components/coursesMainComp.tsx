@@ -192,16 +192,9 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
         <div className={CourseCss.container}>
             <div className={CourseCss.headerSection}>
                 <div className={CourseCss.searchWrapper}>
-                    <input
-                        type="text"
-                        placeholder="Search courses..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={CourseCss.searchInput}
-                    />
+                    <input type="text" placeholder="Search courses..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={CourseCss.searchInput}/>
                     <button onClick={() => setShowModal(true)} className={CourseCss.createbutton}>Create</button>
                 </div>
-                
             </div>
             {showModal && (
                 <div className={CourseCss.modalOverlay}>
@@ -210,70 +203,32 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
                         <form onSubmit={handleSubmit}>
                             <div>
                                 <label className={CourseCss.modalLabel}>Title</label>
-                                <input
-                                    type="text"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className={CourseCss.modalInput}
-                                    required
-                                />
+                                <input type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={CourseCss.modalInput} required/>
                             </div>
                             <div>
                                 <label className={CourseCss.modalLabel}>Description</label>
-                                <textarea
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className={CourseCss.modalInput}
-                                    required
-                                />
+                                <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className={CourseCss.modalInput} required/>
                             </div>
                             <div>
                                 <label className={CourseCss.modalLabel}>Categories</label>
                                 {formData.category.map((cat, index) => (
                                     <div key={index} className="flex gap-2 mb-2">
-                                        <input
-                                            type="text"
-                                            value={cat}
-                                            onChange={(e) => handleCategoryChange(index, e.target.value)}
-                                            className={CourseCss.modalInput}
-                                            required
-                                        />
+                                        <input type="text" value={cat} onChange={(e) => handleCategoryChange(index, e.target.value)} className={CourseCss.modalInput} required/>
                                     </div>
                                 ))}
-                                <button
-                                    type="button"
-                                    onClick={addCategory}
-                                    className="text-blue-500 hover:text-blue-600 text-sm"
-                                >
-                                    + Add Category
-                                </button>
+                                <button type="button" onClick={addCategory} className={CourseCss.addCategoryButton}>+ Add Category</button>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Difficulty Level</label>
-                                <select
-                                    value={formData.difficulty_level}
-                                    onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}
-                                    className="w-full p-2 border rounded"
-                                >
+                                <label className="1">Difficulty Level</label>
+                                <select value={formData.difficulty_level} onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}className={CourseCss.select1} >
                                     <option>Beginner</option>
                                     <option>Intermediate</option>
                                     <option>Advanced</option>
                                 </select>
                             </div>
                             <div className="flex justify-end gap-2 mt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                >
-                                    Create Course
-                                </button>
+                                <button type="button" onClick={() => setShowModal(false)} className={CourseCss.createbutton2}>Cancel</button>
+                                <button type="submit" className={CourseCss.createbutton2}>Create Course</button>
                             </div>
                         </form>
                     </div>

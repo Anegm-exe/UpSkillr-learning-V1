@@ -183,36 +183,36 @@
 /* Input and Textarea */
 .modalInput {
 	width: 100%;
-	padding: 0.75rem;
-	border: 1px solid #ccc; /* Light gray border */
-	border-radius: 6px; /* Rounded input */
+	padding: 1rem;
+	color: black;
+	border: 2px outset black;
+	border-radius: 5px;
 	font-size: 1rem;
-	margin-bottom: 1rem;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	font-family: roboto-light;
+	transition: all 0.1s ease;
 }
 
 	.modalInput:focus {
-		border-color: #007bff; /* Blue border on focus */
-		box-shadow: 0 0 5px rgba(0, 123, 255, 0.4); /* Subtle glow */
+		border-color: var(--accent-color); /* Blue border on focus */
 		outline: none;
 	}
 
 /* Add Category Button */
 .addCategoryButton {
-	color: #007bff; /* Blue text */
+	color: var(--accent-color);
 	font-size: 0.85rem;
-	margin-top: 0.5rem;
 	cursor: pointer;
 	transition: color 0.2s ease;
 }
 
 	.addCategoryButton:hover {
-		color: #0056b3; /* Darker blue on hover */
+		filter: grayscale();
 	}
 
 /* Select Dropdown */
 .select1 {
 	width: 100%;
+	color: black;
 	padding: 0.75rem;
 	border: 1px solid #ccc;
 	border-radius: 6px;
@@ -227,41 +227,21 @@
 		outline: none;
 	}
 
-/* Action Buttons */
-.actionButtons {
-	display: flex;
-	justify-content: flex-end;
-	gap: 0.5rem;
-	margin-top: 1.5rem;
+.createbutton2 {
+	position: relative;
+	padding: .5rem .75rem;
+	border-radius: 15px;
+	font-family: roboto-thin;
+	font-size: 1rem;
+	margin-left: .5rem;
+	color: white;
+	border: 1.5px solid var(--accent-color);
+	transition: all .1s ease;
 }
 
-	.actionButtons button {
-		padding: 0.75rem 1.5rem;
-		font-size: 0.95rem;
-		border: none;
-		border-radius: 6px;
-		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease;
+	.createbutton2:hover {
+		transform: scale(1.1);
 	}
-
-	.actionButtons .cancelButton {
-		color: #666;
-		background: #f0f0f0;
-	}
-
-		.actionButtons .cancelButton:hover {
-			background: #e0e0e0;
-			color: #333;
-		}
-
-	.actionButtons .submitButton {
-		color: #fff;
-		background: #007bff;
-	}
-
-		.actionButtons .submitButton:hover {
-			background: #0056b3;
-		}
 
 /* Animations */
 @keyframes fadeIn {
