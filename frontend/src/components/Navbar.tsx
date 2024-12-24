@@ -44,10 +44,10 @@ export default function Navbar() {
               <a onClick={logout} className={navbarcss.button}>
                 Log out
               </a>
-              <Link href="/profile" className={navbarcss.button}>
+              <Link href="/dashboard" className={navbarcss.button}>
                 {tokenDetails.name || "User"}
               </Link>
-              <Link href="/profile" className={navbarcss.button}>
+              <Link href="/dashboard" className={navbarcss.button}>
                 <Image
                   src={tokenDetails.profile_picture_url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"}
                   alt="Profile"

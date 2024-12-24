@@ -3,6 +3,7 @@ import { useFetchInstructorCourses, useFetchAllCourses } from "../app/api/servic
 import CourseCss from "../styles/coursesmainpage.module.css";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
+import axios from '@/app/api/axios';
 
 export interface CourseData {
     _id: string;
@@ -97,10 +98,16 @@ function Studentcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
         router.push(`/course/${courseId}`);
     };
 
-    const handleEnroll = (courseId: string) => {
+    const handleEnroll = async (courseId: string) => {
         // Logic for enrolling in the course can be implemented here.
-        console.log(`Enrolled in course with ID: ${courseId}`);
-        alert(`You have enrolled in the course!`);
+        try {
+            await axios.post(`/course/${courseId}/apply`)
+            console.log(`Enrolled in course with ID: ${courseId}`);
+            alert(`You have enrolled in the course!`);
+        }catch(error){
+            //@ts-expect-error
+            alert(error.response.data.message)
+        }
     };
 
     return (
@@ -149,7 +156,7 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
         title: '',
         description: '',
         category: [''],
-        difficulty_level: 'Beginner'
+        difficulty_Level: 'Beginner'
     });
 
     const filteredCourses = superCourses?.filter((course: CourseData) => {
@@ -170,7 +177,7 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post('/api/courses', {
+            await axios.post('/course/', {
                 ...formData,
                 instructor_ids: [tokenDetails._id],
                 modules: [],
@@ -227,7 +234,7 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
                             </div>
                             <div>
                                 <label className="1">Difficulty Level</label>
-                                <select value={formData.difficulty_level} onChange={(e) => setFormData({ ...formData, difficulty_level: e.target.value })}className={CourseCss.select1} >
+                                <select value={formData.difficulty_level} onChange={(e) => setFormData({ ...formData, difficulty_Level: e.target.value })}className={CourseCss.select1} >
                                     <option>Beginner</option>
                                     <option>Intermediate</option>
                                     <option>Advanced</option>

@@ -3,6 +3,7 @@ export class CreateCourseDto {
     description: string;
     category: string;
     difficulty_Level: string;
+    instructor_ids?:string[]
 }
 
 export class UpdateCourseDto {

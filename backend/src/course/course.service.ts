@@ -29,8 +29,8 @@ export class CourseService{
 
     // create a new course
     async create(course: CreateCourseDto,req: Request): Promise<Course> {
+        course.instructor_ids = [req['user'].userid]
         const newCourse = new this.courseModel(course);
-        newCourse.instructor_ids.push(req['user'].userid);
         return newCourse.save();
     }
 
