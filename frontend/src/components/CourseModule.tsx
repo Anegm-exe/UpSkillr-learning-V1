@@ -135,7 +135,6 @@ const ContentItem: React.FC<ContentItemProps> = ({ contentId }) => {
 
   // Silently handle 404 errors by not rendering anything
   if (loading || error || !content) return null;
-  console.log(content);
   return (
     <div className="bg-zinc-700/50 rounded-md p-4 border border-zinc-600">
       <div className="flex justify-between items-center">

@@ -172,6 +172,13 @@ export class CourseController {
     }
 
 
+    @Roles(Role.Instructor)
+    @UseGuards(authorizationGuard)
+    @Get('instructorQuiz')
+    async instructorQuiz(@Req() req : Request): Promise<{courseName:string,moduleAverage:{moduleTitle:string,averageScore:number}[]}[]> {
+        return this.courseService.getModulesAverageQuiz(req);
+    }
+
     // search
     @Roles(Role.Instructor,Role.Student)
     @UseGuards(authorizationGuard)

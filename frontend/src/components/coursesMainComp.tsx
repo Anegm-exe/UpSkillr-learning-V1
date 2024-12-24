@@ -136,7 +136,7 @@ function Studentcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
                                     ))}
                                 </div>
                             </div>
-                            <button className={CourseCss.enrollButton} onClick={() => handleEnroll(course._id)}>Enroll</button>
+                            {!course.students.includes(tokenDetails._id) && <button className={CourseCss.enrollButton} onClick={() => handleEnroll(course._id)}>Enroll</button>}
                         </div>
                     </div>
                 ))}

@@ -1,74 +1,258 @@
-/* quizcss.module.css */
-
-/* Quiz Container */
+/* QuizForm.css */
 .quizContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: #ffffff;
   padding: 2rem;
-  background-color: var(--background-color);
-  border: 1.5px solid var(--border-color);
-  border-radius: 15px;
-  color: white;
-  font-family: 'Roboto Condensed', sans-serif;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Quiz Details */
+.pageTitle {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+.pageTitlePage {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+  text-align: center; /* Adjust alignment as needed */
+  font-weight: bold; /* Emphasize the title */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for a dynamic look */
+  line-height: 1.2;
+}
+
 .quizDetails {
-  margin-top: 1.5rem;
-  padding: 1rem; /* Add padding for better spacing */
-  background-color: var(--secondary-background-color); /* Optional: Add background color */
-  border-radius: 10px; /* Rounded corners */
+  background-color: #2d2d2d;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .quizInfo {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-  color: var(--text-color);
+  font-size: 1.1rem;
+  color: #e4e4e4;
+  margin-bottom: 0.75rem;
 }
 
-/* Quiz Actions */
 .quizActions {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+  margin-top: 2rem;
 }
 
-/* Buttons */
-.backButton, .moreDetailsButton {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--accent-color);
-  color: white;
-  border: none;
-  border-radius: 10px;
+.backButton {
+  padding: 0.875rem 1.5rem;
   font-size: 1rem;
-  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add shadow to buttons */
+  transition: background-color 0.2s;
 }
 
-.backButton:hover, .moreDetailsButton:hover {
-  background-color: var(--accent-color-hover);
-  filter: brightness(1.1);
+.backButton:hover {
+  background-color: var(--button-hover-color);
+}
+
+.solvedSection {
+  background-color: #2d2d2d;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
 }
 
 .moreDetailsButton {
-  background-color: var(--secondary-accent-color);
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .moreDetailsButton:hover {
-  background-color: var(--secondary-accent-color-hover);
+  background-color: var(--button-hover-color);
 }
 
-/* Title Styles */
-.pageTitle {
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: 1.8rem; /* Increase font size for emphasis */
+/* Quiz form specific styles */
+.questionCard {
+  background-color: #2d2d2d;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.questionCard h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #e4e4e4;
+}
+
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.optionLabel {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #3d3d3d;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.optionLabel:hover {
+  background-color: #4d4d4d;
+}
+
+.optionLabel input[type="radio"] {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent-color);
+}
+
+.optionText {
+  color: #e4e4e4;
+}
+
+.submitButton, .leaveButton, .actionButton {
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover, .leaveButton:hover, .actionButton:hover {
+  background-color: var(--button-hover-color);
+}
+
+.resultsContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.questionCard_correct {
+  border-left: 4px solid #48bb78;
+}
+
+.questionCard_incorrect {
+  border-left: 4px solid #f56565;
+}
+
+.resultOption {
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  background-color: #3d3d3d;
+}
+
+.resultOption_correctAnswer {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #9ae6b4;
+}
+
+.resultOption_userAnswer:not(.resultOption_correctAnswer) {
+  background-color: rgba(245, 101, 101, 0.2);
+  color: #feb2b2;
+}
+
+.scoreContainer {
+  background-color: #2d2d2d;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  margin: 2rem auto;
+}
+
+.successTitle {
+  color: #48bb78;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.warningTitle {
+  color: #ecc94b;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.scoreText {
+  font-size: 1.5rem;
+  color: #e4e4e4;
+  margin-bottom: 1rem;
+}
+
+.hintText {
+  color: #a0aec0;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .quizContainer {
+    padding: 1rem;
+  }
+
+  .questionCard {
+    padding: 1rem;
+  }
+
+  .pageTitle {
+    font-size: 1.75rem;
+  }
+}
+
+/* Add these new styles to your existing CSS */
+.moduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.moduleCard {
+  background-color: #2d2d2d;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.moduleTitle {
+  font-size: 1.1rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.scoreSection {
+  margin-top: 0.5rem;
+}
+
+.scoreBar {
+  width: 100%;
+  height: 8px;
+  background-color: #3d3d3d;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.scoreProgress {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.pageTitlePage {
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-bottom: 2rem;
 }

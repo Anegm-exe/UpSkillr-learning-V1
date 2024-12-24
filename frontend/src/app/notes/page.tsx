@@ -67,7 +67,6 @@ export default function NoteDetails({
                     </div>
                 ))}
             </div>
-            <button onClick={() => router.push("/dashboard")} className={styles.backButton}>DashBoard</button>
         </div>
     );
 }

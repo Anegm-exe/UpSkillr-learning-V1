@@ -30,9 +30,9 @@ export default function Navbar() {
         <Link href="/chat" className={navbarcss.button}>
           Chats
         </Link>
-        <Link href="/notes" className={navbarcss.button}>
+        {tokenDetails?.role === 'student' && <Link href="/notes" className={navbarcss.button}>
           Notes
-        </Link>
+        </Link>}
         <Link href="/quiz" className={navbarcss.button}>
           Quizzes
         </Link>

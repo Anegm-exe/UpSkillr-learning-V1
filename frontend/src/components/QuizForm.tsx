@@ -71,40 +71,44 @@ export default function QuizForm({ quizData,goBack,goToModule }: QuizFormProps) 
   }
 
   return (
-    <div>
+<div className={styles.quizContainer}>
       {!results ? (
         <form onSubmit={handleSubmit}>
-          <h2>{quizData.module_id?.title} Quiz</h2>
+          <h2 className={styles.quizTitle}>{quizData.module_id?.title} Quiz</h2>
           {quizData.questions.map((question) => (
-            <div key={question._id} className={styles.question}>
+            <div key={question._id} className={styles.questionCard}>
               <h3>{question.title}</h3>
-              {question.options.map((option, i) => (
-                <label key={i} className={styles.option}>
-                  <input
-                    type="radio"
-                    name={question._id}
-                    value={i}
-                    checked={answers.some(
-                      (ans) => ans.question_id === question._id && ans.answer === i
-                    )}
-                    onChange={() => handleChange(question._id, i)}
-                  />
-                  {option}
-                </label>
-              ))}
+              <div className={styles.optionsContainer}>
+                {question.options.map((option, i) => (
+                  <label key={i} className={styles.optionLabel}>
+                    <input
+                      type="radio"
+                      name={question._id}
+                      value={i}
+                      checked={answers.some(
+                        (ans) => ans.question_id === question._id && ans.answer === i
+                      )}
+                      onChange={() => handleChange(question._id, i)}
+                    />
+                    <span className={styles.optionText}>{option}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           ))}
-          <button type="submit" className={styles.button}>
+          <button type="submit" className={styles.submitButton}>
             Submit Quiz
           </button>
         </form>
       ) : (
         <>
-          {!showScore ? (
-            <div>
-              <h2>Quiz Results</h2>
+          {!score ? (
+            <div className={styles.resultsContainer}>
+              <h2 className={styles.resultsTitle}>Quiz Results</h2>
               {quizData.questions.map((question) => {
-                const userAnswer = answers.find((ans) => ans.question_id === question._id)?.answer;
+                const userAnswer = answers.find(
+                  (ans) => ans.question_id === question._id
+                )?.answer;
                 const correctAnswer = results.correctAnswers.find(
                   (ans) => ans.question_id === question._id
                 )?.answer;
@@ -112,50 +116,57 @@ export default function QuizForm({ quizData,goBack,goToModule }: QuizFormProps) 
                 return (
                   <div
                     key={question._id}
-                    className={`${styles.question} ${
-                      userAnswer === correctAnswer ? styles.correct : styles.incorrect
+                    className={`${styles.questionCard} ${
+                      userAnswer === correctAnswer 
+                        ? styles.questionCard_correct 
+                        : styles.questionCard_incorrect
                     }`}
                   >
                     <h3>{question.title}</h3>
-                    {question.options.map((option, i) => (
-                      <div
-                        key={i}
-                        className={`${styles.option} ${
-                          i === correctAnswer
-                            ? styles['correct-answer']
-                            : i === userAnswer
-                            ? styles['user-answer']
-                            : ''
-                        }`}
-                      >
-                        {option}
-                      </div>
-                    ))}
+                    <div className={styles.optionsContainer}>
+                      {question.options.map((option, i) => (
+                        <div
+                          key={i}
+                          className={`${styles.resultOption} ${
+                            i === correctAnswer
+                              ? styles.resultOption_correctAnswer
+                              : i === userAnswer && i !== correctAnswer
+                              ? styles.resultOption_userAnswer
+                              : ''
+                          }`}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
               })}
-              <button onClick={handleLeaveQuiz} className={styles.button}>
+              <button onClick={handleLeaveQuiz} className={styles.leaveButton}>
                 Leave Quiz
               </button>
             </div>
           ) : (
-            <>
-            {results.score >= 50 ? (
-              <div>
-                <h2>Congratulations!</h2>
-                <p>You scored {score}% on the quiz.</p>
-                <button className={styles.button} onClick={goBack}>Go Back</button>
-              </div>
-            ) : (
-              <div>
-                {/* Handle case for score less than 50 */}
-                <h2>Better luck next time!</h2>
-                <p>Your score is {score}%. Keep trying to improve!</p>
-                <p>Try checking out the module again.</p>
-                <button className={styles.button} onClick={goToModule}>Check out module</button>
-              </div>
-            )}   
-            </>         
+            <div className={styles.scoreContainer}>
+              {score >= 50 ? (
+                <>
+                  <h2 className={styles.successTitle}>Congratulations!</h2>
+                  <p className={styles.scoreText}>You scored {score}% on the quiz.</p>
+                  <button className={styles.actionButton} onClick={goBack}>
+                    Go Back
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h2 className={styles.warningTitle}>Better luck next time!</h2>
+                  <p className={styles.scoreText}>Your score is {score}%</p>
+                  <p className={styles.hintText}>Try checking out the module again.</p>
+                  <button className={styles.actionButton} onClick={goToModule}>
+                    Check out module
+                  </button>
+                </>
+              )}
+            </div>
           )}
         </>
       )}
