@@ -1,4 +1,4 @@
-import quizcss from '../styles/quizcss.module.css';
+import styles from '@/styles/quizcss.module.css'; // Import CSS module
 
 interface QuizDetailsProps {
   quizData: {
@@ -16,28 +16,28 @@ interface QuizDetailsProps {
 
 export default function QuizDetails({ quizData, onMoreDetails, onRetake }: QuizDetailsProps) {
   return (
-    <div className={quizcss.container}>
-      <div className={quizcss.card}>
-        <h2 className={quizcss.title}>Quiz for {quizData.module_id?.title}</h2>
-        <p className={quizcss.info}>Type: {quizData.type}</p>
-        <p className={quizcss.info}>Created By: {quizData.user_id?.name || 'Unknown'}</p>
-        <div className={quizcss.actions}>
-          {!quizData.solved ? (
-            <button onClick={onMoreDetails} className={quizcss.primaryButton}>
-              Start Quiz
+    <div className={styles.quizContainer}>
+      <h2 className={styles.pageTitle}>Quiz for {quizData.module_id?.title}</h2>
+      <div className={styles.quizDetails}>
+        <p className={styles.quizInfo}>Type: {quizData.type}</p>
+        <p className={styles.quizInfo}>Created By: {quizData.user_id?.name || 'Unknown'}</p>
+      </div>
+      <div className={styles.quizActions}>
+        {!quizData.solved ? (
+          <button onClick={onMoreDetails} className={styles.backButton}>
+            Start Quiz
+          </button>
+        ) : (
+          <div className={styles.solvedSection}>
+            <p className={styles.quizInfo}>Quiz already solved</p>
+            <button
+              onClick={() => onRetake(quizData._id || '')}
+              className={styles.moreDetailsButton}
+            >
+              Retake Quiz
             </button>
-          ) : (
-            <div className={quizcss.solvedSection}>
-              <p className={quizcss.info}>Quiz already solved</p>
-              <button
-                onClick={() => onRetake(quizData._id || '')}
-                className={quizcss.secondaryButton}
-              >
-                Retake Quiz
-              </button>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

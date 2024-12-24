@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {Course, CourseDocument} from './model/course.schema';
@@ -446,6 +446,12 @@ export class CourseService{
         if (!module) {
             throw new NotFoundException(`Module with ID ${module_id} not found`)
         }
+        // check if module has quiz
+        if(module.quizzes.length > 0) {
+            // conflict
+            throw new ConflictException(`Module with ID ${module_id} already has quizzes`)
+        }
+
         const quizzes = await Promise.all(
             course.students.map(async (studentId) => {
                 return await this.generateQuiz(course_id, module_id, studentId)

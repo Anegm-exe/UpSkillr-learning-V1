@@ -88,5 +88,9 @@ export class ResponseService {
     return this.responseModel.findOne({ quiz_id: quizId, user_id: userId }).exec();
   }  
 
+  // find response by module_id
+  async findByModuleId(moduleId: string): Promise<Response[]> {
+    return this.responseModel.find({ module_id: moduleId }).exec();
+  }
 
 }

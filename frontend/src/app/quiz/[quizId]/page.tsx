@@ -11,5 +11,6 @@ export default function QuizPage({ params } : { params:{quizId:string}}) {
     const { quizData } = useFetchQuiz(quizId)
     if(!quizData)
         return <div>Loading...</div>
-    return <QuizForm quizData={quizData} goBack={()=>router.push('/')}/>
+    console.log(quizData);
+    return <QuizForm quizData={quizData} goBack={()=>router.push('/')} goToModule={() => router.push(`/course/${quizData.module_id.course_id}`)}/>
 }

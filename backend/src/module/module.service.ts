@@ -67,7 +67,19 @@ export class ModuleService {
 
   // Update the module
   async updateModule(moduleId: string, updateModuleDto: UpdateModuleDto): Promise<Modules> {
-    const updatedModule = await this.moduleModel.findByIdAndUpdate(moduleId, updateModuleDto, { new: true }).exec();
+    if(updateModuleDto.no_question || updateModuleDto.type) {
+      const module = await this.moduleModel.findById(moduleId).exec();
+      if (!module) {
+        throw new NotFoundException("Module not found");
+      }
+      // responses of module
+      const responses = await this.responseService.findByModuleId(moduleId);
+      if(responses) {
+        // error that a quiz was already solved
+        throw new ConflictException("A quiz was already solved");
+      }
+    }
+    const updatedModule = await this.moduleModel.findByIdAndUpdate(moduleId,updateModuleDto, { new: true }).exec();
     if (!updatedModule) {
       throw new NotFoundException(`Module with ID ${moduleId} not found`);
     }
@@ -159,7 +171,11 @@ export class ModuleService {
     if (!module) {
       throw new NotFoundException(`Module with ID ${moduleId} not found`);
     }
-
+    const responses = await this.responseService.findByModuleId(moduleId);
+      if(responses) {
+        // error that a quiz was already solved
+        throw new ConflictException("A quiz was already solved");
+      }
     // Check if any student has already solved the quizzes
     await Promise.all(
       module.quizzes.map(async (quizId) => {

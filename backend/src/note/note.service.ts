@@ -30,9 +30,6 @@ export class NoteService {
   //get note by course id
   async findByUser(req: Request): Promise<Note[]> {
     const notes = await this.noteModel.find({ user_id:req['user'].userid }).exec(); // Query notes with the given courseId
-    if (!notes || notes.length === 0) {
-      throw new NotFoundException(`No notes found for course id #${req['user'].userid}`);
-    }
     return notes;
   }
 

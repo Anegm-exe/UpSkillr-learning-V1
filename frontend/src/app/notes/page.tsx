@@ -24,7 +24,7 @@ export default function NoteDetails({
 
     const getAllNotes = async () => {
         try {
-            const response = await axios.get("/note");
+            const response = await axios.get("/note/user");
             setAllNotes(response.data);
         } catch (err) {
             setError("Failed to fetch notes");

@@ -7,7 +7,7 @@ import axios from '../../api/axios';
 interface quiz {
     _id?: string;
     user_id: { _id: string; name: string };
-    module_id: { _id: string; title: string };
+    module_id: { _id: string; title: string; course_id:string; };
     type: string;
     questions: string[];
     solved:boolean;

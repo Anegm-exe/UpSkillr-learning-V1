@@ -113,10 +113,10 @@ export const useInstructorModuleFunctions = () => {
 
   const createModule = async (courseId: string, createModuleDto: CreateModuleDto) => {
     try {
-      const response = await axios.post(`/module/course/add/${courseId}`, createModuleDto);
+      const response = await axios.post(`/course/${courseId}/module`, createModuleDto);
       return response.data;
     } catch (error) {
-      throw new Error(`Failed to create module: ${error.message}`);
+      throw new Error(`Failed to create module: ${error.response.data.message}`);
     }
   };
 
