@@ -34,15 +34,19 @@
 
 .courseGrid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 	gap: 1.5rem;
 	max-width: 1400px;
 	margin: 0 auto;
 }
 
 .courseCard {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	background: var(--background-color);
 	border-radius: 15px;
+	height: 100%;
 	border: 1.5px outset var(--accent-color);
 	padding: 1.5rem;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -110,5 +114,167 @@
 
 	.courseGrid {
 		grid-template-columns: 1fr;
+	}
+}
+
+.headerSection {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	max-width: 1400px;
+	margin: 0 auto 2rem;
+}
+
+.searchWrapper {
+	display: flex;
+	gap: 1rem;
+	max-width: 80%;
+	align-items: center;
+	flex: 1;
+}
+
+.createbutton {
+	position: relative;
+	padding: .5rem .75rem;
+	border-radius: 15px;
+	font-family: roboto-thin;
+	font-size: 1.25rem;
+	color: white;
+	border: 1.5px solid var(--accent-color);
+	transition: all .1s ease;
+}
+
+	.createbutton:hover {
+		transform: scale(1.1);
+	}
+
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1;
+}
+
+.modalContent {
+	background: var(--background-color);
+	width: 35%;
+	padding: 3rem;
+	border-radius: 15px;
+	border: 2px outset var(--accent-color);
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+	.modalContent h2 {
+		font-size: 2rem;
+		font-family: roboto-condensed;
+		margin-bottom: 1rem;
+		text-align: center;
+		color: white;
+	}
+
+.modalLabel {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+	color: var(--border); /* Subtle gray for label text */
+}
+
+/* Input and Textarea */
+.modalInput {
+	width: 100%;
+	padding: 1rem;
+	color: black;
+	border: 2px outset black;
+	border-radius: 5px;
+	font-size: 1rem;
+	font-family: roboto-light;
+	transition: all 0.1s ease;
+}
+
+	.modalInput:focus {
+		border-color: var(--accent-color); /* Blue border on focus */
+		outline: none;
+	}
+
+/* Add Category Button */
+.addCategoryButton {
+	color: var(--accent-color);
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+	.addCategoryButton:hover {
+		filter: grayscale();
+	}
+
+/* Select Dropdown */
+.select1 {
+	width: 100%;
+	color: black;
+	padding: 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 1rem;
+	margin-bottom: 1rem;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+	.select1:focus {
+		border-color: #007bff;
+		box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+		outline: none;
+	}
+
+.createbutton2 {
+	position: relative;
+	padding: .5rem .75rem;
+	border-radius: 15px;
+	font-family: roboto-thin;
+	font-size: 1rem;
+	margin-left: .5rem;
+	color: white;
+	border: 1.5px solid var(--accent-color);
+	transition: all .1s ease;
+}
+
+	.createbutton2:hover {
+		transform: scale(1.1);
+	}
+
+.enrollButton {
+	font-size: 1.25rem;
+	width: 100%;
+	text-align: center; /* Center text inside the button */
+	margin-top: auto; /* Push it to the bottom */
+	padding: 0.75rem; /* Add some padding */
+	border: 2px outset var(--accent-color); /* Add rounded corners */
+	border-radius: 10px;
+	background: var(--background-color); /* Add your preferred button background color */
+	color: white; /* Text color */
+	cursor: pointer;
+	transition: background 0.2s ease; /* Add a hover effect */
+	z-index: 2;
+}
+
+	.enrollButton:hover {
+		border: 2px outset white;
+		filter: invert();
+	}
+/* Animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
 	}
 }
