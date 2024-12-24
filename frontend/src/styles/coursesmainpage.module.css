@@ -34,15 +34,19 @@
 
 .courseGrid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 	gap: 1.5rem;
 	max-width: 1400px;
 	margin: 0 auto;
 }
 
 .courseCard {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	background: var(--background-color);
 	border-radius: 15px;
+	height: 100%;
 	border: 1.5px outset var(--accent-color);
 	padding: 1.5rem;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -243,6 +247,24 @@
 		transform: scale(1.1);
 	}
 
+.enrollButton {
+	font-size: 1.25rem;
+	width: 100%;
+	text-align: center; /* Center text inside the button */
+	margin-top: auto; /* Push it to the bottom */
+	padding: 0.75rem; /* Add some padding */
+	border: 2px outset var(--accent-color); /* Add rounded corners */
+	border-radius: 10px;
+	background: var(--background-color); /* Add your preferred button background color */
+	color: white; /* Text color */
+	cursor: pointer;
+	transition: background 0.2s ease; /* Add a hover effect */
+}
+
+	.enrollButton:hover {
+		border: 2px outset white;
+		filter: invert();
+	}
 /* Animations */
 @keyframes fadeIn {
 	from {

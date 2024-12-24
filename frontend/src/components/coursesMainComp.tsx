@@ -97,6 +97,12 @@ function Studentcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
         router.push(`/course/${courseId}`);
     };
 
+    const handleEnroll = (courseId: string) => {
+        // Logic for enrolling in the course can be implemented here.
+        console.log(`Enrolled in course with ID: ${courseId}`);
+        alert(`You have enrolled in the course!`);
+    };
+
     return (
         <div className={CourseCss.container}>
             <div className={CourseCss.searchWrapper}>
@@ -123,6 +129,7 @@ function Studentcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
                                     ))}
                                 </div>
                             </div>
+                            <button className={CourseCss.enrollButton} onClick={() => handleEnroll(course._id)}>Enroll</button>
                         </div>
                     </div>
                 ))}
