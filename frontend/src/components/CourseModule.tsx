@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useModuleRate } from "../app/_hooks/useModuleRate";
 import { useDownloadFile } from "@/app/_hooks/useDownloadFile";
 import { useFetchContent } from "@/app/_hooks/useFetchContent";
+import { useRouter } from "next/navigation";
+
 interface CourseModuleProps {
   module: ModuleType;
 }
@@ -9,6 +11,16 @@ interface CourseModuleProps {
 const CourseModule: React.FC<CourseModuleProps> = ({ module }) => {
   const [rating, setRating] = useState<number>(0);
   const { rateModule, loading: rateLoading, error: rateError, success: rateSuccess } = useModuleRate();
+
+    const router = useRouter(); // Use router for navigation
+
+    const handleCreateForum = () => {
+        router.push(`/create-forum?courseId=${module._id}`);
+    };
+
+    const handleCreateNote = () => {
+        router.push(`/create-note?moduleId=${module._id}`);
+    };
 
   return (
     <div className="bg-zinc-800 rounded-lg border border-zinc-700 p-6 mb-4 shadow-lg">
@@ -48,7 +60,22 @@ const CourseModule: React.FC<CourseModuleProps> = ({ module }) => {
           ))}
           {module.content_ids.length === 0 && <p>no content available</p>}
         </div>
-      </div>
+          </div>
+          {/* Add Buttons for Forum and Note Creation */}
+          <div className="mt-6 flex justify-end gap-4">
+              <button
+                  onClick={handleCreateForum}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              >
+                  Create Forum
+              </button>
+              <button
+                  onClick={handleCreateNote}
+                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+              >
+                  Create Note
+              </button>
+          </div>
     </div>
   );
 };
