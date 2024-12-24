@@ -229,4 +229,24 @@ export class ModuleService {
     module.content_ids = module.content_ids.filter((id) => id !== contentId);
     return module.save();
   }
+
+  // find quiz average
+  async findQuizAverage(moduleId: string): Promise<number> {
+    const module = await this.moduleModel.findById(moduleId).exec();
+    if (!module) {
+      throw new NotFoundException(`Module with ID ${moduleId} not found`);
+    }
+    const scores = await Promise.all(module.quizzes.map(async (quizId) => {
+      const response = await this.responseService.findByQuizId(quizId);
+      if(response)
+        return response.score*100;
+    }))
+
+    // filter nulls
+    const filteredScores = scores.filter((score) => score !== null && score !== undefined);
+    if (filteredScores.length === 0) {
+      return 0;
+    }
+    return filteredScores.reduce((a, b) => a + b, 0) / filteredScores.length;
+  }
 }

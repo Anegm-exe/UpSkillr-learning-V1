@@ -507,6 +507,24 @@ export class CourseService{
         await this.progressService.update(progress._id, progress);
         return response._id.toString();
     }
+    
+    // get Modules average quiz
+    async getModulesAverageQuiz(req: Request): Promise<{courseName:string,moduleAverage:{moduleTitle:string,averageScore:number}[]}[]> {
+        const user = req['user'].userid;
+        // get courses by user
+        const courses = await this.courseModel.find({ instructor_ids : user }).exec();
+        // loop around modules
+        const modules = await Promise.all(courses.map(async (course) => {
+            const modules = await this.moduleService.findAllByCourse(course._id,req);
+            const moduleAverage = await Promise.all(modules.map(async (module) => {
+                const average = await this.moduleService.findQuizAverage(module._id);
+                return {moduleTitle:module.title,averageScore:average};
+            }))
+            return {courseName:course.title,moduleAverage:moduleAverage};
+        }));
+        return modules;
+    }
+
 
     // retake quiz in module
     async retakeQuiz(quiz_id:string, req: Request) : Promise<string> {
