@@ -200,11 +200,13 @@ const InstructorCourseModule: React.FC<CourseModuleProps> = ({ module }) => {
       console.error("Error deleting content:", error);
     }
   };
-  const initializeQuizzes = (course_id:string,module_id:string) => {
+  const initializeQuizzes = async (course_id:string,module_id:string) => {
     try{
-      axios.post(`course/${course_id}/module/${module_id}/quizzes`);
+      await axios.post(`course/${course_id}/module/${module_id}/quizzes`);
+      alert('Quizzes has been initialized');
     }catch (error){
       //@ts-expect-error
+      alert(error.response.data.message)
       console.error(error.response.data.message);
     }
   }

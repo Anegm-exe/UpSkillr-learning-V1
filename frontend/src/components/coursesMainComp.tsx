@@ -234,7 +234,7 @@ function Instructorcourses({ tokenDetails }: { tokenDetails: TokenDetails }) {
                             </div>
                             <div>
                                 <label className="1">Difficulty Level</label>
-                                <select value={formData.difficulty_level} onChange={(e) => setFormData({ ...formData, difficulty_Level: e.target.value })}className={CourseCss.select1} >
+                                <select value={formData.difficulty_Level} onChange={(e) => setFormData({ ...formData, difficulty_Level: e.target.value })}className={CourseCss.select1} >
                                     <option>Beginner</option>
                                     <option>Intermediate</option>
                                     <option>Advanced</option>
