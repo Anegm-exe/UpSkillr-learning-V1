@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {Course, CourseDocument} from './model/course.schema';
@@ -29,8 +29,8 @@ export class CourseService{
 
     // create a new course
     async create(course: CreateCourseDto,req: Request): Promise<Course> {
+        course.instructor_ids = [req['user'].userid]
         const newCourse = new this.courseModel(course);
-        newCourse.instructor_ids.push(req['user'].userid);
         return newCourse.save();
     }
 
@@ -209,7 +209,7 @@ export class CourseService{
         
 
     async exportAnalytics(req: Request, rating:number): Promise<string> {
-        const instructorId = req['user'].userid || '6755e5161cccf04a9ee865d6';
+        const instructorId = req['user'].userid;
     
         // Fetch courses by instructor
         const courses = await this.getByInstructor(instructorId);
@@ -219,7 +219,6 @@ export class CourseService{
     
         // Prepare analytics data
         const analytics = [];
-    
         for (const course of courses) {
             const modules = await this.moduleService.findAllByCourseIntructor(course._id,); // Fetch modules
             const ratings = modules.map((module) => {
@@ -229,8 +228,8 @@ export class CourseService{
             });
             const courseRating = (await this.updateRating(course._id)).rating;
             const instructorRating = rating;
-            const enrolledStudents = course.students.map(student => student.name);
-            const completedStudents = await this.findCompletedStudents(course._id);
+            const enrolledStudents = course.students.length;
+            const completedStudents = (await this.findCompletedStudents(course._id)).length;
     
             const studentPerformanceMetrics = await this.getStudentPerformance(req,course._id);
     
@@ -238,15 +237,16 @@ export class CourseService{
                 courseId: course._id,
                 courseName: course.title,
                 moduleRatings: ratings,
-                courseRating,
-                instructorRating,
-                enrolledStudents,
-                completedStudents,
+                courseRating:courseRating,
+                instructorRating:instructorRating,
+                enrolledStudents:enrolledStudents,
+                completedStudents:completedStudents,
                 belowAverage: studentPerformanceMetrics.Below_average,
                 average: studentPerformanceMetrics.Average,
                 aboveAverage: studentPerformanceMetrics.Above_Average,
                 excellent: studentPerformanceMetrics.Excellent,
             });
+            console.log(analytics)
         }
     
         // Define the CSV writer
@@ -446,6 +446,12 @@ export class CourseService{
         if (!module) {
             throw new NotFoundException(`Module with ID ${module_id} not found`)
         }
+        // check if module has quiz
+        if(module.quizzes.length > 0) {
+            // conflict
+            throw new ConflictException(`Module with ID ${module_id} already has quizzes`)
+        }
+
         const quizzes = await Promise.all(
             course.students.map(async (studentId) => {
                 return await this.generateQuiz(course_id, module_id, studentId)

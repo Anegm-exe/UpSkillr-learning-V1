@@ -183,12 +183,12 @@
 
 .notificationDiv {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 2rem;
     padding: 1rem 1rem;
     margin-top: .75rem;
     width: calc(100% - 2rem);
-    height: 75%;
+    height: 90%;
     overflow-y: auto;
     scrollbar-width: none;
 }
@@ -250,7 +250,7 @@
     margin: 0;
     display: flex;
     width: calc(100% - 2rem);
-    height: 12rem;
+    height: 15rem;
     padding: 1rem;
     border: 2px solid var(--border-color);
     border-radius: 15px;
@@ -352,7 +352,8 @@
     }
 
     .IcourseTemplate p {
-        font-size: .8rem;
+        padding-top: .6rem;
+        font-size: 1rem;
         font-family: roboto-thin;
         text-align: left;
     }

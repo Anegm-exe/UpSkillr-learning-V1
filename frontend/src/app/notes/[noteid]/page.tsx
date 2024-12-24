@@ -7,7 +7,7 @@ import styles from "../../../styles/note.module.css";
 interface Note {
   _id?: string;
   user_id?: string;
-  course_id?: string;   
+  module_id?: string;   
   content?: string;
   timestamp?: Date;
   last_updated?: Date;
@@ -18,7 +18,7 @@ export default function NoteDetails({ params }: { params: Promise<{ noteid: stri
   const [note, setNote] = useState<Note>({
     _id: "",
     user_id: "",
-    course_id: "",
+    module_id: "",
     content: "",
     timestamp: new Date(),
     last_updated: new Date(),

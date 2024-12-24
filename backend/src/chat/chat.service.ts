@@ -241,7 +241,7 @@ export class ChatService {
       
 
       // Check if the requester is the chat admin or the one who sent the message
-      if (chat.admin_id !== req['user'].userid || req['user'].userid !== message.user_id) {
+      if (chat.admin_id !== req['user'].userid && req['user'].userid !== message.user_id) {
         throw new UnauthorizedException('You are not authorized to delete this message');
       }
 
@@ -284,6 +284,7 @@ export class ChatService {
         }
       ));
       await this.chatModel.deleteOne({ _id: chat_id }).exec();
+      return;
     }
 
     // if user is admin of the chat

@@ -1,87 +1,117 @@
-/* Chat Page Container */
-/* Prevent Scrollbars on the page */
-.html, .body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden; /* Prevent scrollbars */
-  }
-  
-  /* Chat Page Container */
+.chatPageContainer {
+  display: flex;
+  height: 100vh;
+  background-color: #111827; /* Dark background */
+}
+
+.chatListContainer {
+  width: 300px;
+  background-color: #1f2937; /* Dark gray sidebar */
+  border-right: 1px solid #374151; /* Slightly lighter gray border */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebarTitle {
+  padding: 1.5rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f9fafb; /* Light text */
+  border-bottom: 1px solid #374151;
+}
+
+.chatList {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.chatListItem {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  color: #d1d5db; /* Gray text */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chatListItem:hover {
+  background-color: #374151; /* Hover background */
+}
+
+.activeChat {
+  background-color: #2563eb; /* Active blue */
+  color: #f9fafb; /* Light text */
+  font-weight: 500;
+}
+
+.activeChat:hover {
+  background-color: #1e40af; /* Darker blue on hover */
+}
+
+.createChatButton {
+  margin: 1rem;
+  padding: 0.75rem;
+  background-color: #3b82f6; /* Bright blue button */
+  color: #f9fafb;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.createChatButton:hover {
+  background-color: #2563eb; /* Slightly darker on hover */
+}
+
+.chatDetailsContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1f2937; /* Dark gray */
+  overflow: hidden;
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af; /* Light gray text */
+  font-size: 0.875rem;
+  background-color: #111827; /* Match overall background */
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #111827;
+  color: #9ca3af; /* Gray text */
+  font-size: 0.875rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .chatPageContainer {
-    display: flex;
-    height: 100%;
-    background-color: var(--background-color);
-    overflow: hidden; /* Prevent scrollbars on the container */
+    flex-direction: column;
   }
-  
-  /* Chat List (Sidebar) */
+
   .chatListContainer {
-    width: 25%;
-    padding: 1rem;
-    background-color: var(--secondary-background-color);
-    border-right: 1px solid var(--border-color);
-    overflow-y: auto; /* Allow scrolling in the sidebar if necessary */
+    width: 100%;
+    height: 40vh;
   }
-  
-  /* Chat Details Section */
+
   .chatDetailsContainer {
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--background-color);
-    overflow-y: auto; /* Allow scrolling if necessary inside chat details */
+    height: 60vh;
   }
-  
-  /* Make sure placeholder is centered */
-  .placeholder {
-    text-align: center;
-    font-size: 1.2rem;
-    color: var(--text-color);
-  }
-  
-  
-  .sidebarTitle {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: white;
-    text-align: center;
-  }
-  
-  .chatList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .chatListItem {
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 8px;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .chatListItem:hover {
-    background-color: var(--hover-background-color);
-  }
-  
-  .activeChat {
-    background-color: var(--accent-color);
-    color: white;
-  }
-  
-  /* Chat Details Section */
-  .chatDetailsContainer {
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--background-color);
-    overflow-y: auto;
-  }
-  
+}

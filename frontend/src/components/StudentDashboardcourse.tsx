@@ -53,7 +53,11 @@ export function AllCoursesDetails({ courseData }: CourseDetailsProps) {
                 <div className={dashboardcss.progressradial}></div>
                 <div className={dashboardcss.progresscircle} style={{ '--target-BG': `100% ${progressData.completion_percentage || 0}%` } as React.CSSProperties}></div>
                 <h1>Completion: {progressData.completion_percentage}%</h1>
-                <h1>Average Quiz Score: {progressData.average_quiz ?? 'N/A'}</h1>
+                <h1>Average Quiz Score: {
+                  //@ts-expect-error
+                  progressData?.average_quiz*100 ?? 'N/A'}
+                  {progressData.average_quiz?'%':''}
+                </h1>
             </div>
             <div className={dashboardcss.courseTemplatecontnet}>
                 <h1>{courseData.title}</h1>

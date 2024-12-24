@@ -102,10 +102,10 @@ export class ContentService {
         url: filePath,
         desc: updateContentDto.desc || "",
         createdAt: new Date(),
+        fileType: file.mimetype,
       });
 
       await newFileVersion.save();
-      console.log(newFileVersion);
       content.versions.push(newFileVersion._id as any);
       content.currentVersion = newFileVersion._id as any;
     }
@@ -120,6 +120,7 @@ export class ContentService {
     return {
       updatedContent,
       url: newFileVersion ? newFileVersion.url : undefined,
+      fileType: file.mimetype,
     };
   }
 
@@ -144,5 +145,38 @@ export class ContentService {
     await this.contentModel.findByIdAndDelete(contentId).exec();
 
     return { message: "Content and associated file versions deleted successfully" };
-  }
+    }
+
+    async getContentVersions(contentId: string) {
+        if (!isValidObjectId(contentId)) {
+            throw new NotFoundException(`Invalid content ID format: ${contentId}`);
+        }
+
+        const content = await this.contentModel
+            .findById(contentId)
+            .populate('versions')
+            .exec();
+
+        if (!content) {
+            throw new NotFoundException(`Content with ID ${contentId} not found`);
+        }
+
+        return content.versions;
+    }
+
+    async getVersionById(versionId: string) {
+        if (!isValidObjectId(versionId)) {
+            throw new NotFoundException(`Invalid version ID format: ${versionId}`);
+        }
+
+        const version = await this.fileVersionModel
+            .findById(versionId)
+            .exec();
+
+        if (!version) {
+            throw new NotFoundException(`Version with ID ${versionId} not found`);
+        }
+
+        return version;
+    }
 }

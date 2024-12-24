@@ -23,12 +23,7 @@ export class NoteController {
     return this.noteService.findAll();
   }
 
-  // Get a note by ID
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Note> {
-    return this.noteService.findOne((id));
-  }
-
+  
   // Get notes by user ID
   @Get('user')
   async findByUser(@Req() req: Request): Promise<Note[]> {
@@ -49,4 +44,10 @@ export class NoteController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.noteService.delete(id);
   }
+  // Get a note by ID
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Note> {
+    return this.noteService.findOne((id));
+  }
+
 }

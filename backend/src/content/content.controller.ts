@@ -39,7 +39,21 @@ export class ContentController {
   @Get()
   getAllContent() {
     return this.contentService.getAllContent();
-  }
+    }
+
+    @Roles(Role.Student, Role.Instructor, Role.Admin)
+    @UseGuards(authorizationGuard)
+    @Get(":contentId/versions")
+    async getContentVersions(@Param("contentId") contentId: string) {
+        return this.contentService.getContentVersions(contentId);
+    }
+
+    @Roles(Role.Student, Role.Instructor, Role.Admin)
+    @UseGuards(authorizationGuard)
+    @Get("version/:versionId")
+    async getVersionById(@Param("versionId") versionId: string) {
+        return this.contentService.getVersionById(versionId);
+    }
 
   @Roles(Role.Student, Role.Instructor, Role.Admin)
   @UseGuards(authorizationGuard)
@@ -99,5 +113,6 @@ export class ContentController {
   @Delete(":id/module/:module_id")
   remove(@Param("id") id: string, @Param("module_id") moduleId: string) {
     return this.contentService.deleteContent(id, moduleId);
-  }
+    }
+
 }

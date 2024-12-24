@@ -1,44 +1,55 @@
 "use client";
-import { useFetchCourse, useFetchModulesForCourse } from "@/app/api/services/useFetchCourse";
-import { useAuth } from "@/components/AuthContext";
+
+import React from "react";
+import { useModules } from "@/app/_hooks/useModules";
+import { useFetchCourse } from "@/app/_hooks/useFetchCourse";
 import CourseDetails from "@/components/CourseDetails";
 import CourseModule from "@/components/CourseModule";
-import { useModuleService } from "@/app/api/services/useModuleService";
-import ModuleDetails from "../../../components/ModuleDetails";
-import CreateModule from "../../../components/CreateModule";
-import React, { useState, useEffect } from "react";
-import InstructorPage from "./InstructorPage";
-type courseModuleProps = {
-  _id: string;
-  course_id: string;
-  title: string;
-  difficulty: string;
-  resources: string[];
-  content_ids: string[];
-  no_question: number;
-  type: string;
-  question_bank: string[];
-  quizzes: string[];
-  timestamp: string;
-  __v: number;
-  ratings: number[];
-};
+import InstructorCourseModule from "@/components/instructor/InstructorCourseModule";
+import { useAuth } from "@/components/AuthContext";
+import InstructorCourseDetails from "@/components/instructor/InstructorCourseDetails";
 
 export default function CoursePage({ params }: { params: { courseid: string } }) {
-  //@ts-expect-error
   const { courseid } = React.use(params);
-  const { courseDetails, instructors } = useFetchCourse(courseid);
-  const modules = useFetchModulesForCourse(courseid);
   const { tokenDetails } = useAuth();
-  if (tokenDetails?.role === "instructor") {
-    return <InstructorPage courseId={courseid} />;
+  const { modules, loading: modulesLoading, error: modulesError } = useModules(courseid);
+  const { courseData, instructors, loading: courseLoading, error: courseError } = useFetchCourse(courseid);
+
+  if (modulesLoading || courseLoading) {
+    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
   }
+
+  if (modulesError || courseError) {
+    return <div className="text-red-500">Error: {modulesError || courseError}</div>;
+  }
+
+  if (!courseData) {
+    return <div className="text-red-500">Course data not found</div>;
+  }
+
+  if (tokenDetails?.role === "instructor") {
+    return (
+      <div className="p-4">
+        <InstructorCourseDetails courseData={courseData} instructors={instructors} />
+        <h1 className="text-2xl font-bold mb-4">Course Modules</h1>
+        <div className="space-y-4">
+          {modules.map((module) => (
+            <InstructorCourseModule key={module._id} module={module} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <CourseDetails courseData={courseDetails} instructors={instructors} />
-      {modules.map((module) => {
-        return <CourseModule module={module} key={module._id} />;
-      })}
+    <div className="p-4">
+      <CourseDetails courseData={courseData} instructors={instructors} />
+      <h1 className="text-2xl font-bold mb-4">Course Modules</h1>
+      <div className="space-y-4">
+        {modules.map((module) => (
+          <CourseModule key={module._id} module={module} />
+        ))}
+      </div>
     </div>
   );
 }

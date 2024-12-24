@@ -8,8 +8,8 @@ export class Note {
   @Prop({ required: true , ref: 'User' })
   user_id: string;
 
-  @Prop({ required: false , ref: 'Course' })
-  course_id: string;
+  @Prop({ required: false , ref: 'Modules' })
+  module_id: string;
 
   @Prop({ required: true })
   content: string;

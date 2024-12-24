@@ -1,0 +1,42 @@
+.container {
+    max-width: 800px;
+    margin: 20px auto; /* Add margin to the top and bottom */
+    padding: 20px;
+    background-color: #1e1e1e; /* Dark background */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+    font-size: 2.5em;
+    color: #ffffff; /* White text */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    font-size: 1.8em;
+    color: #e0e0e0; /* Light gray for subtitles */
+    margin-top: 20px;
+}
+
+.description {
+    font-size: 1.1em;
+    color: #b0b0b0; /* Gray text for descriptions */
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.featuresList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.featureItem {
+    background-color: #2a2a2a; /* Slightly lighter dark background for features */
+    border-left: 5px solid #2196F3; /* Blue */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    color: #ffffff; /* White text for feature items */
+}

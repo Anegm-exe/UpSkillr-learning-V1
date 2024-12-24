@@ -6,13 +6,14 @@ interface QuizFormProps {
   quizData: {
     _id: string;
     user_id: { _id: string; name: string };
-    module_id: { _id: string; title: string };
+    module_id: { _id: string; title: string; course_id:string;};
     type: string;
     questions: { _id: string; title: string; options: string[] }[];
     solved:boolean;
     timestamp: Date;
   };
   goBack : () => void;
+  goToModule : () => void;
 }
 
 interface Answer {
@@ -20,7 +21,7 @@ interface Answer {
   answer: number;
 }
 
-export default function QuizForm({ quizData,goBack }: QuizFormProps) {
+export default function QuizForm({ quizData,goBack,goToModule }: QuizFormProps) {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [results, setResults] = useState<null | { correctAnswers: Answer[],score:number }>(null);
   const [showScore, setShowScore] = useState<boolean>(false);
@@ -138,11 +139,23 @@ export default function QuizForm({ quizData,goBack }: QuizFormProps) {
               </button>
             </div>
           ) : (
-            <div>
-              <h2>Congratulations!</h2>
-              <p>You scored {score}% on the quiz.</p>
-              <button className={styles.button} onClick={goBack}></button>
-            </div>
+            <>
+            {results.score >= 50 ? (
+              <div>
+                <h2>Congratulations!</h2>
+                <p>You scored {score}% on the quiz.</p>
+                <button className={styles.button} onClick={goBack}>Go Back</button>
+              </div>
+            ) : (
+              <div>
+                {/* Handle case for score less than 50 */}
+                <h2>Better luck next time!</h2>
+                <p>Your score is {score}%. Keep trying to improve!</p>
+                <p>Try checking out the module again.</p>
+                <button className={styles.button} onClick={goToModule}>Check out module</button>
+              </div>
+            )}   
+            </>         
           )}
         </>
       )}
