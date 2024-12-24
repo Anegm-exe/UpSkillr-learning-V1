@@ -155,3 +155,18 @@
     font-size: 0.875rem;
     color: #6b7280;
   }
+  .removeButton {
+    color: #f56565;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50%;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .removeButton:hover {
+    background-color: #c53030;
+    border-radius: 50%;
+  }
+  

@@ -42,11 +42,12 @@ export default function ChatPage({ params }: { params: { chat_id: string } }) {
     try {
       setIsSubmitting(true);
       await axios.post(`/chat/${chatData._id}/user/${email}`);
+      alert('User has been added to chat!')
       setEmail('');
       setIsAddingUser(false);
       // Optionally refresh chat data here
     } catch (error) {
-      console.error('Error adding user:', error);
+      alert(error.response.data.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -58,70 +59,88 @@ export default function ChatPage({ params }: { params: { chat_id: string } }) {
     }
   };
 
+  const handleRemoveUser = async (user_id:string) => {
+    try {
+      await axios.delete(`chat/${chatData._id}/user/${user_id}`)
+      alert('User removed from chat!')
+    }catch (error) {
+      alert(error.response.data.message);
+    } 
+  }
+
   return (
     <div className={chatinfocss.chatDetailsContainer}>
-      <div className={chatinfocss.chatHeader}>
-        <h1>{chatData.name}</h1>
-        <button 
-          onClick={() => router.push('/chat')}
-          className={chatinfocss.backButton}
-        >
-          Back to Chats
-        </button>
-      </div>
+  <div className={chatinfocss.chatHeader}>
+    <h1>{chatData.name}</h1>
+    <button 
+      onClick={() => router.push('/chat')}
+      className={chatinfocss.backButton}
+    >
+      Back to Chats
+    </button>
+  </div>
 
-      <div className={chatinfocss.chatDetails}>
-        <h2>Participants</h2>
-        <ul className={chatinfocss.usersList}>
-          {chatData.user_ids.map((user) => (
-            <li key={user._id} className={chatinfocss.userItem}>
-              <img
-                src={user.profile_picture_url || '/default-avatar.png'}
-                alt={user.name}
-                className={chatinfocss.userProfilePicture}
-              />
-              <span className={chatinfocss.userName}>
-                {user.name}
-                {user._id === chatData.admin_id && (
-                  <span className={chatinfocss.adminBadge}>Admin</span>
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        {tokenDetails?._id === chatData.admin_id && (
-          <>
-            <button 
-              onClick={handleAddUserClick} 
-              className={chatinfocss.addUserButton}
-            >
-              {isAddingUser ? 'Cancel' : 'Add Participant'}
-            </button>
-
-            {isAddingUser && (
-              <div className={chatinfocss.addUserInputContainer}>
-                <input
-                  type="email"
-                  placeholder="Enter participant's email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  onKeyPress={handleKeyPress}
-                  className={chatinfocss.emailInput}
-                  disabled={isSubmitting}
-                />
-                <button 
-                  onClick={handleAddUser} 
-                  className={chatinfocss.addButton}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Adding...' : 'Add'}
-                </button>
-              </div>
+  <div className={chatinfocss.chatDetails}>
+    <h2>Participants</h2>
+    <ul className={chatinfocss.usersList}>
+      {chatData.user_ids.map((user) => (
+        <li key={user._id} className={chatinfocss.userItem}>
+          <img
+            src={user.profile_picture_url || '/default-avatar.png'}
+            alt={user.name}
+            className={chatinfocss.userProfilePicture}
+          />
+          <span className={chatinfocss.userName}>
+            {user.name}
+            {user._id === chatData.admin_id && (
+              <span className={chatinfocss.adminBadge}>Admin</span>
             )}
-          </>
+          </span>
+          {user._id !== tokenDetails?._id && tokenDetails?._id === chatData.admin_id &&(
+            <button
+              onClick={() => handleRemoveUser(user._id)}
+              className={chatinfocss.removeButton}
+            >
+              X
+            </button>
+          )}
+        </li>
+      ))}
+    </ul>
+
+    {tokenDetails?._id === chatData.admin_id && (
+      <>
+        <button 
+          onClick={handleAddUserClick} 
+          className={chatinfocss.addUserButton}
+        >
+          {isAddingUser ? 'Cancel' : 'Add Participant'}
+        </button>
+
+        {isAddingUser && (
+          <div className={chatinfocss.addUserInputContainer}>
+            <input
+              type="email"
+              placeholder="Enter participant's email"
+              value={email}
+              onChange={handleEmailChange}
+              onKeyPress={handleKeyPress}
+              className={chatinfocss.emailInput}
+              disabled={isSubmitting}
+            />
+            <button 
+              onClick={handleAddUser} 
+              className={chatinfocss.addButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Adding...' : 'Add'}
+            </button>
+          </div>
         )}
-      </div>
-    </div>
+      </>
+    )}
+  </div>
+</div>
+
   );
 }

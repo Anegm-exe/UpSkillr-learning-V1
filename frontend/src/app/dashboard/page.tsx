@@ -64,7 +64,6 @@ function AdminDashboard({ tokenDetails }) {
         try {
             axios.post('/backup');
         } catch (error) {
-            //@ts-expect-error
             console.error('Error sending backup request:', error.response.data.message);
         }
     };

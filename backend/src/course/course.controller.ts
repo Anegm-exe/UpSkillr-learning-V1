@@ -113,8 +113,8 @@ export class CourseController {
     //get course by category
     @Public()
     @Get('find/categories')
-    async getByCategorys(@Body() categorys: string[]): Promise<Course[]> {
-        return this.courseService.getByCategorys(categorys);
+    async getByCategorys(): Promise<string[]> {
+        return this.courseService.getUniqueCategories();
     }
 
     // find completed courses
