@@ -9,8 +9,8 @@ export interface CourseAnalytics {
   moduleRatings: string;
   courseRating: number;
   instructorRating: number;
-  enrolledStudents: string;
-  completedStudents: string;
+  enrolledStudents: number;
+  completedStudents: number;
   belowAverageStudents: number;
   averageStudents: number;
   aboveAverageStudents: number;

@@ -16,26 +16,24 @@ interface QuizDetailsProps {
 
 export default function QuizDetails({ quizData, onMoreDetails, onRetake }: QuizDetailsProps) {
   return (
-    <div className={quizcss.quizContainer}>
-      <div className={quizcss.quizDetails} key={quizData._id}>
-        <h2>Quiz for {quizData.module_id?.title}</h2>
-        <p className={quizcss.quizInfo}>Quiz Type: {quizData.type}</p>
-        <p className={quizcss.quizInfo}>
-          Created By: {quizData.user_id?.name || 'Unknown'}
-        </p>
-        <div className={quizcss.quizActions}>
+    <div className={quizcss.container}>
+      <div className={quizcss.card}>
+        <h2 className={quizcss.title}>Quiz for {quizData.module_id?.title}</h2>
+        <p className={quizcss.info}>Type: {quizData.type}</p>
+        <p className={quizcss.info}>Created By: {quizData.user_id?.name || 'Unknown'}</p>
+        <div className={quizcss.actions}>
           {!quizData.solved ? (
-            <button onClick={onMoreDetails} className={quizcss.moreDetailsButton}>
-              Start quiz
+            <button onClick={onMoreDetails} className={quizcss.primaryButton}>
+              Start Quiz
             </button>
           ) : (
-            <div>
-              <span className={quizcss.quizInfo}>Quiz already Solved</span>
+            <div className={quizcss.solvedSection}>
+              <p className={quizcss.info}>Quiz already solved</p>
               <button
                 onClick={() => onRetake(quizData._id || '')}
-                className={quizcss.moreDetailsButton}
+                className={quizcss.secondaryButton}
               >
-                Retake quiz?
+                Retake Quiz
               </button>
             </div>
           )}

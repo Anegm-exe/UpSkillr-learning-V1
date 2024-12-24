@@ -179,7 +179,6 @@ function StudentDashboard({ tokenDetails }) {
             setStudentCourses([]);
         }
     };
-
     return (
         <div className={DashboardCss.maincontainer}>
             {/* Left Container */}
@@ -268,7 +267,7 @@ function StudentDashboard({ tokenDetails }) {
                         <div className={DashboardCss.separatorline} style={{ width: '30%' }}></div>  {/* Separator */}
                         <div className={DashboardCss.notificationDiv}>
                             {notificationsData && notificationsData.length > 0 ? (
-                                notificationsData.map((notification: { _id: string, message: string, sender_id: string, timestamp: string }) => (
+                                notificationsData.toReversed().map((notification: { _id: string, message: string, sender_id: string, timestamp: string }) => (
                                     <NotificationDetails key={notification._id} notificationData={notification} />
                                 ))
                             ) : (
@@ -416,7 +415,7 @@ function InstructorDashboard({ tokenDetails }) {
                         <div className={DashboardCss.separatorline} style={{ width: '30%' }}></div>  {/* Separator */}
                         <div className={DashboardCss.notificationDiv}>
                             {notificationsData && notificationsData.length > 0 ? (
-                                notificationsData.map((notification: { _id: string, message: string, sender_id: string, timestamp: string }) => (
+                                notificationsData.toReversed().map((notification: { _id: string, message: string, sender_id: string, timestamp: string }) => (
                                     <NotificationDetails key={notification._id} notificationData={notification} />
                                 ))
                             ) : (

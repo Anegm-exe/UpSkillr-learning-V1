@@ -183,7 +183,7 @@
 
 .notificationDiv {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 2rem;
     padding: 1rem 1rem;
     margin-top: .75rem;

@@ -58,52 +58,29 @@ export const useAnalytics = () => {
     fetchAnalytics();
   }, []);
 
-  const convertToCSV = (data: CourseAnalytics[]) => {
-    const headers = [
-      "courseId",
-      "courseName",
-      "moduleRatings",
-      "courseRating",
-      "instructorRating",
-      "enrolledStudents",
-      "completedStudents",
-      "belowAverageStudents",
-      "averageStudents",
-      "aboveAverageStudents",
-      "excellentStudents",
-    ];
-
-    const rows = data.map((item) =>
-      [
-        item.courseId,
-        item.courseName,
-        item.moduleRatings,
-        item.courseRating,
-        item.instructorRating,
-        item.enrolledStudents,
-        item.completedStudents,
-        item.belowAverageStudents,
-        item.averageStudents,
-        item.aboveAverageStudents,
-        item.excellentStudents,
-      ].join(",")
-    );
-
-    return [headers.join(","), ...rows].join("\n");
+  const downloadCSV = async () => {
+    try {
+      const response = await axios.get('/user/instructor/analytics', {
+        responseType: 'blob', // Specify blob to handle binary data
+      });
+  
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+  
+      // Create a link element and trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'courses_analytics.csv'); // Filename
+      document.body.appendChild(link);
+      link.click();
+  
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+    }
   };
-
-  const downloadCSV = () => {
-    const csvData = convertToCSV(data);
-    const blob = new Blob([csvData], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("hidden", "");
-    a.setAttribute("href", url);
-    a.setAttribute("download", "analytics.csv");
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
+  
   return { data, loading, error, downloadCSV };
 };

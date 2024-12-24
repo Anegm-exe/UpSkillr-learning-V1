@@ -7,6 +7,7 @@ import QuestionsList from "./QuestionsList";
 import AddQuestionForm from "./AddQuestionForm";
 import ModuleDetails from "../ModuleDetails";
 import ModuleDetailsInstructor from "./ModuleDetailsInstructor";
+import axios from "@/app/api/axios";
 interface CourseModuleProps {
   module: ModuleType;
 }
@@ -199,10 +200,21 @@ const InstructorCourseModule: React.FC<CourseModuleProps> = ({ module }) => {
       console.error("Error deleting content:", error);
     }
   };
+  const initializeQuizzes = (course_id:string,module_id:string) => {
+    try{
+      axios.post(`course/${course_id}/module/${module_id}/quizzes`);
+    }catch (error){
+      //@ts-expect-error
+      console.error(error.response.data.message);
+    }
+  }
 
   return (
     <div className="bg-zinc-800 rounded-lg border border-zinc-700 p-6 mb-4 shadow-lg">
       <ModuleDetailsInstructor module={module} rating={rating} />
+      <button onClick={() => initializeQuizzes(module.course_id,module._id)}className="  bg-zinc-300 p-2 rounded-md text-black">
+          Initialize quizzes
+        </button>
       <QuestionsList
         questions={questions}
         loadingQuestions={loadingQuestions}
